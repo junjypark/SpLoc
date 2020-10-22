@@ -1,7 +1,6 @@
 #define ARMA_NO_DEBUG
 
 #include <armadillo>
-#include <Rcpp.h>
 #include <RcppArmadillo.h>
 // [[Rcpp::depends(RcppArmadillo)]]
 
