@@ -42,6 +42,7 @@ double quantileC(arma::vec Tstatvec, double alpha){
   return out;
 }
 
+// [[Rcpp::depends(RcppArmadillo)]]
 // [[Rcpp::export]]
 Rcpp::List SpLocC(arma::sp_mat NNmatrix, arma::mat ymat, int nperm, double alpha){
   int q=NNmatrix.n_rows;
