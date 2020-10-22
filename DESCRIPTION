@@ -13,6 +13,6 @@ LinkingTo: Rcpp, RcppArmadillo
 Imports:
   MASS (>= 3.0.0),
   Matrix (>= 3.0.0),
-  Rcpp (>= 3.0.0),
+  Rcpp (>= 1.0.5),
   RcppArmadillo (>= 3.0.0)
 
