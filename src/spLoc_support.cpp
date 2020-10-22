@@ -7,7 +7,6 @@
 
 using namespace Rcpp;
 
-// [[Rcpp::export]]
 arma::vec avg_rank(arma::vec x) {
   arma::uvec w = arma::stable_sort_index(x, "descend");
   R_xlen_t sz = x.size();
@@ -24,7 +23,6 @@ arma::vec avg_rank(arma::vec x) {
   return r;
 }
 
-// [[Rcpp::export]]
 double quantileC(arma::vec Tstatvec, double alpha){
   int n=Tstatvec.size();
   arma::vec avgrank=avg_rank(Tstatvec);
