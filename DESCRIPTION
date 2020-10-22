@@ -7,10 +7,7 @@ Maintainer: Jun Young Park <junjy.park@utoronto.ca>
 Description: More about what it does (maybe more than one line)
     Use four spaces when indenting paragraphs within the Description.
 License: GPL (>= 2)
-Encoding: UTF-8
-LazyData: true
 Imports: Rcpp (>= 0.12.9)
 LinkingTo: Rcpp, RcppArmadillo, MASS, Matrix
 Depends:
-  Rcpp, RcppArmadillo, MASS, Matrix
-NeedsCompilation: yes
+  MASS, Matrix
