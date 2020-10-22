@@ -7,16 +7,16 @@
 using namespace Rcpp;
 
 // SpLocC
-Rcpp::List SpLocC(arma::sp_mat NN, arma::mat ymat, int nperm, double alpha);
-RcppExport SEXP _SpLoc_SpLocC(SEXP NNSEXP, SEXP ymatSEXP, SEXP npermSEXP, SEXP alphaSEXP) {
+Rcpp::List SpLocC(arma::sp_mat NNmatrix, arma::mat ymat, int nperm, double alpha);
+RcppExport SEXP _SpLoc_SpLocC(SEXP NNmatrixSEXP, SEXP ymatSEXP, SEXP npermSEXP, SEXP alphaSEXP) {
 BEGIN_RCPP
     Rcpp::RObject rcpp_result_gen;
     Rcpp::RNGScope rcpp_rngScope_gen;
-    Rcpp::traits::input_parameter< arma::sp_mat >::type NN(NNSEXP);
+    Rcpp::traits::input_parameter< arma::sp_mat >::type NNmatrix(NNmatrixSEXP);
     Rcpp::traits::input_parameter< arma::mat >::type ymat(ymatSEXP);
     Rcpp::traits::input_parameter< int >::type nperm(npermSEXP);
     Rcpp::traits::input_parameter< double >::type alpha(alphaSEXP);
-    rcpp_result_gen = Rcpp::wrap(SpLocC(NN, ymat, nperm, alpha));
+    rcpp_result_gen = Rcpp::wrap(SpLocC(NNmatrix, ymat, nperm, alpha));
     return rcpp_result_gen;
 END_RCPP
 }
