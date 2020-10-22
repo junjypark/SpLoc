@@ -12,7 +12,7 @@ SpLoc=function(NN, ymat, nperm=5000, alpha=0.05, seed=NULL){
   } else{
     set.seed(seed)
   }
-  print(dim(NN))
+
   out=SpLocC(NN, ymat, nperm, alpha)
   out$pvalue=(1+sum(c(out$permMax)>max(out$Tstat)))/(1+nperm)
 
