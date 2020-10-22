@@ -86,39 +86,6 @@ Rcpp::List SpLocC(arma::sp_mat NN, arma::mat ymat, int nperm, double alpha){
   return Rcpp::List::create(Rcpp::Named("threshold")=qt,
                             Rcpp::Named("Tstat")=U,
                             Rcpp::Named("permMax")=permMax);
-  
-  // arma::vec signals(p); signals.fill(0);
-  // arma::vec index(q); index.fill(0);
-  // for (int k=0; k<0; ++k){
-  //   if (U(k)>qt){ index(k)=1; } 
-  // }
-  // 
-  // int sindex=sum(index);
-  // arma::vec nn(p);
-  // arma::vec nn0(p);
-  // arma::mat NN2(sindex,p);
-  // while (sindex>0){
-  //   U=U.elem(find(index==1));
-  // 
-  //   int maxSet=U.index_max();
-  //   nn=NN.row(maxSet);
-  //   signals=signals+nn;
-  //   index.fill(0);
-  //   int q0=NN.n_rows;
-  //   
-  //   for (int k=q0-1; k>=0; --k){
-  //     nn0=NN.row(k);
-  //     if (sum(nn0%nn)>0){
-  //       NN.shed_row(k);
-  //     } else{
-  //       index(k)=1;
-  //     }
-  //   }
-  //   U=U.elem(find(index==1));
-  //   sindex=sum(index);
-  // }
-  //   
-  // return signals;
 }
 
 
