@@ -12,5 +12,5 @@ LazyData: true
 Imports: Rcpp (>= 0.12.9)
 LinkingTo: Rcpp, RcppArmadillo, MASS, Matrix
 Depends:
-  MASS, Matrix
+  Rcpp, RcppArmadillo, MASS, Matrix
 NeedsCompilation: yes
