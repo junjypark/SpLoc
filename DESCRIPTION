@@ -9,7 +9,7 @@ Description: More about what it does (maybe more than one line)
 License: What license is it under?
 Encoding: UTF-8
 LazyData: true
-LinkingTo: Rcpp, RcppArmadillo
+LinkingTo: RcppArmadillo
 Imports:
   MASS (>= 3.0.0),
   Matrix (>= 3.0.0),
