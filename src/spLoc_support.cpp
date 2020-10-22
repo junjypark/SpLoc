@@ -41,8 +41,8 @@ double quantileC(arma::vec Tstatvec, double alpha){
 }
 
 // [[Rcpp::export]]
-Rcpp::List SpLocC(arma::sp_mat NN, arma::mat ymat, int nperm, double alpha){
-  int q=NN.n_rows;
+Rcpp::List SpLocC(arma::sp_mat NNmatrix, arma::mat ymat, int nperm, double alpha){
+  int q=NNmatrix.n_rows;
   int p=ymat.n_rows;
   int n=ymat.n_cols;
   arma::mat permU(q,nperm);
@@ -55,7 +55,7 @@ Rcpp::List SpLocC(arma::sp_mat NN, arma::mat ymat, int nperm, double alpha){
   for (int subj=0; subj<n; ++subj){
     y=y+ymat.col(subj);
   }
-  U=NN*y;  
+  U=NNmatrix*y;  
   
   for (int i=0; i<nperm; ++i){
     permy.fill(0);
@@ -64,7 +64,7 @@ Rcpp::List SpLocC(arma::sp_mat NN, arma::mat ymat, int nperm, double alpha){
     for (int subj=0; subj<n; ++subj){
       permy=permy+rand(subj)*ymat.col(subj);
     }
-    permU.col(i)=NN*permy;
+    permU.col(i)=NNmatrix*permy;
   }
   
   for (int k=0; k<q; ++k){
