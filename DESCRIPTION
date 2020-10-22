@@ -6,10 +6,11 @@ Author: Jun Young Park
 Maintainer: Jun Young Park <junjy.park@utoronto.ca>
 Description: More about what it does (maybe more than one line)
     Use four spaces when indenting paragraphs within the Description.
-License: What license is it under?
+License: GPL (>= 2)
 Encoding: UTF-8
 LazyData: true
 Imports: Rcpp (>= 0.12.9)
 LinkingTo: Rcpp, RcppArmadillo, MASS, Matrix
 Depends:
   MASS, Matrix
+NeedsCompilation: yes
