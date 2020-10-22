@@ -1,5 +1,7 @@
 
-#define ARMA_64BIT_WORD
+#define ARMA_NO_DEBUG
+
+#define ARMA_64BIT_WORD1
 
 
 #include <armadillo>
