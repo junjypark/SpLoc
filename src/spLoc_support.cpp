@@ -7,6 +7,8 @@
 #include <RcppArmadillo.h>
 // [[Rcpp::depends(RcppArmadillo)]]
 
+#include <Rcpp.h>
+
 using namespace Rcpp;
 
 arma::vec avg_rank(arma::vec x) {
