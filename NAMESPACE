@@ -1,5 +1,6 @@
 useDynLib(SpLoc)
 importFrom(Rcpp, evalCpp)
+importFrom(RcppArmadillo)
 importFrom(MASS)
 importFrom(Matrix)
 export(SpLoc)
