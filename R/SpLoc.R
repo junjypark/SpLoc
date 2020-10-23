@@ -9,11 +9,15 @@ SpLoc=function(NNmatrix, ymat, nperm=5000, alpha=0.05, seed=NULL){
 
   if (is.null(seed)){
     print("Specifying a seed value is recommended combining multiple NN matrix.")
-  } else{
-    set.seed(seed)
   }
+  
+  # if (is.null(seed)){
+  #   print("Specifying a seed value is recommended combining multiple NN matrix.")
+  # } else{
+  #   set.seed(seed)
+  # }
 
-  out=SpLocC(NNmatrix, ymat, nperm, alpha)
+  out=SpLocC(NNmatrix, ymat, nperm, alpha, seed)
   out$pvalue=(1+sum(c(out$permMax)>max(out$Tstat)))/(1+nperm)
 
   return(out)
