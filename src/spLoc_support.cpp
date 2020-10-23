@@ -7,6 +7,8 @@
 // [[Rcpp::depends(RcppArmadillo, BH, bigmemory)]]
 
 #include <Rcpp.h>
+#include <vector>
+
 using namespace Rcpp;
 
 #include <bigmemory/BigMatrix.h>
