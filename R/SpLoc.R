@@ -21,7 +21,7 @@ SpLoc=function(NNmatrix, ymat, nperm=5000, alpha=0.05, seed=NULL){
 
 ClusterSearch=function(tstat, thres, NNmatrix){
   if (length(tstat)!=nrow(NNmatrix)){
-    stop("The number of rows in NNmat needs to be the same as the length of tstat,")
+    stop("The number of rows in NNmat needs to be the same as the length of tstat.")
   }
 
   sig.ind=which(tstat>thres)
