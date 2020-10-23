@@ -4,10 +4,12 @@
 
 
 #include <RcppArmadillo.h>
-// [[Rcpp::depends(RcppArmadillo)]]
+// [[Rcpp::depends(RcppArmadillo, bigmemory)]]
 
 #include <Rcpp.h>
 using namespace Rcpp;
+
+#include <bigmemory/BigMatrix.h>
 
 arma::vec avg_rank(arma::vec x) {
   arma::uvec w = arma::stable_sort_index(x, "descend");
