@@ -62,7 +62,7 @@ Rcpp::List SpLocC(arma::sp_mat NNmatrix, arma::mat ymat, int nperm, double alpha
   arma::vec y(p);y.fill(0);
   arma::vec U(q);
 
-  XPtr<BigMatrix> xpMat(pBigMat);
+  XPtr<BigMatrix> xpMat(permU);
   arma::mat permU = arma::Mat<double> ( (double *)xpMat->matrix(), xpMat->nrow(), xpMat->ncol(), false);
 
 
