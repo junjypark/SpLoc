@@ -4,7 +4,7 @@
 
 
 #include <RcppArmadillo.h>
-// [[Rcpp::depends(RcppArmadillo, bigmemory)]]
+// [[Rcpp::depends(RcppArmadillo, BH, bigmemory)]]
 
 #include <Rcpp.h>
 using namespace Rcpp;
