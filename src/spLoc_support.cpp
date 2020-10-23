@@ -40,9 +40,18 @@ double quantileC(arma::vec Tstatvec, double alpha){
   return out;
 }
 
+
+// [[Rcpp::export]]
+void set_seed(unsigned int seed) {
+    Rcpp::Environment base_env("package:base");
+    Rcpp::Function set_seed_r = base_env["set.seed"];
+    set_seed_r(seed);
+}
+
+
 // [[Rcpp::depends(RcppArmadillo)]]
 // [[Rcpp::export]]
-Rcpp::List SpLocC(arma::sp_mat NNmatrix, arma::mat ymat, int nperm, double alpha){
+Rcpp::List SpLocC(arma::sp_mat NNmatrix, arma::mat ymat, int nperm, double alpha, int s){
   int q=NNmatrix.n_rows;
   int p=ymat.n_rows;
   int n=ymat.n_cols;
@@ -58,6 +67,7 @@ Rcpp::List SpLocC(arma::sp_mat NNmatrix, arma::mat ymat, int nperm, double alpha
   }
   U=NNmatrix*y;  
   
+  set_seed(s);
   for (int i=0; i<nperm; ++i){
     permy.fill(0);
     rand.randn();
