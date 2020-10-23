@@ -51,16 +51,20 @@ void set_seed(unsigned int seed) {
 
 // [[Rcpp::depends(RcppArmadillo)]]
 // [[Rcpp::export]]
-Rcpp::List SpLocC(arma::sp_mat NNmatrix, arma::mat ymat, int nperm, double alpha, int s){
+Rcpp::List SpLocC(arma::sp_mat NNmatrix, arma::mat ymat, int nperm, double alpha, int s, SEXP permU){
   int q=NNmatrix.n_rows;
   int p=ymat.n_rows;
   int n=ymat.n_cols;
-  arma::mat permU(q,nperm);
+  // arma::mat permU(q,nperm);
   arma::vec permy(p);
   arma::vec rand(n); 
   arma::vec sdvec(q); sdvec.fill(0);
   arma::vec y(p);y.fill(0);
   arma::vec U(q);
+
+  XPtr<BigMatrix> xpMat(pBigMat);
+  arma::mat permU = arma::Mat<double> ( (double *)xpMat->matrix(), xpMat->nrow(), xpMat->ncol(), false);
+
 
   for (int subj=0; subj<n; ++subj){
     y=y+ymat.col(subj);
