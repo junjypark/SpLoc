@@ -8,9 +8,8 @@ SpLoc=function(NNmatrix, ymat, nperm=5000, alpha=0.05, seed=NULL){
   if ( alpha<0 |alpha>1){
     stop("alpha should range between 0 and 1.")
   }
-
   if (is.null(seed)){
-    print("Specifying a seed value is recommended combining multiple NN matrix.")
+    stop("Specifying a seed value is required.")
   }
 
   pU=big.matrix(nrow(NNmatrix), nperm, type = "double")
