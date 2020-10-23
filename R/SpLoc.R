@@ -1,10 +1,10 @@
 SpLoc=function(NNmatrix, ymat, nperm=5000, alpha=0.05, seed=NULL){
   if (length(which(is(NNmatrix)=="sparseMatrix"))==0){
-    stop("NN is not a sparse matrix. Please refer the Matrix R package to convert it")
+    stop("NN is not a sparse matrix. Please refer the Matrix R package to convert it.")
   }
 
   if ( ncol(NNmatrix)!=nrow(ymat) ){
-    stop("The number of columns of NN and the number of rows of ymat needs to be the same (# voxels)")
+    stop("The number of columns of NN and the number of rows of ymat needs to be the same (# voxels).")
   }
 
   if (is.null(seed)){
@@ -41,7 +41,7 @@ ClusterSearch=function(tstat, thres, NNmatrix){
     tstat=tstat[-out.set]
     NNmatrix=NNmatrix[-out.set,,drop=F]
 
-    print(paste0("Cluster ", clust, " with ", length(sig.vertices), " voxel(s) is selected (total=", length(sig), ")" ))
+    print(paste0("Cluster ", clust, " with ", length(sig.vertices), " voxel(s) is selected (total=", length(sig), ")." ))
     clust=clust+1
 
     if (length(tstat)==0){bool=F}
