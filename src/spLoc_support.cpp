@@ -10,6 +10,7 @@
 #include <vector>
 
 using namespace Rcpp;
+using namespace arma;
 
 #include <bigmemory/BigMatrix.h>
 
