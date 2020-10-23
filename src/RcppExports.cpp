@@ -17,8 +17,8 @@ BEGIN_RCPP
 END_RCPP
 }
 // SpLocC
-Rcpp::List SpLocC(arma::sp_mat NNmatrix, arma::mat ymat, int nperm, double alpha, int s);
-RcppExport SEXP _SpLoc_SpLocC(SEXP NNmatrixSEXP, SEXP ymatSEXP, SEXP npermSEXP, SEXP alphaSEXP, SEXP sSEXP) {
+Rcpp::List SpLocC(arma::sp_mat NNmatrix, arma::mat ymat, int nperm, double alpha, int s, SEXP permU);
+RcppExport SEXP _SpLoc_SpLocC(SEXP NNmatrixSEXP, SEXP ymatSEXP, SEXP npermSEXP, SEXP alphaSEXP, SEXP sSEXP, SEXP permUSEXP) {
 BEGIN_RCPP
     Rcpp::RObject rcpp_result_gen;
     Rcpp::RNGScope rcpp_rngScope_gen;
@@ -27,14 +27,15 @@ BEGIN_RCPP
     Rcpp::traits::input_parameter< int >::type nperm(npermSEXP);
     Rcpp::traits::input_parameter< double >::type alpha(alphaSEXP);
     Rcpp::traits::input_parameter< int >::type s(sSEXP);
-    rcpp_result_gen = Rcpp::wrap(SpLocC(NNmatrix, ymat, nperm, alpha, s));
+    Rcpp::traits::input_parameter< SEXP >::type permU(permUSEXP);
+    rcpp_result_gen = Rcpp::wrap(SpLocC(NNmatrix, ymat, nperm, alpha, s, permU));
     return rcpp_result_gen;
 END_RCPP
 }
 
 static const R_CallMethodDef CallEntries[] = {
     {"_SpLoc_set_seed", (DL_FUNC) &_SpLoc_set_seed, 1},
-    {"_SpLoc_SpLocC", (DL_FUNC) &_SpLoc_SpLocC, 5},
+    {"_SpLoc_SpLocC", (DL_FUNC) &_SpLoc_SpLocC, 6},
     {NULL, NULL, 0}
 };
 
