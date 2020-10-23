@@ -5,7 +5,7 @@ set_seed <- function(seed) {
     invisible(.Call('_SpLoc_set_seed', PACKAGE = 'SpLoc', seed))
 }
 
-SpLocC <- function(NNmatrix, ymat, nperm, alpha, s) {
-    .Call('_SpLoc_SpLocC', PACKAGE = 'SpLoc', NNmatrix, ymat, nperm, alpha, s)
+SpLocC <- function(NNmatrix, ymat, nperm, alpha, s, permU) {
+    .Call('_SpLoc_SpLocC', PACKAGE = 'SpLoc', NNmatrix, ymat, nperm, alpha, s, permU)
 }
 
