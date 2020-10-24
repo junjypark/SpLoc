@@ -1,5 +1,4 @@
 
-#define ARMA_64BIT_WORD 1
 #define ARMA_NO_DEBUG
 
 #include <RcppArmadillo.h>
