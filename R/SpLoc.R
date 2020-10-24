@@ -1,4 +1,4 @@
-SpLoc=function(NNmatrix, ymat, nperm=5000, alpha=0.05, seed=NULL){
+SpLoc=function(NNmatrix, ymat, nperm=5000, alpha=0.05, seed=NULL, is.sparse=F){
   if (length(which(is(NNmatrix)=="sparseMatrix"))==0){
     stop("NN is not a sparse matrix. Please refer the Matrix R package to convert it.")
   }
@@ -10,6 +10,11 @@ SpLoc=function(NNmatrix, ymat, nperm=5000, alpha=0.05, seed=NULL){
   }
   if (is.null(seed)){
     stop("Specifying a seed value is required.")
+  }
+  if (is.sparse){
+    index=which(apply(NNmatrix,2,sum)==0)
+    NNmatrix=NNmatrix[,-index]
+    ymat=ymat[-index,]
   }
 
   pU=big.matrix(nrow(NNmatrix), nperm, type = "double")
