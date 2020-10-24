@@ -16,7 +16,7 @@ SpLoc=function(NNmatrix, ymat, nperm=5000, alpha=0.05, seed=NULL){
   
   out=SpLocC(NNmatrix, ymat, nperm, alpha, seed, pU@address)
   out$pvalue=(1+sum(c(out$permMax)>max(out$Tstat)))/(1+nperm)
-
+  out$seed=seeed
   return(out)
 }
 
