@@ -1,6 +1,5 @@
 
 #define ARMA_NO_DEBUG
-#define ARMA_64BIT_WORD 1
 
 #include <RcppArmadillo.h>
 // [[Rcpp::depends(RcppArmadillo, BH, bigmemory)]]
