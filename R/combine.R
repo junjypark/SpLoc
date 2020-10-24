@@ -1,4 +1,4 @@
-combineSpLoc=function(lst, alpha=0.05){
+combine=function(lst, alpha=0.05){
   n=length(lst)
   seed=do.call("c",lapply(lst, function(x){x$seed}))
   nperm=do.call("c",lapply(lst, function(x){x$nperm}))
@@ -8,7 +8,7 @@ combineSpLoc=function(lst, alpha=0.05){
   
   Tstat=do.call("c",lapply(lst, function(x){x$Tstat}))
   permMax=apply(do.call("cbind",lapply(lst, function(x){x$permMax})),1,max)
-  threshold=quantileC(permMax, alpha)
+  threshold=quantile(permMax, 1-alpha)
   pvalue=(1+sum(c(permMax)>max(Tstat,na.rm=T)))/(1+nperm[1])
 
   return(list(
