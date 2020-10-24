@@ -7,6 +7,6 @@ Maintainer: Jun Young Park <junjy.park@utoronto.ca>
 Description: To be added.
 License: GPL (>= 2)
 Imports: Rcpp (>= 0.12.9)
-LinkingTo: Rcpp, RcppArmadillo, Matrix, bigmemory, BH
+LinkingTo: Rcpp, RcppArmadillo, Matrix, bigmemory, BH, foreach, doParallel
 Depends:
-  Matrix, bigmemory, BH
+  Matrix, bigmemory, BH, foreach, doParallel
