@@ -12,15 +12,17 @@ SpLoc=function(NNmatrix, ymat, nperm=5000, alpha=0.05, seed=NULL, is.sparse=F){
     stop("Specifying a seed value is required.")
   }
   if (is.sparse){
-    index=which(apply(NNmatrix,2,sum)==0)
-    NNmatrix=NNmatrix[,-index]
-    ymat=ymat[-index,]
+    index=NULL
+    for (j in 1:ncol(NNmatrix)){
+      if(sum(NNmatrix[,j])!=0){ index=c(index,j)}
+    }
+    NNmatrix=NNmatrix[,index]
+    ymat=ymat[index,]
   }
 
   pU=big.matrix(nrow(NNmatrix), nperm, type = "double")
-  
   out=SpLocC(NNmatrix, ymat, nperm, alpha, seed, pU@address)
-  out$pvalue=(1+sum(c(out$permMax)>max(out$Tstat)))/(1+nperm)
+  out$pvalue=(1+sum(c(out$permMax)>max(out$Tstat,na.rm=TRUE)))/(1+nperm)
   out$seed=seed
   out$nperm=nperm
   return(out)
