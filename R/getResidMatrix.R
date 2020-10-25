@@ -5,5 +5,6 @@ getResidMatrix=function(ymat, X=NULL, mask){
       ymat[,j]=ymat[,j]/sum(ymat[,j]^2,na.rm=T)
     }
   }
+  ymat[is.nan(ymat)]=0
   return(ymat)
 }
