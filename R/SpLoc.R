@@ -51,7 +51,7 @@ SpLoc2=function(NNmatrix, ymat, nperm=1000, alpha=0.05, seed=NULL,
     NNmatrix=NNmatrix[,index]
     ymat=ymat[index,]
   }
-  if (partition){
+  if (isTRUE(partition)){
     if (is.null(npartition)){
       partition=FALSE
       print("partition set to be FALSE as npartition is not specified.")
@@ -62,7 +62,7 @@ SpLoc2=function(NNmatrix, ymat, nperm=1000, alpha=0.05, seed=NULL,
     }
   }
   
-  if (partition){
+  if (isTRUE(partition)){
     NNList=list()
     len=ceiling(nrow(NNmatrix)/npartition)
     for (i in 1:npartition){
@@ -71,10 +71,10 @@ SpLoc2=function(NNmatrix, ymat, nperm=1000, alpha=0.05, seed=NULL,
       NNList[[i]]=NNmatrix[start:end,]
     }
     
-    if (parallel){
+    if (isTRUE(parallel)){
       cl=makeCluster(ncores)
       registerDoParallel(cl)
-      result=foreach(i=1:npartition, .packages("SpLoc"))%dopar%{
+      result=foreach(i=1:npartition, .packages=("SpLoc"))%dopar%{
         pU=big.matrix(nrow(NNList[[i]]), nperm, type = "double")
         SpLocC(NNList[[i]], ymat, nperm, alpha, seed, pU@address)
       }
