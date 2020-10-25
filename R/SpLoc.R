@@ -74,7 +74,7 @@ SpLoc2=function(NNmatrix, ymat, nperm=1000, alpha=0.05, seed=NULL,
     if (isTRUE(parallel)){
       cl=makeCluster(ncores)
       registerDoParallel(cl)
-      result=foreach(i=1:npartition, .packages=("SpLoc"))%dopar%{
+      result=foreach(i=1:npartition, .packages=("SpLoc"),.noexport = "SpLocC" )%dopar%{
         pU=big.matrix(nrow(NNList[[i]]), nperm, type = "double")
         SpLocC(NNList[[i]], ymat, nperm, alpha, seed, pU@address)
       }
