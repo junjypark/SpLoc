@@ -104,7 +104,8 @@ Rcpp::List SpLocC(arma::sp_mat& NNmatrix, arma::mat& ymat, int nperm, double alp
 
   return Rcpp::List::create(Rcpp::Named("threshold")=qt,
                             Rcpp::Named("Tstat")=U,
-                            Rcpp::Named("permMax")=permMax);
+                            Rcpp::Named("permMax")=permMax,
+                            Rcpp::Named("nperm")=nperm);
 }
 
 
