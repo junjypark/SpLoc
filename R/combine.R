@@ -20,3 +20,12 @@ combine=function(lst, alpha=0.05){
     nperm=nperm[1]
   ))
 }
+
+process=function(fit, NNmatrix, thres){
+  if (length(fit$Tstat)!=nrow(NNmatrix)){ stop("The number of test statistics must correspond to the rows of the NNmatrix.") }
+  index=which(fit$Tstat>thres)
+  Tstat=fit$tstat[index]
+  NNmatrix.trim=NNmatrix[index,]
+  return(list(Tstat=Tstat,NNmatrix=NNmatrix.trim))
+}
+
