@@ -48,8 +48,8 @@ processSpLocfit=function(names.fit, names.NNmatrix, alpha=0.05,
     lst.thresfit[[i]]=process(result, NN, thres)  
   }
   
-  NN=do.call("rbind",lapply(lst, function(x){x$NNmatrix}))
-  Tstat=do.call("c",lapply(lst, function(x){x$Tstat}))
+  NN=do.call("rbind",lapply(lst.thresfit, function(x){x$NNmatrix}))
+  Tstat=do.call("c",lapply(lst.thresfit, function(x){x$Tstat}))
   
   return(list(NNmatrix=NN, Tstat=Tstat, threshold=thres))
 }
