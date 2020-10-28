@@ -36,12 +36,12 @@ processSpLocfit=function(names.fit, names.NNmatrix, alpha=0.05,
   }
   n=length(names.fit)
   
-  lst.result=lst()
+  lst.result=list()
   for (i in 1:n){ lst.result[[i]]=readRDS(paste0(fit.directory,names.fit[i])) }
   result.combine=combine(lst.result, alpha=alpha)
   thres=result.combine$threshold
   
-  lst.thresfit=lst()
+  lst.thresfit=list()
   for (i in 1:n){
     NN=readRDS(paste0(NNmatrix.directory,names.NNmatrix[i]))
     result=lst.result[[i]]
