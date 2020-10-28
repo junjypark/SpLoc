@@ -29,3 +29,27 @@ process=function(fit, NNmatrix, thres){
   return(list(Tstat=Tstat,NNmatrix=NNmatrix.trim))
 }
 
+processSpLocfit=function(names.fit, names.NNmatrix, alpha=0.05, 
+                         fit.directory=NULL, NNmatrix.directory=NULL){
+  if (length(names.fit)!=length(names.NNmatrix)){
+    stop("The numbers of elements in names.fit and names.NNmatrix are not the same.")
+  }
+  n=length(names.fit)
+  
+  lst.result=lst()
+  for (i in 1:n){ lst.result[[i]]=readRDS(paste0(fit.directory,names.fit[i])) }
+  result.combine=combine(lst.result, alpha=alpha)
+  thres=result.combine$threshold
+  
+  lst.thresfit=lst()
+  for (i in 1:n){
+    NN=readRDS(paste0(NNmatrix.directory,names.NNmatrix[i]))
+    result=lst.result[[i]]
+    lst.thresfit[[i]]=process(result, NN, thres)  
+  }
+  
+  NN=do.call("rbind",lapply(lst, function(x){x$NNmatrix}))
+  Tstat=do.call("c",lapply(lst, function(x){x$Tstat}))
+  
+  return(list(NNmatrix=NN, Tstat=Tstat, threshold=thres))
+}
