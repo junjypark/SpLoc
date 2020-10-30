@@ -52,12 +52,18 @@ processSpLocfit=function(names.fit, names.NNmatrix, alpha=0.05,
       }
     stopCluster(cl)
   }else{
-    lst.thresfit=list()
-    for (i in 1:n){
+    lst.thresfit=foreach(i=1:n, .packages=("SpLoc"),.noexport = "SpLocC" )%do%{
       NN=readRDS(paste0(NNmatrix.directory,names.NNmatrix[i]))
       result=lst.result[[i]]
-      lst.thresfit[[i]]=process(result, NN, thres)  
+      process(result, NN, thres)
     }
+    
+    # lst.thresfit=list()
+    # for (i in 1:n){
+    #   NN=readRDS(paste0(NNmatrix.directory,names.NNmatrix[i]))
+    #   result=lst.result[[i]]
+    #   lst.thresfit[[i]]=process(result, NN, thres)  
+    # }
   }
 
   
