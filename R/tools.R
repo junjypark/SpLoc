@@ -57,16 +57,8 @@ processSpLocfit=function(names.fit, names.NNmatrix, alpha=0.05,
       result=lst.result[[i]]
       process(result, NN, thres)
     }
-    
-    # lst.thresfit=list()
-    # for (i in 1:n){
-    #   NN=readRDS(paste0(NNmatrix.directory,names.NNmatrix[i]))
-    #   result=lst.result[[i]]
-    #   lst.thresfit[[i]]=process(result, NN, thres)  
-    # }
   }
 
-  
   NN=do.call("rbind",lapply(lst.thresfit, function(x){x$NNmatrix}))
   Tstat=do.call("c",lapply(lst.thresfit, function(x){x$Tstat}))
   
