@@ -30,7 +30,8 @@ process=function(fit, NNmatrix, thres){
 }
 
 processSpLocfit=function(names.fit, names.NNmatrix, alpha=0.05, 
-                         fit.directory=NULL, NNmatrix.directory=NULL){
+                         fit.directory=NULL, NNmatrix.directory=NULL,
+                         parallel=F, ncores=1){
   if (length(names.fit)!=length(names.NNmatrix)){
     stop("The numbers of elements in names.fit and names.NNmatrix are not the same.")
   }
@@ -41,12 +42,24 @@ processSpLocfit=function(names.fit, names.NNmatrix, alpha=0.05,
   result.combine=combine(lst.result, alpha=alpha)
   thres=result.combine$threshold
   
-  lst.thresfit=list()
-  for (i in 1:n){
-    NN=readRDS(paste0(NNmatrix.directory,names.NNmatrix[i]))
-    result=lst.result[[i]]
-    lst.thresfit[[i]]=process(result, NN, thres)  
+  if (isTRUE(parallel)){
+    cl=makeCluster(ncores)
+    registerDoParallel(cl)
+    lst.thresfit=foreach(i=1:n, .packages=("SpLoc"),.noexport = "SpLocC" )%dopar%{
+      NN=readRDS(paste0(NNmatrix.directory,names.NNmatrix[i]))
+      result=lst.result[[i]]
+      process(result, NN, thres)
+      }
+    stopCluster(cl)
+  }else{
+    lst.thresfit=list()
+    for (i in 1:n){
+      NN=readRDS(paste0(NNmatrix.directory,names.NNmatrix[i]))
+      result=lst.result[[i]]
+      lst.thresfit[[i]]=process(result, NN, thres)  
+    }
   }
+
   
   NN=do.call("rbind",lapply(lst.thresfit, function(x){x$NNmatrix}))
   Tstat=do.call("c",lapply(lst.thresfit, function(x){x$Tstat}))
