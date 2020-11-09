@@ -44,66 +44,11 @@ double quantileC(arma::vec Tstatvec, double alpha){
   return out;
 }
 
-
 // [[Rcpp::export]]
 void set_seed(unsigned int seed) {
     Rcpp::Environment base_env("package:base");
     Rcpp::Function set_seed_r = base_env["set.seed"];
     set_seed_r(seed);
-}
-
-
-// [[Rcpp::depends(RcppArmadillo)]]
-// [[Rcpp::export]]
-Rcpp::List SpLocC2(arma::sp_mat& NNmatrix, arma::mat& ymat, int nperm, double alpha, int s, SEXP pU){
-  int q=NNmatrix.n_rows;
-  int p=ymat.n_rows;
-  int n=ymat.n_cols;
-  arma::vec permy(p);
-  arma::vec rand(n); 
-  arma::vec y(p);y.fill(0);
-  arma::vec U(q);
-
-  XPtr<BigMatrix> xpMat(pU);
-  arma::mat permU = arma::Mat<double> ( (double *)xpMat->matrix(), xpMat->nrow(), xpMat->ncol(), false);
-
-
-  for (int subj=0; subj<n; ++subj){
-    y=y+ymat.col(subj);
-  }
-  U=NNmatrix*y;  
-  
-  set_seed(s);
-  for (int i=0; i<nperm; ++i){
-    permy.fill(0);
-    rand.randn();
-    rand=rand/abs(rand);
-    for (int subj=0; subj<n; ++subj){
-      permy=permy+rand(subj)*ymat.col(subj);
-    }
-    permU.col(i)=NNmatrix*permy;
-  }
-  
-  for (int k=0; k<q; ++k){
-    double sd=stddev(permU.row(k));
-    permU.row(k)=permU.row(k)/sd;
-    U(k)=U(k)/sd;
-  }
-  permU=permU%permU;
-  
-  arma::vec permMax(nperm);
-  for (int i=0; i<nperm; ++i){
-    permMax(i)=permU.col(i).max();
-  }
-  
-  double qt=quantileC(permMax, alpha);
-  
-  U=U%U;
-
-  return Rcpp::List::create(Rcpp::Named("threshold")=qt,
-                            Rcpp::Named("Tstat")=U,
-                            Rcpp::Named("permMax")=permMax,
-                            Rcpp::Named("nperm")=nperm);
 }
 
 // [[Rcpp::depends(RcppArmadillo)]]
@@ -113,6 +58,7 @@ Rcpp::List SpLocC(arma::sp_mat& NNmatrix, arma::mat& ymat, int nperm, double alp
   int n=ymat.n_cols;
   arma::vec rand(n); rand.fill(1);
   arma::vec U(q);
+  double sd;
 
   XPtr<BigMatrix> xpMat(pU);
   arma::mat permU = arma::Mat<double> ( (double *)xpMat->matrix(), xpMat->nrow(), xpMat->ncol(), false);
@@ -132,7 +78,7 @@ Rcpp::List SpLocC(arma::sp_mat& NNmatrix, arma::mat& ymat, int nperm, double alp
   permU=NNmatrix*permY;
   
   for (int k=0; k<q; ++k){
-    double sd=stddev(permU.row(k));
+    sd=stddev(permU.row(k));
     permU.row(k)=permU.row(k)/sd;
     U(k)=U(k)/sd;
   }
@@ -152,51 +98,6 @@ Rcpp::List SpLocC(arma::sp_mat& NNmatrix, arma::mat& ymat, int nperm, double alp
                             Rcpp::Named("permMax")=permMax,
                             Rcpp::Named("nperm")=nperm);
 }
-
-
-
-// [[Rcpp::depends(RcppArmadillo)]]
-// [[Rcpp::export]]
-Rcpp::List SpLocDiffC2(arma::sp_mat& NNmatrix, arma::mat& ymat, arma::vec group, int nperm, double alpha, int s, SEXP pU){
-  int q=NNmatrix.n_rows;
-  int p=group.size();
-  arma::vec permgroup(p);
-  arma::vec U(q);
-
-  XPtr<BigMatrix> xpMat(pU);
-  arma::mat permU = arma::Mat<double> ( (double *)xpMat->matrix(), xpMat->nrow(), xpMat->ncol(), false);
-
-  U=NNmatrix*ymat*group;  
-  
-  set_seed(s);
-  for (int i=0; i<nperm; ++i){
-    permgroup=shuffle(group);
-    permU.col(i)=NNmatrix*ymat*permgroup;
-  }
-  
-  for (int k=0; k<q; ++k){
-    double sd=stddev(permU.row(k));
-    permU.row(k)=permU.row(k)/sd;
-    U(k)=U(k)/sd;
-  }
-  permU=permU%permU;
-  
-  arma::vec permMax(nperm);
-  for (int i=0; i<nperm; ++i){
-    permMax(i)=permU.col(i).max();
-  }
-  
-  double qt=quantileC(permMax, alpha);
-  
-  U=U%U;
-
-  return Rcpp::List::create(Rcpp::Named("threshold")=qt,
-                            Rcpp::Named("Tstat")=U,
-                            Rcpp::Named("permMax")=permMax,
-                            Rcpp::Named("nperm")=nperm);
-}
-
-
 
 // [[Rcpp::depends(RcppArmadillo)]]
 // [[Rcpp::export]]
@@ -205,6 +106,7 @@ Rcpp::List SpLocDiffC(arma::sp_mat& NNmatrix, arma::mat& ymat, arma::vec group, 
   int p=group.size();
   arma::vec permgroup(p);
   arma::vec U(q);
+  double sd;
 
   XPtr<BigMatrix> xpMat(pU);
   arma::mat permU = arma::Mat<double> ( (double *)xpMat->matrix(), xpMat->nrow(), xpMat->ncol(), false);
@@ -223,7 +125,7 @@ Rcpp::List SpLocDiffC(arma::sp_mat& NNmatrix, arma::mat& ymat, arma::vec group, 
   permU=NNmatrix*permY;
   
   for (int k=0; k<q; ++k){
-    double sd=stddev(permU.row(k));
+    sd=stddev(permU.row(k));
     permU.row(k)=permU.row(k)/sd;
     U(k)=U(k)/sd;
   }
