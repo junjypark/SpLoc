@@ -1,14 +1,32 @@
 SpLoc=function(NNmatrix, ymat, group=NULL, nperm=1000, alpha=0.05, seed=NULL, 
                is.sparse=F,partition=F, npartition=1, parallel=F, ncores=1){
   if (is.null(group)){
-    return(SpLocMean(NNmatrix=NNmatrix, ymat=ymat, nperm=nperm, alpha=alpha, seed=seed,
-                     is.sparse = is.sparse, partition=partition, npartition = npartition,
-                     parallel=parallel, ncores=ncores))
+    return(
+      SpLocMean(NNmatrix=NNmatrix, 
+                ymat=ymat, nperm=nperm, 
+                alpha=alpha, 
+                seed=seed,
+                is.sparse = is.sparse, 
+                partition=partition, 
+                npartition = npartition,
+                parallel=parallel,
+                ncores=ncores)
+    )
   }
   else{
-    return(SpLocDiff(NNmatrix=NNmatrix, ymat=ymat, group=group, nperm=nperm, alpha=alpha, seed=seed,
-                     is.sparse = is.sparse, partition=partition, npartition = npartition,
-                     parallel=parallel, ncores=ncores))
+    return(
+      SpLocDiff(NNmatrix=NNmatrix, 
+                ymat=ymat, 
+                group=group, 
+                nperm=nperm, 
+                alpha=alpha, 
+                seed=seed,
+                is.sparse = is.sparse, 
+                partition=partition, 
+                npartition = npartition,
+                parallel=parallel, 
+                ncores=ncores)
+    )
   }
 }
 
@@ -84,7 +102,6 @@ SpLocMean=function(NNmatrix, ymat, nperm=1000, alpha=0.05, seed=NULL,
     return(out)    
   }
 }
-
 
 SpLocDiff=function(NNmatrix, ymat, group, nperm=1000, alpha=0.05, seed=NULL, 
                is.sparse=F,partition=F, npartition=1, parallel=F, ncores=1){
