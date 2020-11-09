@@ -59,10 +59,8 @@ Rcpp::List SpLocC(arma::sp_mat& NNmatrix, arma::mat& ymat, int nperm, double alp
   int q=NNmatrix.n_rows;
   int p=ymat.n_rows;
   int n=ymat.n_cols;
-  // arma::mat permU(q,nperm);
   arma::vec permy(p);
   arma::vec rand(n); 
-  arma::vec sdvec(q); sdvec.fill(0);
   arma::vec y(p);y.fill(0);
   arma::vec U(q);
 
@@ -115,13 +113,8 @@ Rcpp::List SpLocDiffC(arma::sp_mat& NNmatrix, arma::mat& ymat, arma::vec group, 
   int q=NNmatrix.n_rows;
   int p=ymat.n_rows;
   int n=ymat.n_cols;
-  // arma::mat permU(q,nperm);
   arma::vec permgroup(p);
-  arma::vec rand(n); 
-  arma::vec sdvec(q); sdvec.fill(0);
-  arma::vec y(p);y.fill(0);
   arma::vec U(q);
-
   arma::sp_mat& NNmatrixY=NNmatrix*ymat;
 
   XPtr<BigMatrix> xpMat(pU);
