@@ -1,5 +1,5 @@
 getSummaryMatrix=function(ymat, X=NULL, mask,
-                          subj.id=NULL, n.visits=NULL, time.var=NULL, random.var=NULL,
+                          subj.id=NULL, n.visits=NULL, time.var=NULL, randomslope=T,
                           parallel=F, n.cores=1){
   mask.index=which(mask!=0)
   
@@ -40,8 +40,13 @@ getSummaryMatrix=function(ymat, X=NULL, mask,
       registerDoParallel(cl)
       
       summaryMat=foreach(i=mask, .combine="rbind", .packages = "lme4")%dopar%{
-        fit=lmer(ymat[,j] ~ -1+ X+(-1+X[,random.var]|Subject), 
-                 control=lmerControl(check.conv.singular = .makeCC(action = "ignore",  tol = 1e-5)))
+        if (randomslope){
+          fit=lmer(ymat[,j] ~ -1+ X+(1+time|Subject), 
+                   control=lmerControl(check.conv.singular = .makeCC(action = "ignore",  tol = 1e-5)))
+        } else{
+          fit=lmer(ymat[,j] ~ -1+ X+(1|Subject), 
+                   control=lmerControl(check.conv.singular = .makeCC(action = "ignore",  tol = 1e-5)))
+        }
         sigma2=attr(VarCorr(fit),"sc")^2
         residuals(fit)/sigma2
       }
@@ -49,8 +54,13 @@ getSummaryMatrix=function(ymat, X=NULL, mask,
     } else{
       summaryMat=matrix(NA, p, n.subj)
       for (j in 1:mask){
-        fit=lmer(ymat[,j] ~ -1+ X+(X[,random.var]|Subject), 
-                 control=lmerControl(check.conv.singular = .makeCC(action = "ignore",  tol = 1e-5)))
+        if (randomslope){
+          fit=lmer(ymat[,j] ~ -1+ X+(1+time|Subject), 
+                   control=lmerControl(check.conv.singular = .makeCC(action = "ignore",  tol = 1e-5)))
+        } else{
+          fit=lmer(ymat[,j] ~ -1+ X+(1|Subject), 
+                   control=lmerControl(check.conv.singular = .makeCC(action = "ignore",  tol = 1e-5)))
+        }
         sigma2=attr(VarCorr(fit),"sc")^2
         summaryMat[j,]=residuals(fit)/sigma2
       }
