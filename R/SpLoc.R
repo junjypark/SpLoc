@@ -136,7 +136,8 @@ SpLocDiff=function(NNmatrix, ymat, group, nperm=1000, alpha=0.05, seed=NULL,
     
   } else{
     pU=big.matrix(nrow(NNmatrix), nperm, type = "double")
-    out=SpLocDiffC(NNmatrix, ymat, group, nperm, alpha, seed, pU@address)
+    pY=big.matrix(ncol(NNmatrix), nperm, type = "double")
+    out=SpLocDiffC(NNmatrix, ymat, group, nperm, alpha, seed, pU@address, pY@address)
     out$pvalue=(1+sum(c(out$permMax)>max(out$Tstat,na.rm=TRUE)))/(1+nperm)
     out$seed=seed
     return(out)    
