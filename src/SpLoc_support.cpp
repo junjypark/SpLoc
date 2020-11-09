@@ -111,7 +111,7 @@ Rcpp::List SpLocC(arma::sp_mat& NNmatrix, arma::mat& ymat, int nperm, double alp
 // [[Rcpp::export]]
 Rcpp::List SpLocDiffC(arma::sp_mat& NNmatrixY, arma::vec group, int nperm, double alpha, int s, SEXP pU){
   int q=NNmatrixY.n_rows;
-  int p=ymat.n_rows;
+  int p=group.size();
   arma::vec permgroup(p);
   arma::vec U(q);
 
