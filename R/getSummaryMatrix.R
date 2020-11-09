@@ -40,7 +40,7 @@ getSummaryMatrix=function(ymat, X=NULL, mask,
       registerDoParallel(cl)
       
       summaryMat=foreach(i=mask, .combine="rbind", .packages = "lme4")%dopar%{
-        fit=lmer(ymat[,j] ~ -1+ X+(X[,random.var]|Subject), 
+        fit=lmer(ymat[,j] ~ -1+ X+(-1+X[,random.var]|Subject), 
                  control=lmerControl(check.conv.singular = .makeCC(action = "ignore",  tol = 1e-5)))
         sigma2=attr(VarCorr(fit),"sc")^2
         residuals(fit)/sigma2
