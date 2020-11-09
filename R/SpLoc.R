@@ -1,5 +1,5 @@
 SpLoc=function(NNmatrix, ymat, group=NULL, nperm=1000, alpha=0.05, seed=NULL, 
-               is.sparse=F,partition=F, npartition=NULL, parallel=F, ncores=1){
+               is.sparse=F,partition=F, npartition=1, parallel=F, ncores=1){
   if (is.null(group)){
     return(SpLocMean(NNmatrix=NNmatrix, ymat=ymat, nperm=nperm, alpha=alpha, seed=seed,
                      is.sparse = is.sparse, partition=partition, npartition = npartition,
@@ -13,7 +13,7 @@ SpLoc=function(NNmatrix, ymat, group=NULL, nperm=1000, alpha=0.05, seed=NULL,
 }
 
 SpLocMean=function(NNmatrix, ymat, nperm=1000, alpha=0.05, seed=NULL, 
-                is.sparse=F,partition=F, npartition=NULL, parallel=F, ncores=1){
+                is.sparse=F,partition=F, npartition=1, parallel=F, ncores=1){
   if (length(which(is(NNmatrix)=="sparseMatrix"))==0){
     stop("NN is not a sparse matrix. Please refer the Matrix R package to convert it.")
   }
@@ -87,7 +87,7 @@ SpLocMean=function(NNmatrix, ymat, nperm=1000, alpha=0.05, seed=NULL,
 
 
 SpLocDiff=function(NNmatrix, ymat, group, nperm=1000, alpha=0.05, seed=NULL, 
-               is.sparse=F,partition=F, npartition=NULL, parallel=F, ncores=1){
+               is.sparse=F,partition=F, npartition=1, parallel=F, ncores=1){
   if (!all.equal(sort(unique(group)),c(-1,1))){
     stop("group should have either 1 or -1.")
   }
