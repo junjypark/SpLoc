@@ -161,8 +161,8 @@ Rcpp::List SpLocDiffC(arma::sp_mat& NNmatrix, arma::mat& ymat, arma::vec group, 
   XPtr<BigMatrix> xpMat(pU);
   arma::mat permU = arma::Mat<double> ( (double *)xpMat->matrix(), xpMat->nrow(), xpMat->ncol(), false);
 
-  XPtr<BigMatrix> xpMat(pY);
-  arma::mat permY = arma::Mat<double> ( (double *)xpMat->matrix(), xpMat->nrow(), xpMat->ncol(), false);
+  XPtr<BigMatrix> xp2Mat(pY);
+  arma::mat permY = arma::Mat<double> ( (double *)xp2Mat->matrix(), xp2Mat->nrow(), xp2Mat->ncol(), false);
 
   U=NNmatrix*ymat*group;  
   
