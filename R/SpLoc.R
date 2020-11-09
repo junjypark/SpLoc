@@ -64,7 +64,7 @@ SpLoc=function(NNmatrix, ymat, nperm=1000, alpha=0.05, seed=NULL,
   } else{
     pU=big.matrix(nrow(NNmatrix), nperm, type = "double")
     pY=big.matrix(ncol(NNmatrix), nperm, type = "double")
-    out=SpLocC(NNmatrix, ymat, nperm, alpha, seed, pU@address, pY$address)
+    out=SpLocC(NNmatrix, ymat, nperm, alpha, seed, pU@address, pY@address)
     out$pvalue=(1+sum(c(out$permMax)>max(out$Tstat,na.rm=TRUE)))/(1+nperm)
     out$seed=seed
     return(out)    
@@ -132,7 +132,7 @@ SpLocDiff=function(NNmatrix, ymat, group, nperm=1000, alpha=0.05, seed=NULL,
       for (i in 1:npartition){
         pU=big.matrix(nrow(NNList[[i]]), nperm, type = "double")
         pY=big.matrix(ncol(NNmatrix), nperm, type = "double")
-        result[[i]]=SpLocDiffC(NNList[[i]], ymat, group, nperm, alpha, seed, pU@address, pY$address)
+        result[[i]]=SpLocDiffC(NNList[[i]], ymat, group, nperm, alpha, seed, pU@address, pY@address)
       }
     }
     
