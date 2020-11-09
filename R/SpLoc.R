@@ -120,14 +120,16 @@ SpLocDiff=function(NNmatrix, ymat, group, nperm=1000, alpha=0.05, seed=NULL,
       registerDoParallel(cl)
       result=foreach(i=1:npartition, .packages=("SpLoc"),.noexport = "SpLocC" )%dopar%{
         pU=big.matrix(nrow(NNList[[i]]), nperm, type = "double")
-        SpLocDiffC(NNList[[i]], ymat, group, nperm, alpha, seed, pU@address)
+        pY=big.matrix(ncol(NNmatrix), nperm, type = "double")
+        SpLocDiffC(NNList[[i]], ymat, group, nperm, alpha, seed, pU@address, pY@address)
       }
       stopCluster(cl)
     } else{
       result=list()
       for (i in 1:npartition){
         pU=big.matrix(nrow(NNList[[i]]), nperm, type = "double")
-        result[[i]]=SpLocDiffC(NNList[[i]], ymat, group, nperm, alpha, seed, pU@address)
+        pY=big.matrix(ncol(NNmatrix), nperm, type = "double")
+        result[[i]]=SpLocDiffC(NNList[[i]], ymat, group, nperm, alpha, seed, pU@address, pY$address)
       }
     }
     
