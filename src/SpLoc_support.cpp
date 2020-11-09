@@ -130,7 +130,7 @@ Rcpp::List SpLocC(arma::sp_mat& NNmatrix, arma::mat& ymat, int nperm, double alp
   set_seed(s);
   for (int i=0; i<nperm; ++i){
     rand.randn();
-    rand=sign(rand);
+    rand=rand/abs(rand);
     permY.col(i)=ymat*rand;
   }
 
