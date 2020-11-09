@@ -110,7 +110,6 @@ Rcpp::List SpLocC2(arma::sp_mat& NNmatrix, arma::mat& ymat, int nperm, double al
 // [[Rcpp::export]]
 Rcpp::List SpLocC(arma::sp_mat& NNmatrix, arma::mat& ymat, int nperm, double alpha, int s, SEXP pU, SEXP pY){
   int q=NNmatrix.n_rows;
-  int p=ymat.n_rows;
   int n=ymat.n_cols;
   arma::vec rand(n); rand.fill(1);
   arma::vec U(q);
