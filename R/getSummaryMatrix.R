@@ -22,8 +22,17 @@ getSummaryMatrix=function(ymat, X=NULL, mask,
     if (sum(n.visits)!=n){
       stop("The sum of the number of visits does not match with the number of columns of ymat.")
     }
-    
+
     n.subj=length(n.visits)
+    
+    timeMat=matrix(0, n.subj, n)
+    for (i in 1:n.subj){
+      if (i==1){start=1} else{ start=sum(n.visits[1:(i-1)])+1}
+      end=sum(n.visits[1:i])
+      timeMat[i,start:end]=time[start:end]
+    }
+    timeMat=Matrix(timeMat, sparse = T)
+    
     Subject=rep(paste0("Subj",1:n.subj),n.visits)
     time=X[,time.var]
     residMat=matrix(NA, p, n.subj)
@@ -31,9 +40,10 @@ getSummaryMatrix=function(ymat, X=NULL, mask,
       fit=lmer(ymat[,j] ~ -1+ X+(X[,random.var]|Subject), 
                control=lmerControl(check.conv.singular = .makeCC(action = "ignore",  tol = 1e-5)))
       sigma2=attr(VarCorr(fit),"sc")^2
-      summaryMat[j,]=time*residuals(fit)/sigma2
+      summaryMat[j,]=residuals(fit)/sigma2
     }
-    return (summaryMat)
+    out=tcrossprod(summaryMat, timeMat)
+    return(out)
   }
 }
 
