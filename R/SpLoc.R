@@ -105,15 +105,14 @@ SpLocDiff=function(NNmatrix, ymat, group, nperm=1000, alpha=0.05, seed=NULL,
     }
   }
   
-  NNmatrixY=NNmatrix%*%ymat
   
   if (isTRUE(partition)){
     NNList=list()
-    len=ceiling(nrow(NNmatrixY)/npartition)
+    len=ceiling(nrow(NNmatrix)/npartition)
     for (i in 1:npartition){
       start=len*(i-1)+1
-      end=min(len*i,nrow(NNmatrixY))
-      NNList[[i]]=NNmatrixY[start:end,]
+      end=min(len*i,nrow(NNmatrix))
+      NNList[[i]]=NNmatrix[start:end,]
     }
     
     if (isTRUE(parallel)){
