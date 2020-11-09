@@ -22,7 +22,9 @@ combine=function(lst, alpha=0.05){
 }
 
 process=function(fit, NNmatrix, thres){
-  if (length(fit$Tstat)!=nrow(NNmatrix)){ stop("The number of test statistics must correspond to the rows of the NNmatrix.") }
+  if (length(fit$Tstat)!=nrow(NNmatrix)){ 
+    stop("The number of test statistics must correspond to the rows of the NNmatrix.") 
+    }
   index=which(fit$Tstat>thres)
   Tstat=fit$Tstat[index]
   NNmatrix.trim=NNmatrix[index,]
