@@ -1,3 +1,13 @@
+SpLoc=function(NNmatrix, ymat, group=NULL, nperm=1000, alpha=0.05, seed=NULL, 
+               is.sparse=F,partition=F, npartition=NULL, parallel=F, ncores=1){
+  if (is.null(group)){
+    return(SpLocMean(...))
+  }
+  else{
+    return(SpLocDiff(...))
+  }
+}
+
 SpLocMean=function(NNmatrix, ymat, nperm=1000, alpha=0.05, seed=NULL, 
                 is.sparse=F,partition=F, npartition=NULL, parallel=F, ncores=1){
   if (length(which(is(NNmatrix)=="sparseMatrix"))==0){
