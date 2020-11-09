@@ -1,4 +1,4 @@
-SpLoc=function(NNmatrix, ymat, nperm=1000, alpha=0.05, seed=NULL, 
+SpLocMean=function(NNmatrix, ymat, nperm=1000, alpha=0.05, seed=NULL, 
                 is.sparse=F,partition=F, npartition=NULL, parallel=F, ncores=1){
   if (length(which(is(NNmatrix)=="sparseMatrix"))==0){
     stop("NN is not a sparse matrix. Please refer the Matrix R package to convert it.")
@@ -46,7 +46,7 @@ SpLoc=function(NNmatrix, ymat, nperm=1000, alpha=0.05, seed=NULL,
       result=foreach(i=1:npartition, .packages=("SpLoc"),.noexport = "SpLocC" )%dopar%{
         pU=big.matrix(nrow(NNList[[i]]), nperm, type = "double")
         pY=big.matrix(ncol(NNmatrix), nperm, type = "double")
-        SpLocC(NNList[[i]], ymat, nperm, alpha, seed, pU@address, pY@address)
+        SpLocMeanC(NNList[[i]], ymat, nperm, alpha, seed, pU@address, pY@address)
       }
       stopCluster(cl)
     } else{
@@ -54,7 +54,7 @@ SpLoc=function(NNmatrix, ymat, nperm=1000, alpha=0.05, seed=NULL,
       for (i in 1:npartition){
         pU=big.matrix(nrow(NNList[[i]]), nperm, type = "double")
         pY=big.matrix(ncol(NNmatrix), nperm, type = "double")
-        result[[i]]=SpLocC(NNList[[i]], ymat, nperm, alpha, seed, pU@address,pY@address)
+        result[[i]]=SpLocMeanC(NNList[[i]], ymat, nperm, alpha, seed, pU@address,pY@address)
       }
     }
     
@@ -64,7 +64,7 @@ SpLoc=function(NNmatrix, ymat, nperm=1000, alpha=0.05, seed=NULL,
   } else{
     pU=big.matrix(nrow(NNmatrix), nperm, type = "double")
     pY=big.matrix(ncol(NNmatrix), nperm, type = "double")
-    out=SpLocC(NNmatrix, ymat, nperm, alpha, seed, pU@address, pY@address)
+    out=SpLocMeanC(NNmatrix, ymat, nperm, alpha, seed, pU@address, pY@address)
     out$pvalue=(1+sum(c(out$permMax)>max(out$Tstat,na.rm=TRUE)))/(1+nperm)
     out$seed=seed
     return(out)    
