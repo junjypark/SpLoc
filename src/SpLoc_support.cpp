@@ -109,7 +109,7 @@ Rcpp::List SpLocC(arma::sp_mat& NNmatrix, arma::mat& ymat, int nperm, double alp
 
 // [[Rcpp::depends(RcppArmadillo)]]
 // [[Rcpp::export]]
-Rcpp::List SpLocDiffC(arma::sp_mat& NNmatrix, arma::mat& ymat, arma::vec group, int nperm, double alpha, int s, SEXP pU){
+Rcpp::List SpLocDiffC2(arma::sp_mat& NNmatrix, arma::mat& ymat, arma::vec group, int nperm, double alpha, int s, SEXP pU){
   int q=NNmatrix.n_rows;
   int p=group.size();
   arma::vec permgroup(p);
@@ -125,6 +125,54 @@ Rcpp::List SpLocDiffC(arma::sp_mat& NNmatrix, arma::mat& ymat, arma::vec group, 
     permgroup=shuffle(group);
     permU.col(i)=NNmatrix*ymat*permgroup;
   }
+  
+  for (int k=0; k<q; ++k){
+    double sd=stddev(permU.row(k));
+    permU.row(k)=permU.row(k)/sd;
+    U(k)=U(k)/sd;
+  }
+  permU=permU%permU;
+  
+  arma::vec permMax(nperm);
+  for (int i=0; i<nperm; ++i){
+    permMax(i)=permU.col(i).max();
+  }
+  
+  double qt=quantileC(permMax, alpha);
+  
+  U=U%U;
+
+  return Rcpp::List::create(Rcpp::Named("threshold")=qt,
+                            Rcpp::Named("Tstat")=U,
+                            Rcpp::Named("permMax")=permMax,
+                            Rcpp::Named("nperm")=nperm);
+}
+
+
+
+// [[Rcpp::depends(RcppArmadillo)]]
+// [[Rcpp::export]]
+Rcpp::List SpLocDiffC(arma::sp_mat& NNmatrix, arma::mat& ymat, arma::vec group, int nperm, double alpha, int s, SEXP pU, SEXP pY){
+  int q=NNmatrix.n_rows;
+  int p=group.size();
+  arma::vec permgroup(p);
+  arma::vec U(q);
+
+  XPtr<BigMatrix> xpMat(pU);
+  arma::mat permU = arma::Mat<double> ( (double *)xpMat->matrix(), xpMat->nrow(), xpMat->ncol(), false);
+
+  XPtr<BigMatrix> xpMat(pY);
+  arma::mat permY = arma::Mat<double> ( (double *)xpMat->matrix(), xpMat->nrow(), xpMat->ncol(), false);
+
+  U=NNmatrix*ymat*group;  
+  
+  set_seed(s);
+  for (int i=0; i<nperm; ++i){
+    permgroup=shuffle(group);
+    permY.col(i)=ymat*permgroup;
+  }
+
+  permU=NNmatrix*permY;
   
   for (int k=0; k<q; ++k){
     double sd=stddev(permU.row(k));
