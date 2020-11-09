@@ -71,7 +71,7 @@ SpLoc=function(NNmatrix, ymat, nperm=1000, alpha=0.05, seed=NULL,
 
 SpLocDiff=function(NNmatrix, ymat, group, nperm=1000, alpha=0.05, seed=NULL, 
                is.sparse=F,partition=F, npartition=NULL, parallel=F, ncores=1){
-  if (!all.equal(sort(unique(d)),c(-1,1))){
+  if (!all.equal(sort(unique(group)),c(-1,1))){
     stop("group should have either 1 or -1")
   }
   if (length(which(is(NNmatrix)=="sparseMatrix"))==0){
