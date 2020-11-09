@@ -105,13 +105,15 @@ SpLocDiff=function(NNmatrix, ymat, group, nperm=1000, alpha=0.05, seed=NULL,
     }
   }
   
+  NNmatrixY=NNmatrix%*%ymat
+  
   if (isTRUE(partition)){
     NNList=list()
-    len=ceiling(nrow(NNmatrix)/npartition)
+    len=ceiling(nrow(NNmatrixY)/npartition)
     for (i in 1:npartition){
       start=len*(i-1)+1
-      end=min(len*i,nrow(NNmatrix))
-      NNList[[i]]=NNmatrix[start:end,]
+      end=min(len*i,nrow(NNmatrixY))
+      NNList[[i]]=NNmatrixY[start:end,]
     }
     
     if (isTRUE(parallel)){
@@ -119,14 +121,14 @@ SpLocDiff=function(NNmatrix, ymat, group, nperm=1000, alpha=0.05, seed=NULL,
       registerDoParallel(cl)
       result=foreach(i=1:npartition, .packages=("SpLoc"),.noexport = "SpLocC" )%dopar%{
         pU=big.matrix(nrow(NNList[[i]]), nperm, type = "double")
-        SpLocDiffC(NNList[[i]], ymat, group, nperm, alpha, seed, pU@address)
+        SpLocDiffC(NNList[[i]], group, nperm, alpha, seed, pU@address)
       }
       stopCluster(cl)
     } else{
       result=list()
       for (i in 1:npartition){
         pU=big.matrix(nrow(NNList[[i]]), nperm, type = "double")
-        result[[i]]=SpLocDiffC(NNList[[i]], ymat, group, nperm, alpha, seed, pU@address)
+        result[[i]]=SpLocDiffC(NNList[[i]], group, nperm, alpha, seed, pU@address)
       }
     }
     
@@ -135,7 +137,7 @@ SpLocDiff=function(NNmatrix, ymat, group, nperm=1000, alpha=0.05, seed=NULL,
     
   } else{
     pU=big.matrix(nrow(NNmatrix), nperm, type = "double")
-    out=SpLocC(NNmatrix, ymat, nperm, alpha, seed, pU@address)
+    out=SpLocDiffC(NNmatrixY, group, nperm, alpha, seed, pU@address)
     out$pvalue=(1+sum(c(out$permMax)>max(out$Tstat,na.rm=TRUE)))/(1+nperm)
     out$seed=seed
     return(out)    
