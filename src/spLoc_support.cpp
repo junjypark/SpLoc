@@ -122,7 +122,7 @@ Rcpp::List SpLocDiffC(arma::sp_mat& NNmatrix, arma::mat& ymat, arma::vec group, 
   arma::vec y(p);y.fill(0);
   arma::vec U(q);
 
-  arma::sp_mat NNmatrixY=NNmatrix*ymat;
+  arma::sp_mat& NNmatrixY=NNmatrix*ymat;
 
   XPtr<BigMatrix> xpMat(pU);
   arma::mat permU = arma::Mat<double> ( (double *)xpMat->matrix(), xpMat->nrow(), xpMat->ncol(), false);
