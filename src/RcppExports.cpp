@@ -44,9 +44,9 @@ BEGIN_RCPP
     return rcpp_result_gen;
 END_RCPP
 }
-// SpLocDiffC
-Rcpp::List SpLocDiffC(arma::sp_mat& NNmatrix, arma::mat& ymat, arma::vec group, int nperm, double alpha, int s, SEXP pU);
-RcppExport SEXP _SpLoc_SpLocDiffC(SEXP NNmatrixSEXP, SEXP ymatSEXP, SEXP groupSEXP, SEXP npermSEXP, SEXP alphaSEXP, SEXP sSEXP, SEXP pUSEXP) {
+// SpLocDiffC2
+Rcpp::List SpLocDiffC2(arma::sp_mat& NNmatrix, arma::mat& ymat, arma::vec group, int nperm, double alpha, int s, SEXP pU);
+RcppExport SEXP _SpLoc_SpLocDiffC2(SEXP NNmatrixSEXP, SEXP ymatSEXP, SEXP groupSEXP, SEXP npermSEXP, SEXP alphaSEXP, SEXP sSEXP, SEXP pUSEXP) {
 BEGIN_RCPP
     Rcpp::RObject rcpp_result_gen;
     Rcpp::RNGScope rcpp_rngScope_gen;
@@ -57,7 +57,25 @@ BEGIN_RCPP
     Rcpp::traits::input_parameter< double >::type alpha(alphaSEXP);
     Rcpp::traits::input_parameter< int >::type s(sSEXP);
     Rcpp::traits::input_parameter< SEXP >::type pU(pUSEXP);
-    rcpp_result_gen = Rcpp::wrap(SpLocDiffC(NNmatrix, ymat, group, nperm, alpha, s, pU));
+    rcpp_result_gen = Rcpp::wrap(SpLocDiffC2(NNmatrix, ymat, group, nperm, alpha, s, pU));
+    return rcpp_result_gen;
+END_RCPP
+}
+// SpLocDiffC
+Rcpp::List SpLocDiffC(arma::sp_mat& NNmatrix, arma::mat& ymat, arma::vec group, int nperm, double alpha, int s, SEXP pU, SEXP pY);
+RcppExport SEXP _SpLoc_SpLocDiffC(SEXP NNmatrixSEXP, SEXP ymatSEXP, SEXP groupSEXP, SEXP npermSEXP, SEXP alphaSEXP, SEXP sSEXP, SEXP pUSEXP, SEXP pYSEXP) {
+BEGIN_RCPP
+    Rcpp::RObject rcpp_result_gen;
+    Rcpp::RNGScope rcpp_rngScope_gen;
+    Rcpp::traits::input_parameter< arma::sp_mat& >::type NNmatrix(NNmatrixSEXP);
+    Rcpp::traits::input_parameter< arma::mat& >::type ymat(ymatSEXP);
+    Rcpp::traits::input_parameter< arma::vec >::type group(groupSEXP);
+    Rcpp::traits::input_parameter< int >::type nperm(npermSEXP);
+    Rcpp::traits::input_parameter< double >::type alpha(alphaSEXP);
+    Rcpp::traits::input_parameter< int >::type s(sSEXP);
+    Rcpp::traits::input_parameter< SEXP >::type pU(pUSEXP);
+    Rcpp::traits::input_parameter< SEXP >::type pY(pYSEXP);
+    rcpp_result_gen = Rcpp::wrap(SpLocDiffC(NNmatrix, ymat, group, nperm, alpha, s, pU, pY));
     return rcpp_result_gen;
 END_RCPP
 }
@@ -66,7 +84,8 @@ static const R_CallMethodDef CallEntries[] = {
     {"_SpLoc_quantileC", (DL_FUNC) &_SpLoc_quantileC, 2},
     {"_SpLoc_set_seed", (DL_FUNC) &_SpLoc_set_seed, 1},
     {"_SpLoc_SpLocC", (DL_FUNC) &_SpLoc_SpLocC, 6},
-    {"_SpLoc_SpLocDiffC", (DL_FUNC) &_SpLoc_SpLocDiffC, 7},
+    {"_SpLoc_SpLocDiffC2", (DL_FUNC) &_SpLoc_SpLocDiffC2, 7},
+    {"_SpLoc_SpLocDiffC", (DL_FUNC) &_SpLoc_SpLocDiffC, 8},
     {NULL, NULL, 0}
 };
 
