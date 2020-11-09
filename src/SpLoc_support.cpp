@@ -109,7 +109,7 @@ Rcpp::List SpLocC(arma::sp_mat& NNmatrix, arma::mat& ymat, int nperm, double alp
 
 // [[Rcpp::depends(RcppArmadillo)]]
 // [[Rcpp::export]]
-Rcpp::List SpLocDiffC(arma::sp_mat& NNmatrixY, arma::vec group, int nperm, double alpha, int s, SEXP pU){
+Rcpp::List SpLocDiffC(arma::sp_mat& NNmatrix, arma::mat& ymat, arma::vec group, int nperm, double alpha, int s, SEXP pU){
   int q=NNmatrixY.n_rows;
   int p=group.size();
   arma::vec permgroup(p);
@@ -118,12 +118,12 @@ Rcpp::List SpLocDiffC(arma::sp_mat& NNmatrixY, arma::vec group, int nperm, doubl
   XPtr<BigMatrix> xpMat(pU);
   arma::mat permU = arma::Mat<double> ( (double *)xpMat->matrix(), xpMat->nrow(), xpMat->ncol(), false);
 
-  U=NNmatrixY*group;  
+  U=NNmatrix*ymat*group;  
   
   set_seed(s);
   for (int i=0; i<nperm; ++i){
     permgroup=shuffle(group);
-    permU.col(i)=NNmatrixY*permgroup;
+    permU.col(i)=NNmatrix*ymat*permgroup;
   }
   
   for (int k=0; k<q; ++k){
