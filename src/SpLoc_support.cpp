@@ -112,8 +112,7 @@ Rcpp::List SpLocC(arma::sp_mat& NNmatrix, arma::mat& ymat, int nperm, double alp
   int q=NNmatrix.n_rows;
   int p=ymat.n_rows;
   int n=ymat.n_cols;
-  arma::vec rand(n); 
-  arma::vec y(p);y.fill(0);
+  arma::vec rand(n); rand.fill(1);
   arma::vec U(q);
 
   XPtr<BigMatrix> xpMat(pU);
@@ -122,15 +121,12 @@ Rcpp::List SpLocC(arma::sp_mat& NNmatrix, arma::mat& ymat, int nperm, double alp
   XPtr<BigMatrix> xp2Mat(pY);
   arma::mat permY = arma::Mat<double> ( (double *)xp2Mat->matrix(), xp2Mat->nrow(), xp2Mat->ncol(), false);
 
-  for (int subj=0; subj<n; ++subj){
-    y=y+ymat.col(subj);
-  }
-  U=NNmatrix*y;  
+  U=NNmatrix*y*rand;  
   
   set_seed(s);
   for (int i=0; i<nperm; ++i){
     rand.randn();
-    rand=rand/abs(rand);
+    rand=sign(rand);
     permY.col(i)=ymat*rand;
   }
 
