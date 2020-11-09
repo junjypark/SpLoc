@@ -55,7 +55,7 @@ void set_seed(unsigned int seed) {
 
 // [[Rcpp::depends(RcppArmadillo)]]
 // [[Rcpp::export]]
-Rcpp::List SpLocC(arma::sp_mat& NNmatrix, arma::mat& ymat, int nperm, double alpha, int s, SEXP pU){
+Rcpp::List SpLocC2(arma::sp_mat& NNmatrix, arma::mat& ymat, int nperm, double alpha, int s, SEXP pU){
   int q=NNmatrix.n_rows;
   int p=ymat.n_rows;
   int n=ymat.n_cols;
@@ -105,6 +105,59 @@ Rcpp::List SpLocC(arma::sp_mat& NNmatrix, arma::mat& ymat, int nperm, double alp
                             Rcpp::Named("permMax")=permMax,
                             Rcpp::Named("nperm")=nperm);
 }
+
+// [[Rcpp::depends(RcppArmadillo)]]
+// [[Rcpp::export]]
+Rcpp::List SpLocC(arma::sp_mat& NNmatrix, arma::mat& ymat, int nperm, double alpha, int s, SEXP pU, SEXP pY){
+  int q=NNmatrix.n_rows;
+  int p=ymat.n_rows;
+  int n=ymat.n_cols;
+  arma::vec rand(n); 
+  arma::vec y(p);y.fill(0);
+  arma::vec U(q);
+
+  XPtr<BigMatrix> xpMat(pU);
+  arma::mat permU = arma::Mat<double> ( (double *)xpMat->matrix(), xpMat->nrow(), xpMat->ncol(), false);
+
+  XPtr<BigMatrix> xp2Mat(pY);
+  arma::mat permY = arma::Mat<double> ( (double *)xp2Mat->matrix(), xp2Mat->nrow(), xp2Mat->ncol(), false);
+
+  for (int subj=0; subj<n; ++subj){
+    y=y+ymat.col(subj);
+  }
+  U=NNmatrix*y;  
+  
+  set_seed(s);
+  for (int i=0; i<nperm; ++i){
+    rand.randn();
+    rand=rand/abs(rand);
+    permY.col(i)=ymat*rand;
+  }
+
+  permU=NNmatrix*permY;
+  
+  for (int k=0; k<q; ++k){
+    double sd=stddev(permU.row(k));
+    permU.row(k)=permU.row(k)/sd;
+    U(k)=U(k)/sd;
+  }
+  permU=permU%permU;
+  
+  arma::vec permMax(nperm);
+  for (int i=0; i<nperm; ++i){
+    permMax(i)=permU.col(i).max();
+  }
+  
+  double qt=quantileC(permMax, alpha);
+  
+  U=U%U;
+
+  return Rcpp::List::create(Rcpp::Named("threshold")=qt,
+                            Rcpp::Named("Tstat")=U,
+                            Rcpp::Named("permMax")=permMax,
+                            Rcpp::Named("nperm")=nperm);
+}
+
 
 
 // [[Rcpp::depends(RcppArmadillo)]]
