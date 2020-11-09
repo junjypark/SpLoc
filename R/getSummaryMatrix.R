@@ -35,13 +35,27 @@ getSummaryMatrix=function(ymat, X=NULL, mask,
     
     Subject=rep(paste0("Subj",1:n.subj),n.visits)
     time=X[,time.var]
-    residMat=matrix(NA, p, n.subj)
-    for (j in 1:p){
-      fit=lmer(ymat[,j] ~ -1+ X+(X[,random.var]|Subject), 
-               control=lmerControl(check.conv.singular = .makeCC(action = "ignore",  tol = 1e-5)))
-      sigma2=attr(VarCorr(fit),"sc")^2
-      summaryMat[j,]=residuals(fit)/sigma2
+    if (isTRUE(parallel)){
+      cl=makeCluster(ncores)
+      registerDoParallel(cl)
+      
+      summaryMat=foreach(i=mask, .combine="rbind", .packages = "lme4")%dopar%{
+        fit=lmer(ymat[,j] ~ -1+ X+(X[,random.var]|Subject), 
+                 control=lmerControl(check.conv.singular = .makeCC(action = "ignore",  tol = 1e-5)))
+        sigma2=attr(VarCorr(fit),"sc")^2
+        residuals(fit)/sigma2
+      }
+      stopCluster(cl)
+    } else{
+      summaryMat=matrix(NA, p, n.subj)
+      for (j in 1:mask){
+        fit=lmer(ymat[,j] ~ -1+ X+(X[,random.var]|Subject), 
+                 control=lmerControl(check.conv.singular = .makeCC(action = "ignore",  tol = 1e-5)))
+        sigma2=attr(VarCorr(fit),"sc")^2
+        summaryMat[j,]=residuals(fit)/sigma2
+      }
     }
+
     out=tcrossprod(summaryMat, timeMat)
     return(out)
   }
