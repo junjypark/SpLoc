@@ -9,8 +9,8 @@ set_seed <- function(seed) {
     invisible(.Call('_SpLoc_set_seed', PACKAGE = 'SpLoc', seed))
 }
 
-SpLocC <- function(NNmatrix, ymat, nperm, alpha, s, pU, pY) {
-    .Call('_SpLoc_SpLocC', PACKAGE = 'SpLoc', NNmatrix, ymat, nperm, alpha, s, pU, pY)
+SpLocMeanC <- function(NNmatrix, ymat, nperm, alpha, s, pU, pY) {
+    .Call('_SpLoc_SpLocMeanC', PACKAGE = 'SpLoc', NNmatrix, ymat, nperm, alpha, s, pU, pY)
 }
 
 SpLocDiffC <- function(NNmatrix, ymat, group, nperm, alpha, s, pU, pY) {
