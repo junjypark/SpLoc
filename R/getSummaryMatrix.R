@@ -11,7 +11,7 @@ getSummaryMatrix=function(ymat, X=NULL, mask,
     }
     
     if (isTRUE(parallel)){
-      cl=makeCluster(ncores)
+      cl=makeCluster(n.cores)
       registerDoParallel(cl)
       out=foreach(i=mask, .combine="rbind")%dopar%{
         ymat[i,]/sum(ymat[i,]^2,na.rm=T)
@@ -47,7 +47,7 @@ getSummaryMatrix=function(ymat, X=NULL, mask,
     time=X[,time.var]
     lmerctrl=lmerControl(check.conv.singular = .makeCC(action = "ignore",  tol = 1e-5))
     if (isTRUE(parallel)){
-      cl=makeCluster(ncores)
+      cl=makeCluster(n.cores)
       registerDoParallel(cl)
       
       summaryMat=foreach(i=mask, .combine="rbind", .packages = "lme4")%dopar%{
