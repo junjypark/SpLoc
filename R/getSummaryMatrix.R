@@ -72,11 +72,7 @@ getSummaryMatrix=function(ymat, X=NULL, mask,
         summaryMat[j,]=residuals(fit)/sigma2
       }
     }
-    print(class(summaryMat))
-    print(class(timeMat))
-    print(dim(summaryMat))
-    print(dim(timeMat))
-    out=tcrossprod(summaryMat, timeMat)
-    return(as.matrix(out))
+    # out=tcrossprod(summaryMat, timeMat)
+    return(list(out=as.matrix(out), TimeMat=timeMat))
   }
 }
