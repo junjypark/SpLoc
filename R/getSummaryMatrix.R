@@ -73,6 +73,8 @@ getSummaryMatrix=function(ymat, X=NULL, mask,
       }
     }
     # out=tcrossprod(summaryMat, timeMat)
-    return(list(out=as.matrix(out), TimeMat=timeMat))
+    # return(list(out=as.matrix(out), TimeMat=timeMat))
+    return(list(out=summaryMat, TimeMat=timeMat))
+
   }
 }
