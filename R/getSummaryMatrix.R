@@ -50,11 +50,11 @@ getSummaryMatrix=function(ymat, X=NULL, mask,
       cl=makeCluster(n.cores)
       registerDoParallel(cl)
       
-      summaryMat=foreach(i=1:p, .combine="rbind", .packages = "lme4")%dopar%{
+      summaryMat=foreach(j=1:p, .combine="rbind", .packages = "lme4")%dopar%{
         if (randomslope){
-          fit=lmer(ymat[,j] ~ -1+ X+(1+time|Subject), control=lmerctrl)
+          fit=lmer(ymat[j,] ~ -1+ X+(1+time|Subject), control=lmerctrl)
         } else{
-          fit=lmer(ymat[,j] ~ -1+ X+(1|Subject), control=lmerctrl)
+          fit=lmer(ymat[j,] ~ -1+ X+(1|Subject), control=lmerctrl)
         }
         sigma2=attr(VarCorr(fit),"sc")^2
         residuals(fit)/sigma2
@@ -64,9 +64,9 @@ getSummaryMatrix=function(ymat, X=NULL, mask,
       summaryMat=matrix(NA, p, n.subj)
       for (j in 1:p){
         if (randomslope){
-          fit=lmer(ymat[,j] ~ -1+ X+(1+time|Subject),control=lmerctrl)
+          fit=lmer(ymat[j,] ~ -1+ X+(1+time|Subject),control=lmerctrl)
         } else{
-          fit=lmer(ymat[,j] ~ -1+ X+(1|Subject), control=lmerctrl)
+          fit=lmer(ymat[j,] ~ -1+ X+(1|Subject), control=lmerctrl)
         }
         sigma2=attr(VarCorr(fit),"sc")^2
         summaryMat[j,]=residuals(fit)/sigma2
