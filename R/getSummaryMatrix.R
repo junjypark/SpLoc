@@ -4,18 +4,28 @@ getSummaryMatrix=function(ymat, X=NULL, mask,
   mask.index=which(mask!=0)
   
   if (is.null(subj.id)){
-    if (is.null(X)){
-      for ( in mask.index){
-        ymat[i,]=ymat[i,]/sum(ymat[i,]^2,na.rm=T)
-      }
-    } else{
-      X=cbind(1,X)
+    if (!is.null(X)){
       n=nrow(X); p=ncol(X)
       Q=diag(n)-tcrossprod(tcrossprod(X,solve(crossprod(X))),X)
       ymat=tcrossprod(ymat,Q)
     }
-    ymat[is.nan(ymat)]=0
-    return(ymat)
+    
+    if (isTRUE(parallel)){
+      cl=makeCluster(ncores)
+      registerDoParallel(cl)
+      out=foreach(i=mask, .combine="rbind")%dopar%{
+        ymat[i,]/sum(ymat[i,]^2,na.rm=T)
+      }
+    } else{
+      out=ymat
+      for (i in mask){
+        out[i,]=out[i,]/sum(out[i,]^2,na.rm=T)
+      }
+    }
+    
+    #ymat[is.nan(ymat)]=0
+    return(out)
+    
   } else{
     print("Fitting a linear mixed model for every voxel/vextex to compare two groups.")
     p=nrow(ymat); n=ncol(ymat)
