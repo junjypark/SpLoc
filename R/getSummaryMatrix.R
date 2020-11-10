@@ -50,7 +50,7 @@ getSummaryMatrix=function(ymat, X=NULL, mask,
       cl=makeCluster(n.cores)
       registerDoParallel(cl)
       
-      summaryMat=foreach(j=1:p, .combine="rbind", .packages = "lme4")%dopar%{
+      summaryMat=foreach(j=1:p, .combine="rbind", .packages = "SpLoc")%dopar%{
         if (randomslope){
           fit=lmer(ymat[j,] ~ -1+ X+(1+time|Subject), control=lmerctrl)
         } else{
@@ -72,6 +72,8 @@ getSummaryMatrix=function(ymat, X=NULL, mask,
         summaryMat[j,]=residuals(fit)/sigma2
       }
     }
+    print(class(summaryMat))
+    print(class(timeMat))
     print(dim(summaryMat))
     print(dim(timeMat))
     out=tcrossprod(summaryMat, timeMat)
