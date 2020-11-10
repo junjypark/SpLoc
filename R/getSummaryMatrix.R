@@ -23,7 +23,6 @@ getSummaryMatrix=function(ymat, X=NULL, mask,
       }
     }
     
-    #ymat[is.nan(ymat)]=0
     return(out)
     
   } else{
