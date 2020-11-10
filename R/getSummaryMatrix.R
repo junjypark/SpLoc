@@ -1,10 +1,10 @@
 getSummaryMatrix=function(ymat, X=NULL, mask,
-                          subj.id=NULL, n.visits=NULL, time.var=NULL, randomslope=T,
+                          longitudinal=F, n.visits=NULL, randomslope=T, time.var=NULL, 
                           parallel=F, n.cores=1){
   mask.index=which(mask!=0)
   ymat=ymat[mask.index,]
   p=nrow(ymat); n=ncol(ymat)
-  if (is.null(subj.id)){
+  if (!longitudinal){
     if (!is.null(X)){
       n=nrow(X); p=ncol(X)
       Q=diag(n)-tcrossprod(tcrossprod(X,solve(crossprod(X))),X)
