@@ -2,7 +2,8 @@ getSummaryMatrix=function(ymat, X=NULL, mask,
                           subj.id=NULL, n.visits=NULL, time.var=NULL, randomslope=T,
                           parallel=F, n.cores=1){
   mask.index=which(mask!=0)
-  
+  ymat=ymat[mask.index,]
+  p=nrow(ymat); n=ncol(ymat)
   if (is.null(subj.id)){
     if (!is.null(X)){
       n=nrow(X); p=ncol(X)
@@ -13,12 +14,13 @@ getSummaryMatrix=function(ymat, X=NULL, mask,
     if (isTRUE(parallel)){
       cl=makeCluster(n.cores)
       registerDoParallel(cl)
-      out=foreach(i=mask, .combine="rbind")%dopar%{
+      out=foreach(i=1:p, .combine="rbind")%dopar%{
         ymat[i,]/sum(ymat[i,]^2,na.rm=T)
       }
+      stopCluster(cl)
     } else{
       out=ymat
-      for (i in mask){
+      for (i in 1:p){
         out[i,]=out[i,]/sum(out[i,]^2,na.rm=T)
       }
     }
@@ -27,7 +29,6 @@ getSummaryMatrix=function(ymat, X=NULL, mask,
     
   } else{
     print("Fitting a linear mixed model for every voxel/vextex to compare two groups.")
-    p=nrow(ymat); n=ncol(ymat)
     if (sum(n.visits)!=n){
       stop("The sum of the number of visits does not match with the number of columns of ymat.")
     }
@@ -49,7 +50,7 @@ getSummaryMatrix=function(ymat, X=NULL, mask,
       cl=makeCluster(n.cores)
       registerDoParallel(cl)
       
-      summaryMat=foreach(i=mask, .combine="rbind", .packages = "lme4")%dopar%{
+      summaryMat=foreach(i=1:p, .combine="rbind", .packages = "lme4")%dopar%{
         if (randomslope){
           fit=lmer(ymat[,j] ~ -1+ X+(1+time|Subject), control=lmerctrl)
         } else{
@@ -61,7 +62,7 @@ getSummaryMatrix=function(ymat, X=NULL, mask,
       stopCluster(cl)
     } else{
       summaryMat=matrix(NA, p, n.subj)
-      for (j in 1:mask){
+      for (j in 1:p){
         if (randomslope){
           fit=lmer(ymat[,j] ~ -1+ X+(1+time|Subject),control=lmerctrl)
         } else{
