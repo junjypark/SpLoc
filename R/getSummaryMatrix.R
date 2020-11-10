@@ -61,7 +61,7 @@ getSummaryMatrix=function(ymat, X=NULL, mask,
       }
       stopCluster(cl)
     } else{
-      summaryMat=matrix(NA, p, n.subj)
+      summaryMat=matrix(NA, p, n)
       for (j in 1:p){
         if (randomslope){
           fit=lmer(ymat[j,] ~ -1+ X+(1+time|Subject),control=lmerctrl)
