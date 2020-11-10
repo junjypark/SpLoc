@@ -41,8 +41,7 @@ getSummaryMatrix=function(ymat, X=NULL, mask,
       end=sum(n.visits[1:i])
       timeMat[i,start:end]=time[start:end]
     }
-    timeMat=Matrix(timeMat, sparse = T)
-    
+
     Subject=rep(paste0("Subj",1:n.subj),n.visits)
     time=X[,time.var]
     lmerctrl=lmerControl(check.conv.singular = .makeCC(action = "ignore",  tol = 1e-5))
@@ -72,7 +71,8 @@ getSummaryMatrix=function(ymat, X=NULL, mask,
         summaryMat[j,]=residuals(fit)/sigma2
       }
     }
-    out=tcrossprod(summaryMat, timeMat)
-    return(out)
+    # out=tcrossprod(summaryMat, timeMat)
+    # return(list(out=as.matrix(out), TimeMat=timeMat))
+    return(list(out=summaryMat, timeMat=timeMat))
   }
 }
