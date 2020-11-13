@@ -32,7 +32,7 @@ ClusterSearch=function(Tstat, threshold, NNmatrix){
 Booster=function(fit, NNmatrix){
   ind=which(fit$Tstat>fit$thres)
   Tstatsub=fit$Tstat[ind]
-  NNsub=NN[ind,]
+  NNsub=NNmatrix[ind,]
   nonzero.index=which(NNsub!=0, arr.ind=T)
   voxels=sort(unique(nonzero.index[,2]))
   boost=foreach(i=1:length(voxels), .combine="c")%do%{
