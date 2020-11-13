@@ -1,6 +1,6 @@
 getSummaryMatrix=function(ymat, X=NULL, mask,
                           longitudinal=F, n.visits=NULL, randomslope=T, time.var=NULL, 
-                          parallel=F, n.cores=1){
+                          parallel=F, ncores=1){
   mask.index=which(mask!=0)
   ymat=ymat[mask.index,]
   p=nrow(ymat); n=ncol(ymat)
@@ -12,7 +12,7 @@ getSummaryMatrix=function(ymat, X=NULL, mask,
     }
     
     if (isTRUE(parallel)){
-      cl=makeCluster(n.cores)
+      cl=makeCluster(ncores)
       registerDoParallel(cl)
       out=foreach(i=1:p, .combine="rbind")%dopar%{
         ymat[i,]/sum(ymat[i,]^2,na.rm=T)
@@ -46,7 +46,7 @@ getSummaryMatrix=function(ymat, X=NULL, mask,
     time=X[,time.var]
     lmerctrl=lmerControl(check.conv.singular = .makeCC(action = "ignore",  tol = 1e-5))
     if (isTRUE(parallel)){
-      cl=makeCluster(n.cores)
+      cl=makeCluster(ncores)
       registerDoParallel(cl)
       
       summaryMat=foreach(j=1:p, .combine="rbind", .packages = "SpLoc")%dopar%{
