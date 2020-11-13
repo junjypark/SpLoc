@@ -29,17 +29,23 @@ ClusterSearch=function(Tstat, threshold, NNmatrix){
   return(sig)
 }
 
-Booster=function(fit, NNmatrix){
+Booster=function(fit, NNmatrix, parallel=F, ncores=1){
   ind=which(fit$Tstat>fit$thres)
   Tstatsub=fit$Tstat[ind]
   NNsub=NNmatrix[ind,]
   nonzero.index=which(NNsub!=0, arr.ind=T)
   voxels=sort(unique(nonzero.index[,2]))
-  boost=foreach(i=1:length(voxels), .combine="c")%do%{
-    max(Tstatsub[nonzero.index[nonzero.index[,2]==voxels[i],1]])
+  
+  if (parallel){
+    cl=makeCluster(ncores)
+    registerDoParallel(cl)
+    boost=foreach(i=1:length(voxels), .combine="c")%dopar%{
+      max(Tstatsub[nonzero.index[nonzero.index[,2]==voxels[i],1]])
+    }
+  } else{
+    boost=foreach(i=1:length(voxels), .combine="c")%do%{
+      max(Tstatsub[nonzero.index[nonzero.index[,2]==voxels[i],1]])
+    }
   }
   return(list(boost=boost, voxels=voxels))
 }
-
-
-
