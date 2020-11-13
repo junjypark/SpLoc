@@ -29,3 +29,17 @@ ClusterSearch=function(Tstat, threshold, NNmatrix){
   return(sig)
 }
 
+Booster=function(fit, NNmatrix){
+  ind=which(fit$Tstat>fit$thres)
+  Tstatsub=fit$Tstat[ind]
+  NNsub=NN[ind,]
+  nonzero.index=which(NNsub!=0, arr.ind=T)
+  voxels=sort(unique(nonzero.index[,2]))
+  boost=foreach(i=1:length(voxels), .combine="c")%do%{
+    max(Tstatsub[nonzero.index[nonzero.index[,2]==voxels[i],1]])
+  }
+  return(list(boost=boost, voxels=voxels))
+}
+
+
+
