@@ -59,12 +59,43 @@ BEGIN_RCPP
     return rcpp_result_gen;
 END_RCPP
 }
+// MassiveMeanC
+Rcpp::List MassiveMeanC(arma::mat& ymat, int nperm, double alpha, int s);
+RcppExport SEXP _SpLoc_MassiveMeanC(SEXP ymatSEXP, SEXP npermSEXP, SEXP alphaSEXP, SEXP sSEXP) {
+BEGIN_RCPP
+    Rcpp::RObject rcpp_result_gen;
+    Rcpp::RNGScope rcpp_rngScope_gen;
+    Rcpp::traits::input_parameter< arma::mat& >::type ymat(ymatSEXP);
+    Rcpp::traits::input_parameter< int >::type nperm(npermSEXP);
+    Rcpp::traits::input_parameter< double >::type alpha(alphaSEXP);
+    Rcpp::traits::input_parameter< int >::type s(sSEXP);
+    rcpp_result_gen = Rcpp::wrap(MassiveMeanC(ymat, nperm, alpha, s));
+    return rcpp_result_gen;
+END_RCPP
+}
+// MassiveDiffC
+Rcpp::List MassiveDiffC(arma::mat& ymat, arma::vec group, int nperm, double alpha, int s);
+RcppExport SEXP _SpLoc_MassiveDiffC(SEXP ymatSEXP, SEXP groupSEXP, SEXP npermSEXP, SEXP alphaSEXP, SEXP sSEXP) {
+BEGIN_RCPP
+    Rcpp::RObject rcpp_result_gen;
+    Rcpp::RNGScope rcpp_rngScope_gen;
+    Rcpp::traits::input_parameter< arma::mat& >::type ymat(ymatSEXP);
+    Rcpp::traits::input_parameter< arma::vec >::type group(groupSEXP);
+    Rcpp::traits::input_parameter< int >::type nperm(npermSEXP);
+    Rcpp::traits::input_parameter< double >::type alpha(alphaSEXP);
+    Rcpp::traits::input_parameter< int >::type s(sSEXP);
+    rcpp_result_gen = Rcpp::wrap(MassiveDiffC(ymat, group, nperm, alpha, s));
+    return rcpp_result_gen;
+END_RCPP
+}
 
 static const R_CallMethodDef CallEntries[] = {
     {"_SpLoc_quantileC", (DL_FUNC) &_SpLoc_quantileC, 2},
     {"_SpLoc_set_seed", (DL_FUNC) &_SpLoc_set_seed, 1},
     {"_SpLoc_SpLocMeanC", (DL_FUNC) &_SpLoc_SpLocMeanC, 5},
     {"_SpLoc_SpLocDiffC", (DL_FUNC) &_SpLoc_SpLocDiffC, 6},
+    {"_SpLoc_MassiveMeanC", (DL_FUNC) &_SpLoc_MassiveMeanC, 4},
+    {"_SpLoc_MassiveDiffC", (DL_FUNC) &_SpLoc_MassiveDiffC, 5},
     {NULL, NULL, 0}
 };
 
