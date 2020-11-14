@@ -59,6 +59,50 @@ Rcpp::List SpLocMeanC(arma::sp_mat& NNmatrix, arma::mat& ymat, int nperm, double
   arma::vec rand(n); rand.fill(1);
   arma::vec U(q);
   double sd;
+  
+  XPtr<BigMatrix> xpMat(pU);
+  arma::mat permU = arma::Mat<double> ( (double *)xpMat->matrix(), xpMat->nrow(), xpMat->ncol(), false);
+  
+  U=NNmatrix*ymat*rand;  
+  
+  set_seed(s);
+  for (int i=0; i<nperm; ++i){
+    rand.randn();
+    rand=sign(rand);
+    permU.col(i)=NNmatrix*ymat*rand;
+  }
+  
+  for (int k=0; k<q; ++k){
+    sd=stddev(permU.row(k));
+    permU.row(k)=permU.row(k)/sd;
+    U(k)=U(k)/sd;
+  }
+  
+  permU=permU%permU;
+  U=U%U;  
+  
+  arma::vec permMax(nperm);
+  for (int i=0; i<nperm; ++i){
+    permMax(i)=permU.col(i).max();
+  }
+  
+  double qt=quantileC(permMax, alpha);  
+  
+  return Rcpp::List::create(Rcpp::Named("threshold")=qt,
+                            Rcpp::Named("Tstat")=U,
+                            Rcpp::Named("permMax")=permMax,
+                            Rcpp::Named("nperm")=nperm);
+}
+
+
+// [[Rcpp::depends(RcppArmadillo)]]
+// [[Rcpp::export]]
+Rcpp::List SpLocMeanC2(arma::sp_mat& NNmatrix, arma::mat& ymat, int nperm, double alpha, int s, SEXP pU, SEXP pY){
+  int q=NNmatrix.n_rows;
+  int n=ymat.n_cols;
+  arma::vec rand(n); rand.fill(1);
+  arma::vec U(q);
+  double sd;
 
   XPtr<BigMatrix> xpMat(pU);
   arma::mat permU = arma::Mat<double> ( (double *)xpMat->matrix(), xpMat->nrow(), xpMat->ncol(), false);
