@@ -59,7 +59,7 @@ Rcpp::List SpLocMeanC(arma::mat& ymat, arma::sp_mat& NNmatrix, int nperm, double
   arma::vec U(q);
   double sd;
   
-  arma::mat permU(NNmatrix.n_cols, nperm); 
+  arma::sp_mat permU(q, nperm); 
   
   U=NNmatrix*ymat*onevec;  
 
@@ -99,7 +99,7 @@ Rcpp::List SpLocDiffC(arma::mat& ymat, arma::sp_mat& NNmatrix, arma::vec group, 
   int n=group.size();
   arma::vec U(q);
   double sd;
-  arma::mat permU(NNmatrix.n_cols, nperm);
+  arma::sp_mat permU(q, nperm);
 
   U=NNmatrix*ymat*group;  
   
