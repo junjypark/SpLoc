@@ -29,8 +29,8 @@ BEGIN_RCPP
 END_RCPP
 }
 // SpLocMeanC
-Rcpp::List SpLocMeanC(arma::sp_mat& NNmatrix, arma::mat& ymat, int nperm, double alpha, int s, SEXP pU);
-RcppExport SEXP _SpLoc_SpLocMeanC(SEXP NNmatrixSEXP, SEXP ymatSEXP, SEXP npermSEXP, SEXP alphaSEXP, SEXP sSEXP, SEXP pUSEXP) {
+Rcpp::List SpLocMeanC(arma::sp_mat& NNmatrix, arma::mat& ymat, int nperm, double alpha, int s);
+RcppExport SEXP _SpLoc_SpLocMeanC(SEXP NNmatrixSEXP, SEXP ymatSEXP, SEXP npermSEXP, SEXP alphaSEXP, SEXP sSEXP) {
 BEGIN_RCPP
     Rcpp::RObject rcpp_result_gen;
     Rcpp::RNGScope rcpp_rngScope_gen;
@@ -39,8 +39,7 @@ BEGIN_RCPP
     Rcpp::traits::input_parameter< int >::type nperm(npermSEXP);
     Rcpp::traits::input_parameter< double >::type alpha(alphaSEXP);
     Rcpp::traits::input_parameter< int >::type s(sSEXP);
-    Rcpp::traits::input_parameter< SEXP >::type pU(pUSEXP);
-    rcpp_result_gen = Rcpp::wrap(SpLocMeanC(NNmatrix, ymat, nperm, alpha, s, pU));
+    rcpp_result_gen = Rcpp::wrap(SpLocMeanC(NNmatrix, ymat, nperm, alpha, s));
     return rcpp_result_gen;
 END_RCPP
 }
@@ -97,7 +96,7 @@ END_RCPP
 static const R_CallMethodDef CallEntries[] = {
     {"_SpLoc_quantileC", (DL_FUNC) &_SpLoc_quantileC, 2},
     {"_SpLoc_set_seed", (DL_FUNC) &_SpLoc_set_seed, 1},
-    {"_SpLoc_SpLocMeanC", (DL_FUNC) &_SpLoc_SpLocMeanC, 6},
+    {"_SpLoc_SpLocMeanC", (DL_FUNC) &_SpLoc_SpLocMeanC, 5},
     {"_SpLoc_SpLocDiffC", (DL_FUNC) &_SpLoc_SpLocDiffC, 6},
     {"_SpLoc_SpLocMeanC2", (DL_FUNC) &_SpLoc_SpLocMeanC2, 6},
     {"_SpLoc_SpLocDiffC2", (DL_FUNC) &_SpLoc_SpLocDiffC2, 7},
