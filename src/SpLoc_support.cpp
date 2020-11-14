@@ -10,7 +10,6 @@
 using namespace Rcpp;
 using namespace arma;
 
-#include <bigmemory/BigMatrix.h>
 
 arma::vec avg_rank(arma::vec x) {
   arma::uvec w = arma::stable_sort_index(x, "descend");
