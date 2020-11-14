@@ -21,14 +21,22 @@ combine=function(lst, alpha=0.05){
   ))
 }
 
-process=function(fit, NNmatrix, thres){
-  if (length(fit$Tstat)!=nrow(NNmatrix)){ 
-    stop("The number of test statistics must correspond to the rows of the NNmatrix.") 
+process=function(fit, NNmatrix=NULL, thres){
+  if (is.null(NNmatrix)){
+    p=length(fit$Tstat)
+    index=which(fit$Tstat>thres)
+    Tstat=fit$Tstat[index]
+    NNmatrix.trim=sparseMatrix(i=1:p, j=index, x=1, dims=c(length(index), p))
+    return(list(Tstat=Tstat,NNmatrix=NNmatrix.trim))
+  } else{
+    if (length(fit$Tstat)!=nrow(NNmatrix)){ 
+      stop("The number of test statistics must correspond to the rows of the NNmatrix.") 
     }
-  index=which(fit$Tstat>thres)
-  Tstat=fit$Tstat[index]
-  NNmatrix.trim=NNmatrix[index,]
-  return(list(Tstat=Tstat,NNmatrix=NNmatrix.trim))
+    index=which(fit$Tstat>thres)
+    Tstat=fit$Tstat[index]
+    NNmatrix.trim=NNmatrix[index,]
+    return(list(Tstat=Tstat,NNmatrix=NNmatrix.trim))
+  }
 }
 
 processSpLocfit=function(names.fit, names.NNmatrix, alpha=0.05, 
@@ -48,14 +56,22 @@ processSpLocfit=function(names.fit, names.NNmatrix, alpha=0.05,
     cl=makeCluster(ncores)
     registerDoParallel(cl)
     lst.thresfit=foreach(i=1:n, .packages=("SpLoc"),.noexport = "SpLocC" )%dopar%{
-      NN=readRDS(paste0(NNmatrix.directory,names.NNmatrix[i]))
+      if (is.null(names.NNmatrix[i])){
+        NN=NULL
+      } else{
+        NN=readRDS(paste0(NNmatrix.directory,names.NNmatrix[i]))
+      }
       result=lst.result[[i]]
       process(result, NN, thres)
       }
     stopCluster(cl)
   }else{
     lst.thresfit=foreach(i=1:n, .packages=("SpLoc"),.noexport = "SpLocC" )%do%{
-      NN=readRDS(paste0(NNmatrix.directory,names.NNmatrix[i]))
+      if (is.null(names.NNmatrix[i])){
+        NN=NULL
+      } else{
+        NN=readRDS(paste0(NNmatrix.directory,names.NNmatrix[i]))
+      }
       result=lst.result[[i]]
       process(result, NN, thres)
     }
