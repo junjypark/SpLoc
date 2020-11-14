@@ -2,7 +2,7 @@ SpLoc=function(ymat, NNmatrix=NULL, group=NULL, nperm=1000, alpha=0.05, seed=NUL
                is.sparse=F,partition=F, npartition=1, parallel=F, ncores=1){
   if (is.null(NNmatrix)){
     print("As NNmatrix is not specified, SpLoc conducts massive univariate analysis.")
-    NNmatrix=Matrix(diag(nrow(ymat)),sparse=T)
+    NNmatrix=Matrix(diag(ncol(ymat)),sparse=T)
   }
   
   if (is.null(group)){
