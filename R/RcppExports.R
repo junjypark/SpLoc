@@ -13,6 +13,10 @@ SpLocMeanC <- function(NNmatrix, ymat, nperm, alpha, s, pU, pY) {
     .Call('_SpLoc_SpLocMeanC', PACKAGE = 'SpLoc', NNmatrix, ymat, nperm, alpha, s, pU, pY)
 }
 
+SpLocMeanC2 <- function(NNmatrix, ymat, nperm, alpha, s, pU, pY) {
+    .Call('_SpLoc_SpLocMeanC2', PACKAGE = 'SpLoc', NNmatrix, ymat, nperm, alpha, s, pU, pY)
+}
+
 SpLocDiffC <- function(NNmatrix, ymat, group, nperm, alpha, s, pU, pY) {
     .Call('_SpLoc_SpLocDiffC', PACKAGE = 'SpLoc', NNmatrix, ymat, group, nperm, alpha, s, pU, pY)
 }
