@@ -59,47 +59,12 @@ BEGIN_RCPP
     return rcpp_result_gen;
 END_RCPP
 }
-// SpLocMeanC2
-Rcpp::List SpLocMeanC2(arma::sp_mat& NNmatrix, arma::mat& ymat, int nperm, double alpha, int s, SEXP pU);
-RcppExport SEXP _SpLoc_SpLocMeanC2(SEXP NNmatrixSEXP, SEXP ymatSEXP, SEXP npermSEXP, SEXP alphaSEXP, SEXP sSEXP, SEXP pUSEXP) {
-BEGIN_RCPP
-    Rcpp::RObject rcpp_result_gen;
-    Rcpp::RNGScope rcpp_rngScope_gen;
-    Rcpp::traits::input_parameter< arma::sp_mat& >::type NNmatrix(NNmatrixSEXP);
-    Rcpp::traits::input_parameter< arma::mat& >::type ymat(ymatSEXP);
-    Rcpp::traits::input_parameter< int >::type nperm(npermSEXP);
-    Rcpp::traits::input_parameter< double >::type alpha(alphaSEXP);
-    Rcpp::traits::input_parameter< int >::type s(sSEXP);
-    Rcpp::traits::input_parameter< SEXP >::type pU(pUSEXP);
-    rcpp_result_gen = Rcpp::wrap(SpLocMeanC2(NNmatrix, ymat, nperm, alpha, s, pU));
-    return rcpp_result_gen;
-END_RCPP
-}
-// SpLocDiffC2
-Rcpp::List SpLocDiffC2(arma::sp_mat& NNmatrix, arma::mat& ymat, arma::vec group, int nperm, double alpha, int s, SEXP pU);
-RcppExport SEXP _SpLoc_SpLocDiffC2(SEXP NNmatrixSEXP, SEXP ymatSEXP, SEXP groupSEXP, SEXP npermSEXP, SEXP alphaSEXP, SEXP sSEXP, SEXP pUSEXP) {
-BEGIN_RCPP
-    Rcpp::RObject rcpp_result_gen;
-    Rcpp::RNGScope rcpp_rngScope_gen;
-    Rcpp::traits::input_parameter< arma::sp_mat& >::type NNmatrix(NNmatrixSEXP);
-    Rcpp::traits::input_parameter< arma::mat& >::type ymat(ymatSEXP);
-    Rcpp::traits::input_parameter< arma::vec >::type group(groupSEXP);
-    Rcpp::traits::input_parameter< int >::type nperm(npermSEXP);
-    Rcpp::traits::input_parameter< double >::type alpha(alphaSEXP);
-    Rcpp::traits::input_parameter< int >::type s(sSEXP);
-    Rcpp::traits::input_parameter< SEXP >::type pU(pUSEXP);
-    rcpp_result_gen = Rcpp::wrap(SpLocDiffC2(NNmatrix, ymat, group, nperm, alpha, s, pU));
-    return rcpp_result_gen;
-END_RCPP
-}
 
 static const R_CallMethodDef CallEntries[] = {
     {"_SpLoc_quantileC", (DL_FUNC) &_SpLoc_quantileC, 2},
     {"_SpLoc_set_seed", (DL_FUNC) &_SpLoc_set_seed, 1},
     {"_SpLoc_SpLocMeanC", (DL_FUNC) &_SpLoc_SpLocMeanC, 5},
     {"_SpLoc_SpLocDiffC", (DL_FUNC) &_SpLoc_SpLocDiffC, 6},
-    {"_SpLoc_SpLocMeanC2", (DL_FUNC) &_SpLoc_SpLocMeanC2, 6},
-    {"_SpLoc_SpLocDiffC2", (DL_FUNC) &_SpLoc_SpLocDiffC2, 7},
     {NULL, NULL, 0}
 };
 
