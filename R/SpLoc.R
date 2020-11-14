@@ -2,37 +2,49 @@ SpLoc=function(ymat, NNmatrix=NULL, group=NULL, nperm=1000, alpha=0.05, seed=NUL
                is.sparse=F,partition=F, npartition=1, parallel=F, ncores=1){
   if (is.null(NNmatrix)){
     print("As NNmatrix is not specified, SpLoc conducts massive univariate analysis.")
-    NNmatrix=Matrix(diag(ncol(ymat)),sparse=T)
-  }
-  
-  if (is.null(group)){
-    return(
-      SpLocMean(ymat=ymat, 
-                NNmatrix=NNmatrix, 
-                nperm=nperm, 
-                alpha=alpha, 
-                seed=seed,
-                is.sparse = is.sparse, 
-                partition=partition, 
-                npartition = npartition,
-                parallel=parallel,
-                ncores=ncores)
-    )
-  }
-  else{
-    return(
-      SpLocDiff(ymat=ymat, 
-                NNmatrix=NNmatrix, 
-                group=group, 
-                nperm=nperm, 
-                alpha=alpha, 
-                seed=seed,
-                is.sparse = is.sparse, 
-                partition=partition, 
-                npartition = npartition,
-                parallel=parallel, 
-                ncores=ncores)
-    )
+    if (is.null(group)){
+      return(MassiveMean(ymat=ymat,
+                         nperm=nperm, 
+                         alpha=alpha, 
+                         seed=seed)) 
+    } else{
+      return(MassiveDiff(ymat=ymat,
+                         group=group,
+                         nperm=nperm, 
+                         alpha=alpha, 
+                         seed=seed)) 
+    }
+    
+  } else{
+    if (is.null(group)){
+      return(
+        SpLocMean(ymat=ymat, 
+                  NNmatrix=NNmatrix, 
+                  nperm=nperm, 
+                  alpha=alpha, 
+                  seed=seed,
+                  is.sparse = is.sparse, 
+                  partition=partition, 
+                  npartition = npartition,
+                  parallel=parallel,
+                  ncores=ncores)
+      )
+    }
+    else{
+      return(
+        SpLocDiff(ymat=ymat, 
+                  NNmatrix=NNmatrix, 
+                  group=group, 
+                  nperm=nperm, 
+                  alpha=alpha, 
+                  seed=seed,
+                  is.sparse = is.sparse, 
+                  partition=partition, 
+                  npartition = npartition,
+                  parallel=parallel, 
+                  ncores=ncores)
+      )
+    }
   }
 }
 
@@ -177,5 +189,43 @@ SpLocDiff=function(ymat, NNmatrix, group, nperm=1000, alpha=0.05, seed=NULL,
     out$seed=seed
     return(out)    
   }
+}
+
+
+MassiveMean=function(ymat, nperm=1000, alpha=0.05, seed=NULL, 
+                   partition=F, npartition=1, parallel=F, ncores=1){
+  if ( alpha<0 |alpha>1){
+    stop("alpha should range between 0 and 1.")
+  }
+  if (is.null(seed)){
+    stop("Specifying a seed value is required.")
+  }
+
+  out=MassiveMeanC(ymat, nperm, alpha, seed)
+  out$pvalue=(1+sum(c(out$permMax)>max(out$Tstat,na.rm=TRUE)))/(1+nperm)
+  out$seed=seed
+  return(out)    
+}
+
+
+MassiveDiff=function(ymat, group, nperm=1000, alpha=0.05, seed=NULL, 
+                   is.sparse=F,partition=F, npartition=1, parallel=F, ncores=1){
+  if (!all.equal(sort(unique(group)),c(-1,1))){
+    stop("group should have either 1 or -1.")
+  }
+  if (length(group)!=ncol(ymat)){
+    stop("The number of elements in group does not match with the number of columns in ymat.")
+  }
+  if ( alpha<0 |alpha>1){
+    stop("alpha should range between 0 and 1.")
+  }
+  if (is.null(seed)){
+    stop("Specifying a seed value is required.")
+  }
+  
+  out=MassiveDiffC(ymat, group, nperm, alpha, seed)
+  out$pvalue=(1+sum(c(out$permMax)>max(out$Tstat,na.rm=TRUE)))/(1+nperm)
+  out$seed=seed
+  return(out)    
 }
 
