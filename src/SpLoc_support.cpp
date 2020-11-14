@@ -53,7 +53,7 @@ void set_seed(unsigned int seed) {
 
 // [[Rcpp::depends(RcppArmadillo)]]
 // [[Rcpp::export]]
-Rcpp::List SpLocMeanC(arma::sp_mat& NNmatrix, arma::mat& ymat, int nperm, double alpha, int s, SEXP pU){
+Rcpp::List SpLocMeanC(arma::sp_mat& NNmatrix, arma::mat& ymat, int nperm, double alpha, int s){
   int q=NNmatrix.n_rows;
   int n=ymat.n_cols;
   arma::vec onevec(n); onevec.fill(1);
