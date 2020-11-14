@@ -17,3 +17,11 @@ SpLocDiffC <- function(ymat, NNmatrix, group, nperm, alpha, s) {
     .Call('_SpLoc_SpLocDiffC', PACKAGE = 'SpLoc', ymat, NNmatrix, group, nperm, alpha, s)
 }
 
+MassiveMeanC <- function(ymat, nperm, alpha, s) {
+    .Call('_SpLoc_MassiveMeanC', PACKAGE = 'SpLoc', ymat, nperm, alpha, s)
+}
+
+MassiveDiffC <- function(ymat, group, nperm, alpha, s) {
+    .Call('_SpLoc_MassiveDiffC', PACKAGE = 'SpLoc', ymat, group, nperm, alpha, s)
+}
+
