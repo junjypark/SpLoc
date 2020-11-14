@@ -186,7 +186,7 @@ Rcpp::List MassiveDiffC(arma::mat& ymat, arma::vec group, int nperm, double alph
   double sd;
   arma::mat permU(q, nperm);
 
-  U=Nymat*group;  
+  U=ymat*group;  
   
   arma::mat permmat(n,nperm);
   set_seed(s);
