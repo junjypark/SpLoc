@@ -100,7 +100,7 @@ Rcpp::List SpLocDiffC(arma::sp_mat& NNmatrix, arma::mat& ymat, arma::vec group, 
   int n=group.size();
   arma::vec U(q);
   double sd;
-  Arma::mat permU(NNmatrix.n_cols; nperm);
+  Arma::mat permU(NNmatrix.n_cols, nperm);
 
   U=NNmatrix*ymat*group;  
   
