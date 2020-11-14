@@ -193,7 +193,6 @@ Rcpp::List MassiveDiffC(arma::mat ymat, arma::vec group, int nperm, double alpha
   for (int i=0; i<nperm; ++i){
     permmat.col(i)=shuffle(group);
   }
-
   permU=ymat*permmat;
   
   for (int k=0; k<q; ++k){
