@@ -56,7 +56,7 @@ void set_seed(unsigned int seed) {
 Rcpp::List SpLocMeanC(arma::sp_mat& NNmatrix, arma::mat& ymat, int nperm, double alpha, int s, SEXP pU){
   int q=NNmatrix.n_rows;
   int n=ymat.n_cols;
-  arma::vec u(n); u.fill(1);
+  arma::vec onevec(n); onevec.fill(1);
 
   arma::vec U(q);
   double sd;
@@ -64,7 +64,7 @@ Rcpp::List SpLocMeanC(arma::sp_mat& NNmatrix, arma::mat& ymat, int nperm, double
   XPtr<BigMatrix> xpMat(pU);
   arma::mat permU = arma::Mat<double> ( (double *)xpMat->matrix(), xpMat->nrow(), xpMat->ncol(), false);
   
-  U=NNmatrix*ymat*rand;  
+  U=NNmatrix*ymat*onevec;  
 
   set_seed(s);
   arma::mat<double> randmat(n,nperm); randmat.randn(); randmat=randmat/abs(randmat);
