@@ -48,8 +48,7 @@ Booster=function(fit, NNmatrix, parallel=F, ncores=1){
       max(Tstatsub[which(NNsub[,voxels[i]]!=0)])
     }
   }
-  
-  
+
   return(list(boost=boost, voxels=voxels))
 }
 
