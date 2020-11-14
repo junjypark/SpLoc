@@ -29,33 +29,33 @@ BEGIN_RCPP
 END_RCPP
 }
 // SpLocMeanC
-Rcpp::List SpLocMeanC(arma::sp_mat& NNmatrix, arma::mat& ymat, int nperm, double alpha, int s);
-RcppExport SEXP _SpLoc_SpLocMeanC(SEXP NNmatrixSEXP, SEXP ymatSEXP, SEXP npermSEXP, SEXP alphaSEXP, SEXP sSEXP) {
+Rcpp::List SpLocMeanC(arma::mat& ymat, arma::sp_mat& NNmatrix, int nperm, double alpha, int s);
+RcppExport SEXP _SpLoc_SpLocMeanC(SEXP ymatSEXP, SEXP NNmatrixSEXP, SEXP npermSEXP, SEXP alphaSEXP, SEXP sSEXP) {
 BEGIN_RCPP
     Rcpp::RObject rcpp_result_gen;
     Rcpp::RNGScope rcpp_rngScope_gen;
-    Rcpp::traits::input_parameter< arma::sp_mat& >::type NNmatrix(NNmatrixSEXP);
     Rcpp::traits::input_parameter< arma::mat& >::type ymat(ymatSEXP);
+    Rcpp::traits::input_parameter< arma::sp_mat& >::type NNmatrix(NNmatrixSEXP);
     Rcpp::traits::input_parameter< int >::type nperm(npermSEXP);
     Rcpp::traits::input_parameter< double >::type alpha(alphaSEXP);
     Rcpp::traits::input_parameter< int >::type s(sSEXP);
-    rcpp_result_gen = Rcpp::wrap(SpLocMeanC(NNmatrix, ymat, nperm, alpha, s));
+    rcpp_result_gen = Rcpp::wrap(SpLocMeanC(ymat, NNmatrix, nperm, alpha, s));
     return rcpp_result_gen;
 END_RCPP
 }
 // SpLocDiffC
-Rcpp::List SpLocDiffC(arma::sp_mat& NNmatrix, arma::mat& ymat, arma::vec group, int nperm, double alpha, int s);
-RcppExport SEXP _SpLoc_SpLocDiffC(SEXP NNmatrixSEXP, SEXP ymatSEXP, SEXP groupSEXP, SEXP npermSEXP, SEXP alphaSEXP, SEXP sSEXP) {
+Rcpp::List SpLocDiffC(arma::mat& ymat, arma::sp_mat& NNmatrix, arma::vec group, int nperm, double alpha, int s);
+RcppExport SEXP _SpLoc_SpLocDiffC(SEXP ymatSEXP, SEXP NNmatrixSEXP, SEXP groupSEXP, SEXP npermSEXP, SEXP alphaSEXP, SEXP sSEXP) {
 BEGIN_RCPP
     Rcpp::RObject rcpp_result_gen;
     Rcpp::RNGScope rcpp_rngScope_gen;
-    Rcpp::traits::input_parameter< arma::sp_mat& >::type NNmatrix(NNmatrixSEXP);
     Rcpp::traits::input_parameter< arma::mat& >::type ymat(ymatSEXP);
+    Rcpp::traits::input_parameter< arma::sp_mat& >::type NNmatrix(NNmatrixSEXP);
     Rcpp::traits::input_parameter< arma::vec >::type group(groupSEXP);
     Rcpp::traits::input_parameter< int >::type nperm(npermSEXP);
     Rcpp::traits::input_parameter< double >::type alpha(alphaSEXP);
     Rcpp::traits::input_parameter< int >::type s(sSEXP);
-    rcpp_result_gen = Rcpp::wrap(SpLocDiffC(NNmatrix, ymat, group, nperm, alpha, s));
+    rcpp_result_gen = Rcpp::wrap(SpLocDiffC(ymat, NNmatrix, group, nperm, alpha, s));
     return rcpp_result_gen;
 END_RCPP
 }
