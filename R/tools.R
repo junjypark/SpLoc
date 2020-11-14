@@ -26,7 +26,7 @@ process=function(fit, NNmatrix=NULL, thres){
     p=length(fit$Tstat)
     index=which(fit$Tstat>thres)
     Tstat=fit$Tstat[index]
-    NNmatrix.trim=sparseMatrix(i=1:p, j=index, x=1, dims=c(length(index), p))
+    NNmatrix.trim=sparseMatrix(i=1:length(index), j=index, x=1, dims=c(length(index), p))
     return(list(Tstat=Tstat,NNmatrix=NNmatrix.trim))
   } else{
     if (length(fit$Tstat)!=nrow(NNmatrix)){ 
