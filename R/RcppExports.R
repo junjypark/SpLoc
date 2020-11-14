@@ -9,11 +9,11 @@ set_seed <- function(seed) {
     invisible(.Call('_SpLoc_set_seed', PACKAGE = 'SpLoc', seed))
 }
 
-SpLocMeanC <- function(NNmatrix, ymat, nperm, alpha, s) {
-    .Call('_SpLoc_SpLocMeanC', PACKAGE = 'SpLoc', NNmatrix, ymat, nperm, alpha, s)
+SpLocMeanC <- function(ymat, NNmatrix, nperm, alpha, s) {
+    .Call('_SpLoc_SpLocMeanC', PACKAGE = 'SpLoc', ymat, NNmatrix, nperm, alpha, s)
 }
 
-SpLocDiffC <- function(NNmatrix, ymat, group, nperm, alpha, s) {
-    .Call('_SpLoc_SpLocDiffC', PACKAGE = 'SpLoc', NNmatrix, ymat, group, nperm, alpha, s)
+SpLocDiffC <- function(ymat, NNmatrix, group, nperm, alpha, s) {
+    .Call('_SpLoc_SpLocDiffC', PACKAGE = 'SpLoc', ymat, NNmatrix, group, nperm, alpha, s)
 }
 
