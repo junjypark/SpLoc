@@ -39,14 +39,17 @@ Booster=function(fit, NNmatrix, parallel=F, ncores=1){
   if (parallel){
     cl=makeCluster(ncores)
     registerDoParallel(cl)
-    boost=foreach(i=1:length(voxels), .combine="c")%dopar%{
-      max(Tstatsub[nonzero.index[nonzero.index[,2]==voxels[i],1]])
+    boost=foreach(i=1:length(voxels), .combine="c", .packages="Matrix")%dopar%{
+      max(Tstatsub[which(NNsub[,voxels[i]]!=0)])
     }
     stopCluster(cl)
   } else{
-    boost=foreach(i=1:length(voxels), .combine="c")%do%{
-      max(Tstatsub[nonzero.index[nonzero.index[,2]==voxels[i],1]])
+    boost=foreach(i=1:length(voxels), .combine="c",.packages="Matrix")%do%{
+      max(Tstatsub[which(NNsub[,voxels[i]]!=0)])
     }
   }
+  
+  
   return(list(boost=boost, voxels=voxels))
 }
+
