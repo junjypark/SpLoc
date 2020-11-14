@@ -152,7 +152,7 @@ SpLocDiff=function(NNmatrix, ymat, group, nperm=1000, alpha=0.05, seed=NULL,
       cl=makeCluster(ncores)
       registerDoParallel(cl)
       result=foreach(i=1:npartition, .packages=("SpLoc"),.noexport = "SpLocC" )%dopar%{
-        SpLocDiffC(NNList[[i]], ymat, group, nperm, alpha, seed, pU@address)
+        SpLocDiffC(NNList[[i]], ymat, group, nperm, alpha, seed)
       }
       stopCluster(cl)
     } else{
