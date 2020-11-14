@@ -42,6 +42,7 @@ Booster=function(fit, NNmatrix, parallel=F, ncores=1){
     boost=foreach(i=1:length(voxels), .combine="c")%dopar%{
       max(Tstatsub[nonzero.index[nonzero.index[,2]==voxels[i],1]])
     }
+    stopCluster(cl)
   } else{
     boost=foreach(i=1:length(voxels), .combine="c")%do%{
       max(Tstatsub[nonzero.index[nonzero.index[,2]==voxels[i],1]])
