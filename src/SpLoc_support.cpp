@@ -69,7 +69,7 @@ Rcpp::List SpLocMeanC(arma::sp_mat& NNmatrix, arma::mat& ymat, int nperm, double
   arma::mat randmat(n,nperm); 
   set_seed(s);
   randmat.randn(); 
-  randmat=randmat/abs(randmat);
+  randmat=sign(randmat);
   permU=NNmatrix*ymat*randmat;
   
   for (int k=0; k<q; ++k){
