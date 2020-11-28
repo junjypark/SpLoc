@@ -3,30 +3,46 @@ ClusterSearch=function(Tstat, threshold, NNmatrix){
     stop("The number of rows in NNmat needs to be the same as the length of Tstat.")
   }
   
-  sig.ind=which(Tstat>threshold)
-  Tstat=Tstat[sig.ind]
-  NNmatrix=NNmatrix[sig.ind,,drop=F]
+  if (length(threshold)>1){ threshold=sort(threshold,decreasing = T) } 
   
-  if (nrow(NNmatrix)==0){bool=F}else{bool=T}
-  
-  clust=1
-  sig=NULL
-  while(bool){
-    ind=which(Tstat==max(Tstat))[1]
-    sig.vertices=which(NNmatrix[ind,]!=0)
-    sig=c(sig, sig.vertices)
-    out.set=which(apply(NNmatrix[,sig.vertices,drop=F],1,max)>0)
+  selection=list()
+  for (th in 1:length(threshold)){
+    if (th==1){ sig.ind=which(Tstat>threshold[th]) } 
+    else{ sig.ind=which(Tstat>threshold[th] & Tstat<=threshold[th-1]) }
     
-    Tstat=Tstat[-out.set]
-    NNmatrix=NNmatrix[-out.set,,drop=F]
+    Tstat.sub=Tstat[sig.ind]
+    NNmatrix.sub=NNmatrix[sig.ind,,drop=F]
     
-    print(paste0("Cluster ", clust, " with ", length(sig.vertices), " voxel(s) is selected (total=", length(sig), ")." ))
-    clust=clust+1
+    if (th==1){
+      sig=NULL
+    } else{
+      if (!is.null(sig)){
+        out.set=which(apply(NNmatrix.sub[,sig,drop=F],1,max)>0)
+        if (length(out.set)>0){
+          Tstat.sub=Tstat.sub[-out.set]
+          NNmatrix.sub=NNmatrix.sub[-out.set,,drop=F]
+        }
+      }
+    }
     
-    if (length(Tstat)==0){bool=F}
+    if (length(Tstat.sub)==0){bool=F}else{bool=T}
+    
+    while(bool){
+      ind=which(Tstat.sub==max(Tstat.sub))[1]
+      sig.vertices=which(NNmatrix.sub[ind,]!=0)
+      sig=c(sig, sig.vertices)
+      out.set=which(apply(NNmatrix.sub[,sig.vertices,drop=F],1,max)>0)
+      
+      Tstat.sub=Tstat.sub[-out.set]
+      NNmatrix.sub=NNmatrix.sub[-out.set,,drop=F]
+      if (length(Tstat.sub)==0){bool=F}
+    }
+    
+    if (is.null(sig)){ out[[th]]=NA }
+    else{ selection[[th]]=sig }
   }
   
-  return(sig)
+  return(list(selection=selection, threshold=threshold))
 }
 
 Booster=function(fit, NNmatrix, parallel=F, ncores=1){
@@ -48,7 +64,7 @@ Booster=function(fit, NNmatrix, parallel=F, ncores=1){
       max(Tstatsub[which(NNsub[,voxels[i]]!=0)])
     }
   }
-
+  
   return(list(boost=boost, voxels=voxels))
 }
 
