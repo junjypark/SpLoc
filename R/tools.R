@@ -62,7 +62,7 @@ processSpLocfit=function(names.fit, names.NNmatrix, alpha=0.05,
         NN=readRDS(paste0(NNmatrix.directory,names.NNmatrix[i]))
       }
       result=lst.result[[i]]
-      process(result, NN, thres)
+      process(result, NN, min(thres))
       }
     stopCluster(cl)
   }else{
@@ -73,7 +73,7 @@ processSpLocfit=function(names.fit, names.NNmatrix, alpha=0.05,
         NN=readRDS(paste0(NNmatrix.directory,names.NNmatrix[i]))
       }
       result=lst.result[[i]]
-      process(result, NN, thres)
+      process(result, NN, min(thres))
     }
   }
 
