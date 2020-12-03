@@ -58,6 +58,7 @@ Rcpp::List SpLocMeanC(arma::mat& ymat, arma::sp_mat& NNmatrix, int nperm, double
   arma::vec onevec(n); onevec.fill(1);
   arma::vec U(q);
   double sd;
+  double mn;
   
   arma::mat permU(q, nperm); 
   
@@ -70,9 +71,10 @@ Rcpp::List SpLocMeanC(arma::mat& ymat, arma::sp_mat& NNmatrix, int nperm, double
   permU=NNmatrix*ymat*flipmat;
   
   for (int k=0; k<q; ++k){
+    mn=mean(permU.row(k));
     sd=stddev(permU.row(k));
-    permU.row(k)=permU.row(k)/sd;
-    U(k)=U(k)/sd;
+    permU.row(k)=(permU.row(k)-mn)/sd;
+    U(k)=(U(k)-mn)/sd;
   }
   
   permU=permU%permU;
@@ -99,6 +101,7 @@ Rcpp::List SpLocDiffC(arma::mat& ymat, arma::sp_mat& NNmatrix, arma::vec group, 
   int n=group.size();
   arma::vec U(q);
   double sd;
+  double mn;
   arma::mat permU(q, nperm);
 
   U=NNmatrix*ymat*group;  
@@ -112,9 +115,10 @@ Rcpp::List SpLocDiffC(arma::mat& ymat, arma::sp_mat& NNmatrix, arma::vec group, 
   permU=NNmatrix*ymat*permmat;
   
   for (int k=0; k<q; ++k){
+    mn=mean(permU.row(k));
     sd=stddev(permU.row(k));
-    permU.row(k)=permU.row(k)/sd;
-    U(k)=U(k)/sd;
+    permU.row(k)=(permU.row(k)-mn)/sd;
+    U(k)=(U(k)-mn)/sd;
   }
 
   permU=permU%permU;
@@ -143,7 +147,8 @@ Rcpp::List MassiveMeanC(arma::mat ymat, int nperm, double alpha, int s){
   arma::vec onevec(n); onevec.fill(1);
   arma::vec U(q);
   double sd;
-  
+  double mn;  
+
   arma::mat permU(q, nperm); 
   
   U=ymat*onevec;  
@@ -155,9 +160,10 @@ Rcpp::List MassiveMeanC(arma::mat ymat, int nperm, double alpha, int s){
   permU=ymat*flipmat;
   
   for (int k=0; k<q; ++k){
+    mn=mean(permU.row(k));
     sd=stddev(permU.row(k));
-    permU.row(k)=permU.row(k)/sd;
-    U(k)=U(k)/sd;
+    permU.row(k)=(permU.row(k)-mn)/sd;
+    U(k)=(U(k)-mn)/sd;
   }
   
   permU=permU%permU;
@@ -184,6 +190,7 @@ Rcpp::List MassiveDiffC(arma::mat ymat, arma::vec group, int nperm, double alpha
   int n=group.size();
   arma::vec U(q);
   double sd;
+  double mn;
   arma::mat permU(q, nperm);
 
   U=ymat*group;  
@@ -196,9 +203,10 @@ Rcpp::List MassiveDiffC(arma::mat ymat, arma::vec group, int nperm, double alpha
   permU=ymat*permmat;
   
   for (int k=0; k<q; ++k){
+    mn=mean(permU.row(k));
     sd=stddev(permU.row(k));
-    permU.row(k)=permU.row(k)/sd;
-    U(k)=U(k)/sd;
+    permU.row(k)=(permU.row(k)-mn)/sd;
+    U(k)=(U(k)-mn)/sd;
   }
 
   permU=permU%permU;
