@@ -262,9 +262,37 @@ MassiveDiff=function(ymat, group, nperm=1000, alpha=0.05, seed=NULL,
     stop("Specifying a seed value is required.")
   }
   
-  out=MassiveDiffC(ymat, group, nperm, alpha, seed)
-  out$pvalue=(1+sum(c(out$permMax)>max(out$Tstat,na.rm=TRUE)))/(1+nperm)
-  out$seed=seed
+  if (isTRUE(partition)){
+    ymatList=list()
+    len=ceiling(nrow(ymat)/npartition)
+    for (i in 1:npartition){
+      start=len*(i-1)+1
+      end=min(len*i,nrow(ymat))
+      ymatList[[i]]=ymat[start:end,]
+    }
+    
+    if (isTRUE(parallel)){
+      cl=makeCluster(ncores)
+      registerDoParallel(cl)
+      result=foreach(i=1:npartition, .packages=("SpLoc"),.noexport = "SpLocC" )%dopar%{
+        MassiveDiffC(ymatList[[i]], group, nperm, alpha, seed)
+      }
+      stopCluster(cl)
+    } else{
+      result=list()
+      for (i in 1:npartition){
+        result[[i]]=MassiveDiffC(ymatList[[i]], group, nperm, alpha, seed)
+      }
+    }
+    
+    out=combine(result, alpha=alpha)
+    return(out)
+    
+  } else{
+    out=MassiveDiffC(ymat, group, nperm, alpha, seed)
+    out$pvalue=(1+sum(c(out$permMax)>max(out$Tstat,na.rm=TRUE)))/(1+nperm)
+    out$seed=seed
+  }
   return(out)    
 }
 
