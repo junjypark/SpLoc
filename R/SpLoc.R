@@ -6,13 +6,23 @@ SpLoc=function(ymat, NNmatrix=NULL, group=NULL, nperm=1000, alpha=0.05, seed=NUL
       return(MassiveMean(ymat=ymat,
                          nperm=nperm, 
                          alpha=alpha, 
-                         seed=seed)) 
+                         seed=seed,
+                         partition=partition, 
+                         npartition = npartition,
+                         parallel=parallel,
+                         ncores=ncores)
+                         )
     } else{
       return(MassiveDiff(ymat=ymat,
                          group=group,
                          nperm=nperm, 
                          alpha=alpha, 
-                         seed=seed)) 
+                         seed=seed,
+                         partition=partition, 
+                         npartition = npartition,
+                         parallel=parallel,
+                         ncores=ncores)
+                         ) 
     }
     
   } else{
