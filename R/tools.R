@@ -57,7 +57,7 @@ processSpLocfit=function(names.fit, names.NNmatrix, alpha=0.05,
     cl=makeCluster(ncores)
     registerDoParallel(cl)
     lst.thresfit=foreach(i=1:n, .packages=("SpLoc"),.noexport = "SpLocC" )%dopar%{
-      if (names.NNmatrix[1]==""){
+      if (names.NNmatrix[i]==""){
         NN=NULL
       } else{
         NN=readRDS(paste0(NNmatrix.directory,names.NNmatrix[i]))
