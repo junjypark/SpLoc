@@ -16,6 +16,14 @@ if (!require("devtools"))
 devtools::install_github("junjypark/SpLoc")
 ```
 
+## Usage
+Fitting SpLoc requires a number of components
+
+* data matrix: ```math
+\sum_i^n
+```
+
+
 ## Example
 
 ```R
