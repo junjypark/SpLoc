@@ -1,6 +1,6 @@
 # SpLoc
 
-Spatially Localized Signals
+**Spatially Localized Signals**
 
 R code to apply SpLoc to longitudinal cortical thickness data. The current version supports parallel computing using the *doParallel* package.
 
@@ -19,17 +19,17 @@ devtools::install_github("junjypark/SpLoc")
 ## Usage
 Fitting SpLoc for longitudinal data requires a number of components:
 
-* **data**: a SxM matrix, where S is the number of spatial locations and M is the sum of the number of visits for all subjects. Each row represents an image.
+* **data**: a *S*x*M* matrix, where *S* is the number of spatial locations and *M* is the sum of the number of visits for all subjects. Each row represents an image.
 
-* **X**: a NxQ matrix, where N is the number of subjects and Q is the number of covariates, including intercepts.
+* **X**: a *N*x*Q* matrix, where *N* is the number of subjects and *Q* is the number of covariates, including intercepts.
 
-* **NNmatrix**: a QxS binary sparse matrix (1 or 0), where Q is the number of neighbors pre-specified by user.
+* **NNmatrix**: a *P*x*S* binary sparse matrix (1 or 0), where *P* is the number of neighbors pre-specified by user.
 
-* **group**: a binary vector (1 or -1) of length N that specifies the group.
+* **group**: a binary vector (1 or -1) of length *N* that specifies the group.
 
-* **time** (for longitudinal data only): a vector of length M that stores time of the visit for the image corresponding to each column of the data matrix.
+* **time** (for longitudinal data only): a vector of length *M* that stores time of the visit for the image corresponding to each column of the data matrix.
 
-* **n.visits** (for longitudinal data only): a vector of length N that contains the number of visits (scans) for each subject.
+* **n.visits** (for longitudinal data only): a vector of length *N* that contains the number of visits (scans) for each subject.
 
 The SpLoc can be performed using the followings:
 
@@ -95,43 +95,41 @@ dx.status=c(rep(-1, n.subj/2),rep(1,n.subj/2))
 dx.expand=rep(dx.status, n.visits)
 
 pred=c(alpha0+X.expand%*%alpha1+dx.expand*beta0+time*beta1)
-ymat.lh=matrix(NA,sum(n.visits),ncol(NNmatLH)) 
-ymat.rh=matrix(NA,sum(n.visits),ncol(NNmatRH)) 
+ymat.lh=matrix(NA,ncol(NNmatLH), sum(n.visits)) 
+ymat.rh=matrix(NA,ncol(NNmatRH), sum(n.visits)) 
 
 #Generate data for the left and right hemispheres
 for (j in 1:ncol(NNmatLH)){ 
   b=mvrnorm(n.subj,c(0,0), b.cov) 
   b.expand=b[rep(1:50, n.visits),]
   epsilon=rnorm(sum(n.visits),0,sqrt(tau2))
-  ymat.lh[,j]=pred+b.expand[,1]+time*b.expand[,2]+epsilon 
+  ymat.lh[j,]=pred+b.expand[,1]+time*b.expand[,2]+epsilon 
 }
 
 for (j in 1:ncol(NNmatRH)){
   b=mvrnorm(n.subj,c(0,0), b.cov)
   b.expand=b[rep(1:50, n.visits),]
   epsilon=rnorm(sum(n.visits),0,sqrt(tau2))
-  ymat.rh[,j]=pred+b.expand[,1]+time*b.expand[,2]+epsilon
+  ymat.rh[j,]=pred+b.expand[,1]+time*b.expand[,2]+epsilon
 }
 
 #Add signals
-ymat.lh[,ind.signal.lh]=ymat.lh[,ind.signal.lh]+matrix(rep(gamma*dx.expand*time, length(ind.signal.lh)), sum(n.visits) )
-ymat.rh[,ind.signal.rh]=ymat.rh[,ind.signal.rh]+matrix(rep(gamma*dx.expand*time, length(ind.signal.rh)), sum(n.visits) )
-
+ymat.lh[ind.signal.lh,]=ymat.lh[ind.signal.lh,]+t(matrix(rep(gamma*dx.expand*time, length(ind.signal.lh)), sum(n.visits)))
+ymat.rh[ind.signal.rh,]=ymat.rh[ind.signal.rh,]+t(matrix(rep(gamma*dx.expand*time, length(ind.signal.rh)), sum(n.visits)))
 ```
 
 **Step 2: Fit SpLoc and identify spatial clusters**
 ```R
 ###Step 2: Fit SpLoc
 X1=cbind(1,X[rep(1:n.subj, n.visits),], dx.expand,time)     #Generate expanded X matrix with intercepts, groups, time
-ymat.lh=t(ymat.lh)                                          #transpose to an appropriate form
-ymat.rh=t(ymat.rh)                                          #transpose to an appropriate form
+                                                            #Note that time variable is in the 5th column
 
 getResid.lh=getSummaryMatrix(ymat.lh, X1, mask=1:nrow(ymat.lh),longitudinal=T, n.visits, randomslope=T,  5) 
 getResid.rh=getSummaryMatrix(ymat.rh, X1, mask=1:nrow(ymat.rh),longitudinal=T, n.visits, randomslope=T,  5)
 fit.lh=SpLoc(getResid.lh, NNmatLH, group=dx.status, nperm=1000, alpha=0.05, seed=1234)    #Fit SpLoc to the left hemisphere
 fit.rh=SpLoc(getResid.rh, NNmatRH, group=dx.status, nperm=1000, alpha=0.05, seed=1234)    #Fit SpLoc to the right hemisphere
 
-fit.combine=combine(list(fit.lh,fit.rh),alpha=0.05)                #Combine two results to control brain-wise FWER (make sure seeds are the same)
+fit.combine=combine(list(fit.lh,fit.rh),alpha=0.05)                     #Combine two results to control brain-wise FWER (make sure seeds are the same)
 cluster.lh=ClusterSearch(fit.lh$Tstat, fit.combine$threshold, NNmatLH)  #Cluster search for the left hemisphere
 cluster.rh=ClusterSearch(fit.rh$Tstat, fit.combine$threshold, NNmatRH)  #Cluster search for the right hemisphere
 ```
