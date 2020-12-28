@@ -34,7 +34,7 @@ Fitting SpLoc for longitudinal data requires a number of components:
 The SpLoc can be performed using the followings:
 
 ```R
-getResid=getSummaryMatrix(data, X, mask=rep(1, ncol(data)),longitudinal=T, n.visits, randomslope=T,  NNmatrix, time.var)
+getResid=getSummaryMatrix(data, X, mask=rep(1, ncol(data)),longitudinal=T, n.visits, randomslope=T,  time.var)
 fit=SpLoc(ymat, NNmatrix, group=group, nperm=1000, alpha=0.05, seed=1234)
 select=ClusterSearch(fit$Tstat, fit$threshold, NNmatrix)
 ```
