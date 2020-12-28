@@ -1,6 +1,6 @@
 # SpLoc
 
-Spatially localized signals
+Spatially Localized Signals
 
 R code to apply SpLoc to longitudinal cortical thickness data. 
 
@@ -19,15 +19,15 @@ devtools::install_github("junjypark/SpLoc")
 ## Usage
 Fitting SpLoc requires a number of components:
 
-* data matrix: a MxS matrix, where S is the number of spatial locations and M is the sum of the number of visits for all subjects. Each row represents an image.
+* **data**: a MxS matrix, where S is the number of spatial locations and M is the sum of the number of visits for all subjects. Each row represents an image.
 
-* X: a NxQ matrix, where N is the number of subjects and Q is the number of covariates, including intercepts.
+* **X**: a NxQ matrix, where N is the number of subjects and Q is the number of covariates, including intercepts.
 
-* NNmatrix: a QxS binary sparse matrix (1 or 0), where Q is the number of neighbors pre-specified by user.
+* **NNmatrix**: a QxS binary sparse matrix (1 or 0), where Q is the number of neighbors pre-specified by user.
 
-* time: a vector of length M that stores time of the visit for the image corresponding to each row of the data matrix.
+* **time**: a vector of length M that stores time of the visit for the image corresponding to each row of the data matrix.
 
-* group: a binary vector (1 or -1) of length N that specifies the group.
+* **group**: a binary vector (1 or -1) of length N that specifies the group.
 
 ## Example
 
