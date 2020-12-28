@@ -44,6 +44,7 @@ select=ClusterSearch(fit$Tstat, fit$threshold, NNmatrix)
 
 NNmatrix with the corresponding cortex for fsaverage4 can be downloaded [here](https://www.dropbox.com/sh/8xwycechdlo85ky/AAAfJ6Ktww4js2SHluLKiFwPa?dl=0).
 
+**Step 0: Load R packages**
 ```R
 #Load R Package
 library(SpLoc)
