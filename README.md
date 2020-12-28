@@ -120,10 +120,10 @@ ymat.rh[ind.signal.rh,]=ymat.rh[ind.signal.rh,]+t(matrix(rep(gamma*dx.expand*tim
 
 **Step 2: Fit SpLoc and identify spatial clusters**
 ```R
-###Step 2: Fit SpLoc
-X1=cbind(1,X[rep(1:n.subj, n.visits),], dx.expand,time)     #Generate expanded X matrix with intercepts, groups, time
-                                                            #Note that time variable is in the 5th column
-
+#Generate expanded X matrix with intercepts, groups, time
+#Note that time variable is in the 5th column
+X1=cbind(1,X[rep(1:n.subj, n.visits),], dx.expand,time)     
+                                                            
 getResid.lh=getSummaryMatrix(ymat.lh, X1, mask=1:nrow(ymat.lh),longitudinal=T, n.visits, randomslope=T,  5) 
 getResid.rh=getSummaryMatrix(ymat.rh, X1, mask=1:nrow(ymat.rh),longitudinal=T, n.visits, randomslope=T,  5)
 fit.lh=SpLoc(getResid.lh, NNmatLH, group=dx.status, nperm=1000, alpha=0.05, seed=1234)    #Fit SpLoc to the left hemisphere
