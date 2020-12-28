@@ -38,7 +38,7 @@ ClusterSearch=function(Tstat, threshold, NNmatrix){
       if (length(Tstat.sub)==0){bool=F}
     }
     
-    if (is.null(sig)){ out[[th]]=NA }
+    if (is.null(sig)){ selection[[th]]=NA }
     else{ selection[[th]]=sig }
   }
   
