@@ -118,7 +118,7 @@ ymat.rh[,ind.signal.rh]=ymat.rh[,ind.signal.rh]+matrix(rep(gamma*dx.expand*time,
 
 ```
 
-**Step 2: Fit SpLoc and identify spatial clusters
+**Step 2: Fit SpLoc and identify spatial clusters**
 ```R
 ###Step 2: Fit SpLoc
 X1=cbind(1,X[rep(1:n.subj, n.visits),], dx.expand,time)     #Generate expanded X matrix with intercepts, groups, time
