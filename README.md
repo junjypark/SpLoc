@@ -27,6 +27,8 @@ Fitting SpLoc requires a number of components:
 
 * **time**: a vector of length M that stores time of the visit for the image corresponding to each row of the data matrix.
 
+* **n.visits**: a vector of length N that contains the number of visits (scans) for each subject.
+
 * **group**: a binary vector (1 or -1) of length N that specifies the group.
 
 The SpLoc can be performed using the followings:
