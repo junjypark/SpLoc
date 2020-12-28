@@ -137,3 +137,6 @@ fit.combine=combine(list(fit.lh,fit.rh),alpha=0.05)
 cluster.lh=ClusterSearch(fit.lh$Tstat, fit.combine$threshold, NNmatLH) 
 cluster.rh=ClusterSearch(fit.rh$Tstat, fit.combine$threshold, NNmatRH) 
 ```
+
+## Questions?
+Please forward your inquiries to junjy.park<at>utoronto<dot>ca.
