@@ -17,7 +17,7 @@ devtools::install_github("junjypark/SpLoc")
 ```
 
 ## Usage
-Fitting SpLoc requires a number of components:
+Fitting SpLoc for longitudinal data requires a number of components:
 
 * **data**: a MxS matrix, where S is the number of spatial locations and M is the sum of the number of visits for all subjects. Each row represents an image.
 
