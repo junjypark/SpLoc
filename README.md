@@ -139,4 +139,4 @@ cluster.rh=ClusterSearch(fit.rh$Tstat, fit.combine$threshold, NNmatRH)
 ```
 
 ## Questions?
-Please forward your inquiries to junjy.park<at>utoronto<dot>ca.
+Please forward your inquiries to junjy.park(at)utoronto(dot)ca.
