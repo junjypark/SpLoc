@@ -42,6 +42,8 @@ select=ClusterSearch(fit$Tstat, fit$threshold, NNmatrix)
 
 ## Example
 
+NNmatrix for fsaverage4 can be downloaded here: [link](https://www.dropbox.com/sh/8xwycechdlo85ky/AAAfJ6Ktww4js2SHluLKiFwPa?dl=0)
+
 ```R
 #Load R Package
 library(SpLoc)
