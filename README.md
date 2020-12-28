@@ -29,6 +29,15 @@ Fitting SpLoc requires a number of components:
 
 * **group**: a binary vector (1 or -1) of length N that specifies the group.
 
+The SpLoc can be performed using the followings:
+
+```R
+getResid=getSummaryMatrix(data, X, mask=rep(1, ncol(data)),longitudinal=T, n.visits, randomslope=T,  NNmatrix, time.var)
+fit=SpLoc(ymat, NNmatrix, group=group, nperm=1000, alpha=0.05, seed=1234)
+select=ClusterSearch(fit$Tstat, fit$threshold, NNmatrix)
+```
+
+
 ## Example
 
 ```R
