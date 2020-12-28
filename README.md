@@ -4,7 +4,7 @@ Spatially Localized Signals
 
 R code to apply SpLoc to longitudinal cortical thickness data. The current version supports parallel computing using the *doParallel* package.
 
-* Park, J.Y., Fiecas, M. "Permutation-based inference for spatially localized signals in longitudinal MRI data." Preprint.
+* Park, J.Y., Fiecas, M. Permutation-based inference for spatially localized signals in longitudinal MRI data. *Preprint*.
 
 
 ## Installation
