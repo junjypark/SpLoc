@@ -129,7 +129,10 @@ getResid.rh=getSummaryMatrix(ymat.rh, X1, mask=1:nrow(ymat.rh),longitudinal=T, n
 fit.lh=SpLoc(getResid.lh, NNmatLH, group=dx.status, nperm=1000, alpha=0.05, seed=1234)    #Fit SpLoc to the left hemisphere
 fit.rh=SpLoc(getResid.rh, NNmatRH, group=dx.status, nperm=1000, alpha=0.05, seed=1234)    #Fit SpLoc to the right hemisphere
 
-fit.combine=combine(list(fit.lh,fit.rh),alpha=0.05)                     #Combine two results to control brain-wise FWER (make sure seeds are the same)
+#Combine two results to control brain-wise FWER (make sure seeds are the same)
+fit.combine=combine(list(fit.lh,fit.rh),alpha=0.05)                     
+
+#Cluster search
 cluster.lh=ClusterSearch(fit.lh$Tstat, fit.combine$threshold, NNmatLH)  #Cluster search for the left hemisphere
 cluster.rh=ClusterSearch(fit.rh$Tstat, fit.combine$threshold, NNmatRH)  #Cluster search for the right hemisphere
 ```
