@@ -122,7 +122,7 @@ ymat.rh[ind.signal.rh,]=ymat.rh[ind.signal.rh,]+t(matrix(rep(gamma*dx.expand*tim
 ```R
 #Generate expanded X matrix with intercepts, groups, time
 #Note that time variable is in the 5th column
-X1=cbind(1,X[rep(1:n.subj, n.visits),], dx.expand,time)     
+X1=cbind(1,X.expand,dx.expand,time)     
                                                             
 #Fit SpLoc to both hemispheres
 getResid.lh=getSummaryMatrix(ymat.lh, X1, mask=1:nrow(ymat.lh),longitudinal=T, n.visits, randomslope=T,  5) 
