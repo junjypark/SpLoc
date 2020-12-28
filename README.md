@@ -46,7 +46,7 @@ NNmatrix with the corresponding cortex for fsaverage4 can be downloaded [here](h
 
 **Step 0: Load R packages**
 ```R
-#Load R Package
+#Load R packages
 library(SpLoc)
 library(MASS)
 ```
@@ -98,7 +98,7 @@ pred=c(alpha0+X.expand%*%alpha1+dx.expand*beta0+time*beta1)
 ymat.lh=matrix(NA,ncol(NNmatLH), sum(n.visits)) 
 ymat.rh=matrix(NA,ncol(NNmatRH), sum(n.visits)) 
 
-#Generate data for the left and right hemispheres
+#Generate data for both hemispheres
 for (j in 1:ncol(NNmatLH)){ 
   b=mvrnorm(n.subj,c(0,0), b.cov) 
   b.expand=b[rep(1:50, n.visits),]
@@ -124,15 +124,16 @@ ymat.rh[ind.signal.rh,]=ymat.rh[ind.signal.rh,]+t(matrix(rep(gamma*dx.expand*tim
 #Note that time variable is in the 5th column
 X1=cbind(1,X[rep(1:n.subj, n.visits),], dx.expand,time)     
                                                             
+#Fit SpLoc to both hemispheres
 getResid.lh=getSummaryMatrix(ymat.lh, X1, mask=1:nrow(ymat.lh),longitudinal=T, n.visits, randomslope=T,  5) 
 getResid.rh=getSummaryMatrix(ymat.rh, X1, mask=1:nrow(ymat.rh),longitudinal=T, n.visits, randomslope=T,  5)
-fit.lh=SpLoc(getResid.lh, NNmatLH, group=dx.status, nperm=1000, alpha=0.05, seed=1234)    #Fit SpLoc to the left hemisphere
-fit.rh=SpLoc(getResid.rh, NNmatRH, group=dx.status, nperm=1000, alpha=0.05, seed=1234)    #Fit SpLoc to the right hemisphere
+fit.lh=SpLoc(getResid.lh, NNmatLH, group=dx.status, nperm=1000, alpha=0.05, seed=1234) 
+fit.rh=SpLoc(getResid.rh, NNmatRH, group=dx.status, nperm=1000, alpha=0.05, seed=1234) 
 
 #Combine two results to control brain-wise FWER (make sure seeds are the same)
 fit.combine=combine(list(fit.lh,fit.rh),alpha=0.05)                     
 
 #Cluster search
-cluster.lh=ClusterSearch(fit.lh$Tstat, fit.combine$threshold, NNmatLH)  #Cluster search for the left hemisphere
-cluster.rh=ClusterSearch(fit.rh$Tstat, fit.combine$threshold, NNmatRH)  #Cluster search for the right hemisphere
+cluster.lh=ClusterSearch(fit.lh$Tstat, fit.combine$threshold, NNmatLH) 
+cluster.rh=ClusterSearch(fit.rh$Tstat, fit.combine$threshold, NNmatRH) 
 ```
