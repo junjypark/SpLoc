@@ -25,11 +25,11 @@ Fitting SpLoc for longitudinal data requires a number of components:
 
 * **NNmatrix**: a QxS binary sparse matrix (1 or 0), where Q is the number of neighbors pre-specified by user.
 
-* **time**: a vector of length M that stores time of the visit for the image corresponding to each row of the data matrix.
-
-* **n.visits**: a vector of length N that contains the number of visits (scans) for each subject.
-
 * **group**: a binary vector (1 or -1) of length N that specifies the group.
+
+* **time** (for longitudinal data only): a vector of length M that stores time of the visit for the image corresponding to each row of the data matrix.
+
+* **n.visits** (for longitudinal data only): a vector of length N that contains the number of visits (scans) for each subject.
 
 The SpLoc can be performed using the followings:
 
