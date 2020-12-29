@@ -121,21 +121,22 @@ ymat.rh[ind.signal.rh,]=ymat.rh[ind.signal.rh,]+t(matrix(rep(gamma*dx.expand*tim
 **Step 2: Fit SpLoc and identify spatial clusters**
 ```R
 #Generate expanded X matrix with intercepts, groups, time
-#Note that time variable is in the 5th column
+#Note that time variable is in the 6th column
 X1=cbind(1,X.expand,dx.expand,time)     
                                                             
 #Fit SpLoc to both hemispheres
-getResid.lh=getSummaryMatrix(ymat.lh, X1, mask=1:nrow(ymat.lh),longitudinal=T, n.visits, randomslope=T,  5) 
-getResid.rh=getSummaryMatrix(ymat.rh, X1, mask=1:nrow(ymat.rh),longitudinal=T, n.visits, randomslope=T,  5)
+getResid.lh=getSummaryMatrix(ymat.lh, X1, mask=1:nrow(ymat.lh),longitudinal=T, n.visits=n.visits, randomslope=T, time.var=6) 
+getResid.rh=getSummaryMatrix(ymat.rh, X1, mask=1:nrow(ymat.rh),longitudinal=T, n.visits=n.visits, randomslope=T, time.var=6)
 fit.lh=SpLoc(getResid.lh, NNmatLH, group=dx.status, nperm=1000, alpha=0.05, seed=1234) 
 fit.rh=SpLoc(getResid.rh, NNmatRH, group=dx.status, nperm=1000, alpha=0.05, seed=1234) 
 
 #Combine two results to control brain-wise FWER (make sure seeds are the same)
 fit.combine=combine(list(fit.lh,fit.rh),alpha=0.05)                     
+threshold=fit.combine$threshold
 
 #Cluster search
-cluster.lh=ClusterSearch(fit.lh$Tstat, fit.combine$threshold, NNmatLH) 
-cluster.rh=ClusterSearch(fit.rh$Tstat, fit.combine$threshold, NNmatRH) 
+cluster.lh=ClusterSearch(fit.lh$Tstat, threshold, NNmatLH) 
+cluster.rh=ClusterSearch(fit.rh$Tstat, threshold, NNmatRH) 
 ```
 
 ## Questions?
