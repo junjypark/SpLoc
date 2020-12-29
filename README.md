@@ -135,7 +135,7 @@ fit.rh=SpLoc(getResid.rh, NNmatRH, group=dx.status, nperm=1000, alpha=0.05, seed
 fit.combine=combine(list(fit.lh,fit.rh), alpha=0.05)            #It is possible to use vectors to alpha                  
 threshold=fit.combine$threshold
 
-#Cluster search
+#Search for clusters
 cluster.lh=ClusterSearch(fit.lh$Tstat, threshold, NNmatLH)      #It is possible to use vectors to threshold 
 cluster.rh=ClusterSearch(fit.rh$Tstat, threshold, NNmatRH) 
 ```
