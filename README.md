@@ -31,11 +31,16 @@ Fitting SpLoc for longitudinal data requires a number of components:
 
 * **n.visits** (for longitudinal data only): a vector of length *N* that contains the number of visits (scans) for each subject.
 
-The SpLoc can be performed using the followings:
+The SpLoc can be conducted using the followings:
 
 ```R
+#Step 1: Get summary matrix as a form that permutation can be conducted
 getResid=getSummaryMatrix(data, X, mask=rep(1, ncol(data)),longitudinal=T, n.visits, randomslope=T,  time.var)
+
+#Use permutation to compute test statistics and the threshold that controls FWER
 fit=SpLoc(ymat, NNmatrix, group=group, nperm=1000, alpha=0.05, seed=1234)
+
+#Select signal locations
 select=ClusterSearch(fit$Tstat, fit$threshold, NNmatrix)
 ```
 
