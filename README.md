@@ -21,7 +21,7 @@ Fitting SpLoc for longitudinal data requires a number of components:
 
 * **data**: a *S*x*M* matrix, where *S* is the number of spatial locations and *M* is the sum of the number of visits for all subjects. Each row represents an image.
 
-* **X**: a *N*x*Q* matrix, where *N* is the number of subjects and *Q* is the number of covariates, including intercepts.
+* **X**: a *N*x*Q* covariate matrix, where *N* is the number of subjects and *Q* is the number of covariates, including intercepts.
 
 * **NNmatrix**: a *P*x*S* binary sparse matrix (1 or 0), where *P* is the number of neighbors pre-specified by user.
 
