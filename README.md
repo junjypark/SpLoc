@@ -8,7 +8,7 @@ R code to apply SpLoc to longitudinal cortical thickness data. The current versi
 
 
 ## Installation
-To install the latest development builds directly from GitHub, run this:
+To install the latest development builds directly from GitHub, please run the followings:
 
 ```R
 if (!require("devtools"))
@@ -123,16 +123,16 @@ ymat.rh[ind.signal.rh,]=ymat.rh[ind.signal.rh,]+t(matrix(rep(gamma*dx.expand*tim
 #Generate expanded X matrix with intercepts, groups, time
 #Note that time variable is in the 6th column
 #Do NOT include variable of your interest that corresponds to the null hypothesis (e.g., H0: gamma=0)
-X1=cbind(1,X.expand,dx.expand,time)     
+X1=cbind(1, X.expand, dx.expand, time)     
                                                             
 #Fit SpLoc to both hemispheres
-getResid.lh=getSummaryMatrix(ymat.lh, X1, mask=1:nrow(ymat.lh),longitudinal=T, n.visits=n.visits, randomslope=T, time.var=6) 
-getResid.rh=getSummaryMatrix(ymat.rh, X1, mask=1:nrow(ymat.rh),longitudinal=T, n.visits=n.visits, randomslope=T, time.var=6)
+getResid.lh=getSummaryMatrix(ymat.lh, X1, mask=1:nrow(ymat.lh), longitudinal=T, n.visits=n.visits, randomslope=T, time.var=6) 
+getResid.rh=getSummaryMatrix(ymat.rh, X1, mask=1:nrow(ymat.rh), longitudinal=T, n.visits=n.visits, randomslope=T, time.var=6)
 fit.lh=SpLoc(getResid.lh, NNmatLH, group=dx.status, nperm=1000, alpha=0.05, seed=1234) 
 fit.rh=SpLoc(getResid.rh, NNmatRH, group=dx.status, nperm=1000, alpha=0.05, seed=1234) 
 
 #Combine two results to control brain-wise FWER (make sure seeds are the same)
-fit.combine=combine(list(fit.lh,fit.rh),alpha=0.05)                     
+fit.combine=combine(list(fit.lh,fit.rh), alpha=0.05)                     
 threshold=fit.combine$threshold
 
 #Cluster search
