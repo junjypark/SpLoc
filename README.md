@@ -122,6 +122,7 @@ ymat.rh[ind.signal.rh,]=ymat.rh[ind.signal.rh,]+t(matrix(rep(gamma*dx.expand*tim
 ```R
 #Generate expanded X matrix with intercepts, groups, time
 #Note that time variable is in the 6th column
+#Do NOT include variable of your interest that corresponds to the null hypothesis (e.g., H0: gamma=0)
 X1=cbind(1,X.expand,dx.expand,time)     
                                                             
 #Fit SpLoc to both hemispheres
