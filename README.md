@@ -1,6 +1,6 @@
 # SpLoc
 
-**Spatially Localized Signals**
+**SPatially LOCalized signals**
 
 R code to apply SpLoc to longitudinal cortical thickness data. The current version supports parallel computing using the *doParallel* package.
 
