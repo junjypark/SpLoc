@@ -136,7 +136,7 @@ getResid.rh=getSummaryMatrix(ymat.rh, X1, mask=1:nrow(ymat.rh), longitudinal=T, 
 fit.lh=SpLoc(getResid.lh, NNmatLH, group=dx.status, nperm=1000, alpha=0.05, seed=1234) 
 fit.rh=SpLoc(getResid.rh, NNmatRH, group=dx.status, nperm=1000, alpha=0.05, seed=1234) 
 
-#Combine two results to control brain-wise FWER (make sure seeds are the same)
+#Combine two results to control brain-wise FWER (make sure seeds and the number of permutations are the same)
 fit.combine=combine(list(fit.lh,fit.rh), alpha=0.05)            #It is possible to use vectors to alpha                  
 threshold=fit.combine$threshold
 
