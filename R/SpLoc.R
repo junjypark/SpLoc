@@ -1,4 +1,4 @@
-SpLoc=function(ymat, NNmatrix=NULL, group=NULL, nperm=1000, alpha=0.05, seed=NULL, 
+SpLoc=function(ymat, NNmatrix=NULL, group=NULL, nperm=1000, alpha=0.05, alternative=c("two.sided","less", "greater"), seed=NULL, 
                is.sparse=F,partition=F, npartition=1, parallel=F, ncores=1){
   if (is.null(NNmatrix)){
     print("As NNmatrix is not specified, SpLoc conducts massive univariate analysis.")
@@ -6,6 +6,7 @@ SpLoc=function(ymat, NNmatrix=NULL, group=NULL, nperm=1000, alpha=0.05, seed=NUL
       return(MassiveMean(ymat=ymat,
                          nperm=nperm, 
                          alpha=alpha, 
+                         alternative=alternative,
                          seed=seed,
                          partition=partition, 
                          npartition = npartition,
@@ -17,6 +18,7 @@ SpLoc=function(ymat, NNmatrix=NULL, group=NULL, nperm=1000, alpha=0.05, seed=NUL
                          group=group,
                          nperm=nperm, 
                          alpha=alpha, 
+                         alternative=alternative,
                          seed=seed,
                          partition=partition, 
                          npartition = npartition,
@@ -32,6 +34,7 @@ SpLoc=function(ymat, NNmatrix=NULL, group=NULL, nperm=1000, alpha=0.05, seed=NUL
                   NNmatrix=NNmatrix, 
                   nperm=nperm, 
                   alpha=alpha, 
+                  alternative=alternative,
                   seed=seed,
                   is.sparse = is.sparse, 
                   partition=partition, 
@@ -47,6 +50,7 @@ SpLoc=function(ymat, NNmatrix=NULL, group=NULL, nperm=1000, alpha=0.05, seed=NUL
                   group=group, 
                   nperm=nperm, 
                   alpha=alpha, 
+                  alternative=alternative,
                   seed=seed,
                   is.sparse = is.sparse, 
                   partition=partition, 
@@ -59,7 +63,7 @@ SpLoc=function(ymat, NNmatrix=NULL, group=NULL, nperm=1000, alpha=0.05, seed=NUL
 }
 
 
-SpLocMean=function(ymat, NNmatrix, nperm=1000, alpha=0.05, seed=NULL, 
+SpLocMean=function(ymat, NNmatrix, nperm=1000, alpha=0.05, alternative=c("two.sided", "less", "greater"), seed=NULL, 
                    is.sparse=F,partition=F, npartition=1, parallel=F, ncores=1){
   if (length(which(is(NNmatrix)=="sparseMatrix"))==0){
     stop("NN is not a sparse matrix. Please refer the Matrix R package to convert it.")
@@ -70,6 +74,9 @@ SpLocMean=function(ymat, NNmatrix, nperm=1000, alpha=0.05, seed=NULL,
   if ( alpha<0 |alpha>1){
     stop("alpha should range between 0 and 1.")
   }
+  if (alternative=="two.sided"){ side=2 }
+  if (alternative=="greater"){ side=1 }
+  if (alternative=="less"){ side=-1 }
   if (is.null(seed)){
     stop("Specifying a seed value is required.")
   }
@@ -105,13 +112,13 @@ SpLocMean=function(ymat, NNmatrix, nperm=1000, alpha=0.05, seed=NULL,
       cl=makeCluster(ncores)
       registerDoParallel(cl)
       result=foreach(i=1:npartition, .packages=("SpLoc"),.noexport = "SpLocC" )%dopar%{
-        SpLocMeanC(ymat, NNList[[i]], nperm, alpha, seed)
+        SpLocMeanC(ymat, NNList[[i]], nperm, alpha, seed, side)
       }
       stopCluster(cl)
     } else{
       result=list()
       for (i in 1:npartition){
-        result[[i]]=SpLocMeanC(ymat, NNList[[i]], nperm, alpha, seed)
+        result[[i]]=SpLocMeanC(ymat, NNList[[i]], nperm, alpha, seed, side)
       }
     }
     
@@ -119,7 +126,7 @@ SpLocMean=function(ymat, NNmatrix, nperm=1000, alpha=0.05, seed=NULL,
     return(out)
     
   } else{
-    out=SpLocMeanC(ymat, NNmatrix, nperm, alpha, seed)
+    out=SpLocMeanC(ymat, NNmatrix, nperm, alpha, seed, side)
     out$pvalue=(1+sum(c(out$permMax)>max(out$Tstat,na.rm=TRUE)))/(1+nperm)
     out$seed=seed
     return(out)    
@@ -127,7 +134,7 @@ SpLocMean=function(ymat, NNmatrix, nperm=1000, alpha=0.05, seed=NULL,
 }
 
 
-SpLocDiff=function(ymat, NNmatrix, group, nperm=1000, alpha=0.05, seed=NULL, 
+SpLocDiff=function(ymat, NNmatrix, group, nperm=1000, alpha=0.05, alternative=c("two.sided", "less", "greater"), seed=NULL, 
                    is.sparse=F,partition=F, npartition=1, parallel=F, ncores=1){
   if (!all.equal(sort(unique(group)),c(-1,1))){
     stop("group should have either 1 or -1.")
@@ -144,6 +151,9 @@ SpLocDiff=function(ymat, NNmatrix, group, nperm=1000, alpha=0.05, seed=NULL,
   if ( alpha<0 |alpha>1){
     stop("alpha should range between 0 and 1.")
   }
+  if (alternative=="two.sided"){ side=2 }
+  if (alternative=="greater"){ side=1 }
+  if (alternative=="less"){ side=-1 }
   if (is.null(seed)){
     stop("Specifying a seed value is required.")
   }
@@ -180,13 +190,13 @@ SpLocDiff=function(ymat, NNmatrix, group, nperm=1000, alpha=0.05, seed=NULL,
       cl=makeCluster(ncores)
       registerDoParallel(cl)
       result=foreach(i=1:npartition, .packages=("SpLoc"),.noexport = "SpLocC" )%dopar%{
-        SpLocDiffC(ymat, NNList[[i]], group, nperm, alpha, seed)
+        SpLocDiffC(ymat, NNList[[i]], group, nperm, alpha, seed, side)
       }
       stopCluster(cl)
     } else{
       result=list()
       for (i in 1:npartition){
-        result[[i]]=SpLocDiffC(ymat, NNList[[i]], group, nperm, alpha, seed)
+        result[[i]]=SpLocDiffC(ymat, NNList[[i]], group, nperm, alpha, seed, side)
       }
     }
     
@@ -194,7 +204,7 @@ SpLocDiff=function(ymat, NNmatrix, group, nperm=1000, alpha=0.05, seed=NULL,
     return(out)
     
   } else{
-    out=SpLocDiffC(ymat, NNmatrix, group, nperm, alpha, seed)
+    out=SpLocDiffC(ymat, NNmatrix, group, nperm, alpha, seed, side)
     out$pvalue=(1+sum(c(out$permMax)>max(out$Tstat,na.rm=TRUE)))/(1+nperm)
     out$seed=seed
     return(out)    
@@ -202,11 +212,14 @@ SpLocDiff=function(ymat, NNmatrix, group, nperm=1000, alpha=0.05, seed=NULL,
 }
 
 
-MassiveMean=function(ymat, nperm=1000, alpha=0.05, seed=NULL, 
+MassiveMean=function(ymat, nperm=1000, alpha=0.05, alternative=c("two.sided", "less", "greater"), seed=NULL, 
                    partition=F, npartition=1, parallel=F, ncores=1){
   if ( alpha<0 |alpha>1){
     stop("alpha should range between 0 and 1.")
   }
+  if (alternative=="two.sided"){ side=2 }
+  if (alternative=="greater"){ side=1 }
+  if (alternative=="less"){ side=-1 }
   if (is.null(seed)){
     stop("Specifying a seed value is required.")
   }
@@ -224,13 +237,13 @@ MassiveMean=function(ymat, nperm=1000, alpha=0.05, seed=NULL,
       cl=makeCluster(ncores)
       registerDoParallel(cl)
       result=foreach(i=1:npartition, .packages=("SpLoc"),.noexport = "SpLocC" )%dopar%{
-        MassiveMeanC(ymatList[[i]], nperm, alpha, seed)
+        MassiveMeanC(ymatList[[i]], nperm, alpha, seed, side)
       }
       stopCluster(cl)
     } else{
       result=list()
       for (i in 1:npartition){
-        result[[i]]=MassiveMeanC(ymatList[[i]], nperm, alpha, seed)
+        result[[i]]=MassiveMeanC(ymatList[[i]], nperm, alpha, seed, side)
       }
     }
     
@@ -238,7 +251,7 @@ MassiveMean=function(ymat, nperm=1000, alpha=0.05, seed=NULL,
     return(out)
     
   } else{
-    out=MassiveMeanC(ymat, nperm, alpha, seed)
+    out=MassiveMeanC(ymat, nperm, alpha, seed, side)
     out$pvalue=(1+sum(c(out$permMax)>max(out$Tstat,na.rm=TRUE)))/(1+nperm)
     out$seed=seed
   }
@@ -247,7 +260,7 @@ MassiveMean=function(ymat, nperm=1000, alpha=0.05, seed=NULL,
 }
 
 
-MassiveDiff=function(ymat, group, nperm=1000, alpha=0.05, seed=NULL, 
+MassiveDiff=function(ymat, group, nperm=1000, alpha=0.05, alternative=c("two.sided", "less", "greater"), seed=NULL, 
                    is.sparse=F,partition=F, npartition=1, parallel=F, ncores=1){
   if (!all.equal(sort(unique(group)),c(-1,1))){
     stop("group should have either 1 or -1.")
@@ -258,6 +271,9 @@ MassiveDiff=function(ymat, group, nperm=1000, alpha=0.05, seed=NULL,
   if ( alpha<0 |alpha>1){
     stop("alpha should range between 0 and 1.")
   }
+  if (alternative=="two.sided"){ side=2 }
+  if (alternative=="greater"){ side=1 }
+  if (alternative=="less"){ side=-1 }
   if (is.null(seed)){
     stop("Specifying a seed value is required.")
   }
@@ -275,13 +291,13 @@ MassiveDiff=function(ymat, group, nperm=1000, alpha=0.05, seed=NULL,
       cl=makeCluster(ncores)
       registerDoParallel(cl)
       result=foreach(i=1:npartition, .packages=("SpLoc"),.noexport = "SpLocC" )%dopar%{
-        MassiveDiffC(ymatList[[i]], group, nperm, alpha, seed)
+        MassiveDiffC(ymatList[[i]], group, nperm, alpha, seed, side)
       }
       stopCluster(cl)
     } else{
       result=list()
       for (i in 1:npartition){
-        result[[i]]=MassiveDiffC(ymatList[[i]], group, nperm, alpha, seed)
+        result[[i]]=MassiveDiffC(ymatList[[i]], group, nperm, alpha, seed, side)
       }
     }
     
@@ -289,7 +305,7 @@ MassiveDiff=function(ymat, group, nperm=1000, alpha=0.05, seed=NULL,
     return(out)
     
   } else{
-    out=MassiveDiffC(ymat, group, nperm, alpha, seed)
+    out=MassiveDiffC(ymat, group, nperm, alpha, seed, side)
     out$pvalue=(1+sum(c(out$permMax)>max(out$Tstat,na.rm=TRUE)))/(1+nperm)
     out$seed=seed
   }
