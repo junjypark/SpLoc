@@ -9,19 +9,19 @@ set_seed <- function(seed) {
     invisible(.Call('_SpLoc_set_seed', PACKAGE = 'SpLoc', seed))
 }
 
-SpLocMeanC <- function(ymat, NNmatrix, nperm, alpha, s) {
-    .Call('_SpLoc_SpLocMeanC', PACKAGE = 'SpLoc', ymat, NNmatrix, nperm, alpha, s)
+SpLocMeanC <- function(ymat, NNmatrix, nperm, alpha, s, side) {
+    .Call('_SpLoc_SpLocMeanC', PACKAGE = 'SpLoc', ymat, NNmatrix, nperm, alpha, s, side)
 }
 
-SpLocDiffC <- function(ymat, NNmatrix, group, nperm, alpha, s) {
-    .Call('_SpLoc_SpLocDiffC', PACKAGE = 'SpLoc', ymat, NNmatrix, group, nperm, alpha, s)
+SpLocDiffC <- function(ymat, NNmatrix, group, nperm, alpha, s, side) {
+    .Call('_SpLoc_SpLocDiffC', PACKAGE = 'SpLoc', ymat, NNmatrix, group, nperm, alpha, s, side)
 }
 
-MassiveMeanC <- function(ymat, nperm, alpha, s) {
-    .Call('_SpLoc_MassiveMeanC', PACKAGE = 'SpLoc', ymat, nperm, alpha, s)
+MassiveMeanC <- function(ymat, nperm, alpha, s, side) {
+    .Call('_SpLoc_MassiveMeanC', PACKAGE = 'SpLoc', ymat, nperm, alpha, s, side)
 }
 
-MassiveDiffC <- function(ymat, group, nperm, alpha, s) {
-    .Call('_SpLoc_MassiveDiffC', PACKAGE = 'SpLoc', ymat, group, nperm, alpha, s)
+MassiveDiffC <- function(ymat, group, nperm, alpha, s, side) {
+    .Call('_SpLoc_MassiveDiffC', PACKAGE = 'SpLoc', ymat, group, nperm, alpha, s, side)
 }
 
