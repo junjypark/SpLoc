@@ -10,6 +10,23 @@
 using namespace Rcpp;
 using namespace arma;
 
+// [[Rcpp::depends(RcppArmadillo)]]
+// [[Rcpp::export]]
+arma::vec avg_rank2(arma::vec x) {
+  arma::uvec w = arma::stable_sort_index(x, "ascend");
+  R_xlen_t sz = x.size();
+  arma::vec r(sz);
+  
+  for (R_xlen_t n, i = 0; i < sz; i += n) {
+    n = 1;
+    while (i + n < sz && x[w[i]] == x[w[i + n]]) ++n;
+    for (R_xlen_t k = 0; k < n; k++) {
+      // r[w[i + k]] = i + (n + 1) / 2.;
+      r[w[i + k]] = i + (n ) ;
+    }
+  }
+  return r;
+}
 
 arma::vec avg_rank(arma::vec x) {
   arma::uvec w = arma::stable_sort_index(x, "descend");
@@ -269,4 +286,3 @@ Rcpp::List MassiveDiffC(arma::mat ymat, arma::vec group, int nperm, double alpha
                             Rcpp::Named("permMax")=permMax,
                             Rcpp::Named("nperm")=nperm);
 }
-
