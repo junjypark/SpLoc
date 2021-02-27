@@ -1,5 +1,5 @@
 SpLoc=function(ymat, NNmatrix=NULL, group=NULL, nperm=1000, alpha=0.05, alternative=c("two.sided","less", "greater"), seed=NULL, 
-               is.sparse=F,partition=F, npartition=1, parallel=F, ncores=1){
+               is.sparse=F,partition=T, npartition=NULL, parallel=F, ncores=1){
   if (is.null(NNmatrix)){
     print("As NNmatrix is not specified, SpLoc conducts massive univariate analysis.")
     if (is.null(group)){
@@ -74,6 +74,10 @@ SpLocMean=function(ymat, NNmatrix, nperm=1000, alpha=0.05, alternative=c("two.si
   if ( alpha<0 |alpha>1){
     stop("alpha should range between 0 and 1.")
   }
+  if (is.null(alternative)){ 
+    alternative="two.sided"
+    print("Conducting the two-sided test as alternative has not been specified...")
+    }
   if (alternative=="two.sided"){ side=2 }
   if (alternative=="greater"){ side=1 }
   if (alternative=="less"){ side=-1 }
@@ -90,8 +94,9 @@ SpLocMean=function(ymat, NNmatrix, nperm=1000, alpha=0.05, alternative=c("two.si
   }
   if (isTRUE(partition)){
     if (is.null(npartition)){
-      partition=FALSE
-      print("partition set to be FALSE as npartition is not specified.")
+      npartition=nrow(NNmatrix)%/%10000
+      # partition=FALSE
+      # print("partition set to be FALSE as npartition is not specified.")
     }
     else if (npartition==1){
       partition=FALSE
@@ -122,7 +127,7 @@ SpLocMean=function(ymat, NNmatrix, nperm=1000, alpha=0.05, alternative=c("two.si
       }
     }
     
-    out=combine(result, alpha=alpha, alternative=alternative)
+    out=combine(result, alpha=alpha)
     return(out)
     
   } else{
@@ -152,6 +157,10 @@ SpLocDiff=function(ymat, NNmatrix, group, nperm=1000, alpha=0.05, alternative=c(
   if ( alpha<0 |alpha>1){
     stop("alpha should range between 0 and 1.")
   }
+  if (is.null(alternative)){ 
+    alternative="two.sided"
+    print("Conducting the two-sided test as alternative has not been specified...")
+  }
   if (alternative=="two.sided"){ side=2 }
   if (alternative=="greater"){ side=1 }
   if (alternative=="less"){ side=-1 }
@@ -168,8 +177,9 @@ SpLocDiff=function(ymat, NNmatrix, group, nperm=1000, alpha=0.05, alternative=c(
   }
   if (isTRUE(partition)){
     if (is.null(npartition)){
-      partition=FALSE
-      print("partition set to be FALSE as npartition is not specified.")
+      npartition=nrow(NNmatrix)%/%10000
+      # partition=FALSE
+      # print("partition set to be FALSE as npartition is not specified.")
     }
     else if (npartition==1){
       partition=FALSE
@@ -201,7 +211,7 @@ SpLocDiff=function(ymat, NNmatrix, group, nperm=1000, alpha=0.05, alternative=c(
       }
     }
     
-    out=combine(result, alpha=alpha, alternative=alternative)
+    out=combine(result, alpha=alpha)
     return(out)
     
   } else{
@@ -218,6 +228,10 @@ MassiveMean=function(ymat, nperm=1000, alpha=0.05, alternative=c("two.sided", "l
                    partition=F, npartition=1, parallel=F, ncores=1){
   if ( alpha<0 |alpha>1){
     stop("alpha should range between 0 and 1.")
+  }
+  if (is.null(alternative)){ 
+    alternative="two.sided"
+    print("Conducting the two-sided test as alternative has not been specified...")
   }
   if (alternative=="two.sided"){ side=2 }
   if (alternative=="greater"){ side=1 }
@@ -249,7 +263,7 @@ MassiveMean=function(ymat, nperm=1000, alpha=0.05, alternative=c("two.sided", "l
       }
     }
     
-    out=combine(result, alpha=alpha, alternative=alternative)
+    out=combine(result, alpha=alpha)
     return(out)
     
   } else{
@@ -273,6 +287,10 @@ MassiveDiff=function(ymat, group, nperm=1000, alpha=0.05, alternative=c("two.sid
   }
   if ( alpha<0 |alpha>1){
     stop("alpha should range between 0 and 1.")
+  }
+  if (is.null(alternative)){ 
+    alternative="two.sided"
+    print("Conducting the two-sided test as alternative has not been specified...")
   }
   if (alternative=="two.sided"){ side=2 }
   if (alternative=="greater"){ side=1 }
@@ -304,7 +322,7 @@ MassiveDiff=function(ymat, group, nperm=1000, alpha=0.05, alternative=c("two.sid
       }
     }
     
-    out=combine(result, alpha=alpha,alternative=alternative)
+    out=combine(result, alpha=alpha)
     return(out)
     
   } else{
