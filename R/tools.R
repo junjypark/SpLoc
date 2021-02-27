@@ -30,7 +30,6 @@ combine=function(lst, alpha=0.05){
     permMax=permMax,
     pvalue=pvalue,
     seed=seed,
-    alternative=alternative,
     nperm=nperm
   ))
 }
