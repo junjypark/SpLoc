@@ -74,7 +74,7 @@ SpLocMean=function(ymat, NNmatrix, nperm=1000, alpha=0.05, alternative=c("two.si
   if ( alpha<0 |alpha>1){
     stop("alpha should range between 0 and 1.")
   }
-  if (is.null(alternative)){ 
+  if (length(alternative)>1){ 
     alternative="two.sided"
     print("Conducting the two-sided test as alternative has not been specified...")
     }
@@ -156,7 +156,7 @@ SpLocDiff=function(ymat, NNmatrix, group, nperm=1000, alpha=0.05, alternative=c(
   if ( alpha<0 |alpha>1){
     stop("alpha should range between 0 and 1.")
   }
-  if (is.null(alternative)){ 
+  if (length(alternative)>1){ 
     alternative="two.sided"
     print("Conducting the two-sided test as alternative has not been specified...")
   }
@@ -227,7 +227,7 @@ MassiveMean=function(ymat, nperm=1000, alpha=0.05, alternative=c("two.sided", "l
   if ( alpha<0 |alpha>1){
     stop("alpha should range between 0 and 1.")
   }
-  if (is.null(alternative)){ 
+  if (length(alternative)>1){ 
     alternative="two.sided"
     print("Conducting the two-sided test as alternative has not been specified...")
   }
@@ -288,7 +288,7 @@ MassiveDiff=function(ymat, group, nperm=1000, alpha=0.05, alternative=c("two.sid
   if ( alpha<0 |alpha>1){
     stop("alpha should range between 0 and 1.")
   }
-  if (is.null(alternative)){ 
+  if (length(alternative)>1){ 
     alternative="two.sided"
     print("Conducting the two-sided test as alternative has not been specified...")
   }
