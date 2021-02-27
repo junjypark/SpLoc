@@ -94,13 +94,10 @@ SpLocMean=function(ymat, NNmatrix, nperm=1000, alpha=0.05, alternative=c("two.si
   }
   if (isTRUE(partition)){
     if (is.null(npartition)){
-      npartition=nrow(NNmatrix)%/%10000
-      # partition=FALSE
-      # print("partition set to be FALSE as npartition is not specified.")
+      npartition=nrow(NNmatrix)%/%10000+1
     }
     else if (npartition==1){
       partition=FALSE
-      print("partition set to be FALSE as npartition is 1.")
     }
   }
   
@@ -117,19 +114,21 @@ SpLocMean=function(ymat, NNmatrix, nperm=1000, alpha=0.05, alternative=c("two.si
       cl=makeCluster(ncores)
       registerDoParallel(cl)
       result=foreach(i=1:npartition, .packages=("SpLoc"),.noexport = "SpLocC" )%dopar%{
-        SpLocMeanC(ymat, NNList[[i]], nperm, alpha, seed, side)
+        fit=SpLocMeanC(ymat, NNList[[i]], nperm, alpha, seed, side)
+        fit$alternative=alternative
+        fit
       }
       stopCluster(cl)
     } else{
       result=list()
       for (i in 1:npartition){
         result[[i]]=SpLocMeanC(ymat, NNList[[i]], nperm, alpha, seed, side)
+        result[[i]]$alternative=alternative
       }
     }
     
     out=combine(result, alpha=alpha)
     return(out)
-    
   } else{
     out=SpLocMeanC(ymat, NNmatrix, nperm, alpha, seed, side)
     out$pvalue=(1+sum(c(out$permMax)>max(out$Tstat,na.rm=TRUE)))/(1+nperm)
@@ -177,13 +176,10 @@ SpLocDiff=function(ymat, NNmatrix, group, nperm=1000, alpha=0.05, alternative=c(
   }
   if (isTRUE(partition)){
     if (is.null(npartition)){
-      npartition=nrow(NNmatrix)%/%10000
-      # partition=FALSE
-      # print("partition set to be FALSE as npartition is not specified.")
+      npartition=nrow(NNmatrix)%/%10000+1
     }
     else if (npartition==1){
       partition=FALSE
-      print("partition set to be FALSE as npartition is 1.")
     }
   }
   
@@ -201,19 +197,21 @@ SpLocDiff=function(ymat, NNmatrix, group, nperm=1000, alpha=0.05, alternative=c(
       cl=makeCluster(ncores)
       registerDoParallel(cl)
       result=foreach(i=1:npartition, .packages=("SpLoc"),.noexport = "SpLocC" )%dopar%{
-        SpLocDiffC(ymat, NNList[[i]], group, nperm, alpha, seed, side)
+        fit=SpLocDiffC(ymat, NNList[[i]], group, nperm, alpha, seed, side)
+        fit$alternative=alternative
+        fit
       }
       stopCluster(cl)
     } else{
       result=list()
       for (i in 1:npartition){
         result[[i]]=SpLocDiffC(ymat, NNList[[i]], group, nperm, alpha, seed, side)
+        result[[i]]$alternative=alternative
       }
     }
     
     out=combine(result, alpha=alpha)
     return(out)
-    
   } else{
     out=SpLocDiffC(ymat, NNmatrix, group, nperm, alpha, seed, side)
     out$pvalue=(1+sum(c(out$permMax)>max(out$Tstat,na.rm=TRUE)))/(1+nperm)
@@ -253,19 +251,21 @@ MassiveMean=function(ymat, nperm=1000, alpha=0.05, alternative=c("two.sided", "l
       cl=makeCluster(ncores)
       registerDoParallel(cl)
       result=foreach(i=1:npartition, .packages=("SpLoc"),.noexport = "SpLocC" )%dopar%{
-        MassiveMeanC(ymatList[[i]], nperm, alpha, seed, side)
+        fit=MassiveMeanC(ymatList[[i]], nperm, alpha, seed, side)
+        fit$alternative=alternative
+        fit
       }
       stopCluster(cl)
     } else{
       result=list()
       for (i in 1:npartition){
         result[[i]]=MassiveMeanC(ymatList[[i]], nperm, alpha, seed, side)
+        result[[i]]$alternative=alternative
       }
     }
     
     out=combine(result, alpha=alpha)
     return(out)
-    
   } else{
     out=MassiveMeanC(ymat, nperm, alpha, seed, side)
     out$pvalue=(1+sum(c(out$permMax)>max(out$Tstat,na.rm=TRUE)))/(1+nperm)
@@ -312,19 +312,21 @@ MassiveDiff=function(ymat, group, nperm=1000, alpha=0.05, alternative=c("two.sid
       cl=makeCluster(ncores)
       registerDoParallel(cl)
       result=foreach(i=1:npartition, .packages=("SpLoc"),.noexport = "SpLocC" )%dopar%{
-        MassiveDiffC(ymatList[[i]], group, nperm, alpha, seed, side)
+        fit=MassiveDiffC(ymatList[[i]], group, nperm, alpha, seed, side)
+        fit$alternative=alternative
+        fit
       }
       stopCluster(cl)
     } else{
       result=list()
       for (i in 1:npartition){
         result[[i]]=MassiveDiffC(ymatList[[i]], group, nperm, alpha, seed, side)
+        result[[i]]$alternative=alternative
       }
     }
     
     out=combine(result, alpha=alpha)
     return(out)
-    
   } else{
     out=MassiveDiffC(ymat, group, nperm, alpha, seed, side)
     out$pvalue=(1+sum(c(out$permMax)>max(out$Tstat,na.rm=TRUE)))/(1+nperm)
