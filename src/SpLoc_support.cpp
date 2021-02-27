@@ -59,6 +59,7 @@ Rcpp::List SpLocMeanC(arma::mat& ymat, arma::sp_mat& NNmatrix, int nperm, double
   arma::vec U(q);
   double sd;
   double mn;
+  double qt;
   
   arma::mat permU(q, nperm); 
   
@@ -89,9 +90,9 @@ Rcpp::List SpLocMeanC(arma::mat& ymat, arma::sp_mat& NNmatrix, int nperm, double
   }
     
   if (side==-1){
-    double qt=quantileC(permMax, alpha);  
+    qt=quantileC(permMax, alpha);  
   } else{
-    double qt=quantileC(permMax, 1-alpha);
+    qt=quantileC(permMax, 1-alpha);
   }
   
   return Rcpp::List::create(Rcpp::Named("threshold")=qt,
@@ -109,6 +110,8 @@ Rcpp::List SpLocDiffC(arma::mat& ymat, arma::sp_mat& NNmatrix, arma::vec group, 
   arma::vec U(q);
   double sd;
   double mn;
+  double qt;
+
   arma::mat permU(q, nperm);
 
   U=NNmatrix*ymat*group;  
@@ -141,9 +144,9 @@ Rcpp::List SpLocDiffC(arma::mat& ymat, arma::sp_mat& NNmatrix, arma::vec group, 
   }
     
   if (side==-1){
-    double qt=quantileC(permMax, alpha);  
+    qt=quantileC(permMax, alpha);  
   } else{
-    double qt=quantileC(permMax, 1-alpha);
+    qt=quantileC(permMax, 1-alpha);
   }
   
   return Rcpp::List::create(Rcpp::Named("threshold")=qt,
@@ -163,6 +166,7 @@ Rcpp::List MassiveMeanC(arma::mat ymat, int nperm, double alpha, int s, int side
   arma::vec U(q);
   double sd;
   double mn;  
+  double qt;
 
   arma::mat permU(q, nperm); 
   
@@ -193,9 +197,9 @@ Rcpp::List MassiveMeanC(arma::mat ymat, int nperm, double alpha, int s, int side
   }
   
   if (side==-1){
-    double qt=quantileC(permMax, alpha);  
+    qt=quantileC(permMax, alpha);  
   } else{
-    double qt=quantileC(permMax, 1-alpha);
+    qt=quantileC(permMax, 1-alpha);
   }
   
   return Rcpp::List::create(Rcpp::Named("threshold")=qt,
@@ -213,6 +217,7 @@ Rcpp::List MassiveDiffC(arma::mat ymat, arma::vec group, int nperm, double alpha
   arma::vec U(q);
   double sd;
   double mn;
+  double qt;
   arma::mat permU(q, nperm);
 
   U=ymat*group;  
@@ -243,9 +248,9 @@ Rcpp::List MassiveDiffC(arma::mat ymat, arma::vec group, int nperm, double alpha
   }
     
   if (side==-1){
-    double qt=quantileC(permMax, alpha);  
+    qt=quantileC(permMax, alpha);  
   } else{
-    double qt=quantileC(permMax, 1-alpha);
+    qt=quantileC(permMax, 1-alpha);
   }
   
   return Rcpp::List::create(Rcpp::Named("threshold")=qt,
