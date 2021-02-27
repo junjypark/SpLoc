@@ -1,10 +1,17 @@
-combine=function(lst, alpha=0.05, alternative=c("two.sided", "less", "greater")){
+combine=function(lst, alpha=0.05){
   n=length(lst)
   seed=do.call("c",lapply(lst, function(x){x$seed}))
   nperm=do.call("c",lapply(lst, function(x){x$nperm}))
+  alternative=do.call("c",lapply(lst, function(x){x$alternative}))
   
-  if (length(unique(seed))>1){stop("Use the same seed for every Sploc output.")}
+  if (length(unique(seed))>1){stop("Use the same seed for every SpLoc output.")}
+  else{seed=seed[1]}
+  
+  if (length(unique(alternative))>1){stop("Use the same alternative for every SpLoc output.")}
+  else{alternative=alternative[1]}
+  
   if (length(unique(nperm))>1){stop("Use the same number of permutations for every SpLoc output.")}
+  else{nperm=nperm[1]}
   
   Tstat=do.call("c",lapply(lst, function(x){x$Tstat}))
   if (alternative=="less"){
@@ -22,9 +29,9 @@ combine=function(lst, alpha=0.05, alternative=c("two.sided", "less", "greater"))
     Tstat=Tstat,
     permMax=permMax,
     pvalue=pvalue,
-    seed=seed[1],
+    seed=seed,
     alternative=alternative,
-    nperm=nperm[1]
+    nperm=nperm
   ))
 }
 
