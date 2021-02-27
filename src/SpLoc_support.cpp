@@ -52,7 +52,7 @@ void set_seed(unsigned int seed) {
 
 // [[Rcpp::depends(RcppArmadillo)]]
 // [[Rcpp::export]]
-Rcpp::List SpLocMeanC(arma::mat& ymat, arma::sp_mat& NNmatrix, int nperm, double alpha, int s){
+Rcpp::List SpLocMeanC(arma::mat& ymat, arma::sp_mat& NNmatrix, int nperm, double alpha, int s, int side){
   int q=NNmatrix.n_rows;
   int n=ymat.n_cols;
   arma::vec onevec(n); onevec.fill(1);
@@ -77,9 +77,11 @@ Rcpp::List SpLocMeanC(arma::mat& ymat, arma::sp_mat& NNmatrix, int nperm, double
     U(k)=U(k)/sd;
   }
   
-  permU=permU%permU;
-  U=U%U;  
-  
+  if (side==2){
+    permU=permU%permU;
+    U=U%U;  
+  }
+
   arma::vec permMax(nperm);
   for (int i=0; i<nperm; ++i){
     permMax(i)=permU.col(i).max();
@@ -96,7 +98,7 @@ Rcpp::List SpLocMeanC(arma::mat& ymat, arma::sp_mat& NNmatrix, int nperm, double
 
 // [[Rcpp::depends(RcppArmadillo)]]
 // [[Rcpp::export]]
-Rcpp::List SpLocDiffC(arma::mat& ymat, arma::sp_mat& NNmatrix, arma::vec group, int nperm, double alpha, int s){
+Rcpp::List SpLocDiffC(arma::mat& ymat, arma::sp_mat& NNmatrix, arma::vec group, int nperm, double alpha, int s, int side){
   int q=NNmatrix.n_rows;
   int n=group.size();
   arma::vec U(q);
@@ -121,8 +123,11 @@ Rcpp::List SpLocDiffC(arma::mat& ymat, arma::sp_mat& NNmatrix, arma::vec group, 
     U(k)=U(k)/sd;
   }
 
-  permU=permU%permU;
-  U=U%U;
+  if (side==2){
+    permU=permU%permU;
+    U=U%U;  
+  }
+
 
   arma::vec permMax(nperm);
   for (int i=0; i<nperm; ++i){
@@ -141,7 +146,7 @@ Rcpp::List SpLocDiffC(arma::mat& ymat, arma::sp_mat& NNmatrix, arma::vec group, 
 
 // [[Rcpp::depends(RcppArmadillo)]]
 // [[Rcpp::export]]
-Rcpp::List MassiveMeanC(arma::mat ymat, int nperm, double alpha, int s){
+Rcpp::List MassiveMeanC(arma::mat ymat, int nperm, double alpha, int s, int side){
   int q=ymat.n_rows;
   int n=ymat.n_cols;
   arma::vec onevec(n); onevec.fill(1);
@@ -166,8 +171,10 @@ Rcpp::List MassiveMeanC(arma::mat ymat, int nperm, double alpha, int s){
     U(k)=U(k)/sd;
   }
   
-  permU=permU%permU;
-  U=U%U;  
+  if (side==2){
+    permU=permU%permU;
+    U=U%U;  
+  }
   
   arma::vec permMax(nperm);
   for (int i=0; i<nperm; ++i){
@@ -185,7 +192,7 @@ Rcpp::List MassiveMeanC(arma::mat ymat, int nperm, double alpha, int s){
 
 // [[Rcpp::depends(RcppArmadillo)]]
 // [[Rcpp::export]]
-Rcpp::List MassiveDiffC(arma::mat ymat, arma::vec group, int nperm, double alpha, int s){
+Rcpp::List MassiveDiffC(arma::mat ymat, arma::vec group, int nperm, double alpha, int s, int side){
   int q=ymat.n_rows;
   int n=group.size();
   arma::vec U(q);
@@ -209,8 +216,10 @@ Rcpp::List MassiveDiffC(arma::mat ymat, arma::vec group, int nperm, double alpha
     U(k)=U(k)/sd;
   }
 
-  permU=permU%permU;
-  U=U%U;
+  if (side==2){
+    permU=permU%permU;
+    U=U%U;  
+  }
 
   arma::vec permMax(nperm);
   for (int i=0; i<nperm; ++i){
