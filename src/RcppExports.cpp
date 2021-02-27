@@ -6,6 +6,17 @@
 
 using namespace Rcpp;
 
+// avg_rank2
+arma::vec avg_rank2(arma::vec x);
+RcppExport SEXP _SpLoc_avg_rank2(SEXP xSEXP) {
+BEGIN_RCPP
+    Rcpp::RObject rcpp_result_gen;
+    Rcpp::RNGScope rcpp_rngScope_gen;
+    Rcpp::traits::input_parameter< arma::vec >::type x(xSEXP);
+    rcpp_result_gen = Rcpp::wrap(avg_rank2(x));
+    return rcpp_result_gen;
+END_RCPP
+}
 // quantileC
 double quantileC(arma::vec Tstatvec, double alpha);
 RcppExport SEXP _SpLoc_quantileC(SEXP TstatvecSEXP, SEXP alphaSEXP) {
@@ -94,6 +105,7 @@ END_RCPP
 }
 
 static const R_CallMethodDef CallEntries[] = {
+    {"_SpLoc_avg_rank2", (DL_FUNC) &_SpLoc_avg_rank2, 1},
     {"_SpLoc_quantileC", (DL_FUNC) &_SpLoc_quantileC, 2},
     {"_SpLoc_set_seed", (DL_FUNC) &_SpLoc_set_seed, 1},
     {"_SpLoc_SpLocMeanC", (DL_FUNC) &_SpLoc_SpLocMeanC, 6},
