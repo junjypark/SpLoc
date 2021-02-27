@@ -1,4 +1,4 @@
-combine=function(lst, alpha=0.05){
+combine=function(lst, alpha=0.05, alternative=c("two.sided", "less", "greater")){
   n=length(lst)
   seed=do.call("c",lapply(lst, function(x){x$seed}))
   nperm=do.call("c",lapply(lst, function(x){x$nperm}))
@@ -7,9 +7,15 @@ combine=function(lst, alpha=0.05){
   if (length(unique(nperm))>1){stop("Use the same number of permutations for every SpLoc output.")}
   
   Tstat=do.call("c",lapply(lst, function(x){x$Tstat}))
-  permMax=apply(do.call("cbind",lapply(lst, function(x){x$permMax})),1,max)
-  threshold=quantile(permMax, 1-alpha)
-  pvalue=(1+sum(c(permMax)>max(Tstat,na.rm=T)))/(1+nperm[1])
+  if (alternative=="less"){
+    permMax=apply(do.call("cbind",lapply(lst, function(x){x$permMax})),1,min)
+    threshold=quantile(permMax, alpha)
+    pvalue=(1+sum(c(permMax)<max(Tstat,na.rm=T)))/(1+nperm[1])
+  } else{
+    permMax=apply(do.call("cbind",lapply(lst, function(x){x$permMax})),1,max)
+    threshold=quantile(permMax, 1-alpha)
+    pvalue=(1+sum(c(permMax)>max(Tstat,na.rm=T)))/(1+nperm[1])
+  }
 
   return(list(
     threshold=threshold,
@@ -17,6 +23,7 @@ combine=function(lst, alpha=0.05){
     permMax=permMax,
     pvalue=pvalue,
     seed=seed[1],
+    alternative=alternative,
     nperm=nperm[1]
   ))
 }
