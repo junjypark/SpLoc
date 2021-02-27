@@ -86,8 +86,12 @@ Rcpp::List SpLocMeanC(arma::mat& ymat, arma::sp_mat& NNmatrix, int nperm, double
   for (int i=0; i<nperm; ++i){
     permMax(i)=permU.col(i).max();
   }
-  
-  double qt=quantileC(permMax, alpha);  
+    
+  if (side==-1){
+    double qt=quantileC(permMax, alpha);  
+  } else{
+    double qt=quantileC(permMax, 1-alpha);
+  }
   
   return Rcpp::List::create(Rcpp::Named("threshold")=qt,
                             Rcpp::Named("Tstat")=U,
@@ -133,8 +137,12 @@ Rcpp::List SpLocDiffC(arma::mat& ymat, arma::sp_mat& NNmatrix, arma::vec group, 
   for (int i=0; i<nperm; ++i){
     permMax(i)=permU.col(i).max();
   }
-  
-  double qt=quantileC(permMax, alpha);
+    
+  if (side==-1){
+    double qt=quantileC(permMax, alpha);  
+  } else{
+    double qt=quantileC(permMax, 1-alpha);
+  }
   
   return Rcpp::List::create(Rcpp::Named("threshold")=qt,
                             Rcpp::Named("Tstat")=U,
@@ -181,7 +189,11 @@ Rcpp::List MassiveMeanC(arma::mat ymat, int nperm, double alpha, int s, int side
     permMax(i)=permU.col(i).max();
   }
   
-  double qt=quantileC(permMax, alpha);  
+  if (side==-1){
+    double qt=quantileC(permMax, alpha);  
+  } else{
+    double qt=quantileC(permMax, 1-alpha);
+  }
   
   return Rcpp::List::create(Rcpp::Named("threshold")=qt,
                             Rcpp::Named("Tstat")=U,
@@ -225,8 +237,12 @@ Rcpp::List MassiveDiffC(arma::mat ymat, arma::vec group, int nperm, double alpha
   for (int i=0; i<nperm; ++i){
     permMax(i)=permU.col(i).max();
   }
-  
-  double qt=quantileC(permMax, alpha);
+    
+  if (side==-1){
+    double qt=quantileC(permMax, alpha);  
+  } else{
+    double qt=quantileC(permMax, 1-alpha);
+  }
   
   return Rcpp::List::create(Rcpp::Named("threshold")=qt,
                             Rcpp::Named("Tstat")=U,
