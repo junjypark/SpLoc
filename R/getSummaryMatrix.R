@@ -34,6 +34,8 @@ getSummaryMatrix=function(ymat, X=NULL, mask,
     }
 
     n.subj=length(n.visits)
+
+    time=X[,time.var]
     
     timeMat=matrix(0, n.subj, n)
     for (i in 1:n.subj){
@@ -43,7 +45,6 @@ getSummaryMatrix=function(ymat, X=NULL, mask,
     }
 
     Subject=rep(paste0("Subj",1:n.subj),n.visits)
-    time=X[,time.var]
     lmerctrl=lmerControl(check.conv.singular = .makeCC(action = "ignore",  tol = 1e-5))
     if (isTRUE(parallel)){
       cl=makeCluster(ncores)
