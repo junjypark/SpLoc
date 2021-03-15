@@ -1,4 +1,4 @@
-@@ -1,6 +1,6 @@
+
 # SpLoc
 
 **SPatially LOCalized signals**
