@@ -11,6 +11,8 @@ To install the latest development builds directly from GitHub, please run the fo
 ```R
 if (!require("devtools"))
 devtools::install_github("junjypark/SpLoc")
+```
+
 ## Usage
 Fitting SpLoc for longitudinal data requires a number of components:
 
