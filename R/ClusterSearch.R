@@ -47,32 +47,80 @@ ClusterSearch=function(Tstat, threshold, NNmatrix){
 
 
 ClusterSearch2=function(Tstat, threshold, NNmatrix, fraction=0.1){
-  
-  selection=NULL
-  sig.ind=which(Tstat>threshold)  
-  if (length(sig.ind)>0){
-    Tstat.sub=Tstat[sig.ind]
-    NNmatrix.sub=NNmatrix[sig.ind,,drop=F]
-    
-    if (length(Tstat.sub)==0){bool=F}else{bool=T}
-    while(bool){
-      sig=which(NNmatrix.sub[which(Tstat.sub==max(Tstat.sub, na.rm=T))[1],]!=0)
-      selection=c(selection,sig)
-      num.vec=apply(NNmatrix.sub[,sig,drop=F],1, function(x){sum(x>0)})
-      
-      b=which(NNmatrix.sub>0,arr.ind=T)
-      den.vec=as.numeric(table(b[,1]))
-      
-      out.set=which(num.vec/den.vec>fraction)
-      Tstat.sub=Tstat.sub[-out.set]
-      NNmatrix.sub=NNmatrix.sub[-out.set,,drop=F]
-      if (length(Tstat.sub)==0){bool=F}
-    }
-    selection=unique(selection)
+  if (length(Tstat)!=nrow(NNmatrix)){
+    stop("The number of rows in NNmat needs to be the same as the length of Tstat.")
   }
   
-  return(list(selection=selection, threshold=threshold))
+  n.threshold=length(threshold)
+  if (n.threshold>1){ threshold=sort(threshold,decreasing = T) } 
+  
+  selectionList=list()
+  TstatList=list()
+  NNmatrixList=list()
+  for (th in 1:n.threshold){
+    if (th==1){ sig.ind=which(Tstat>threshold[th]) } 
+    else{ sig.ind=which(Tstat>threshold[th] & Tstat<=threshold[th-1]) }
+    TstatList[[th]]=Tstat[sig.ind]
+    NNmatrixList[[th]]=NNmatrix[sig.ind,,drop=F]
+  }
+  
+  for (th in 1:n.threshold){
+    if (th==1){ selectionList[[th]] }
+    else{ selectionList[[th]]=selectionList[[th-1]] }
+    
+    if (length(Tstat.sub)==0){ bool=F } else { bool=T }
+    while(bool){
+      sig=which(NNmatrixList[[th]][which(TstatList[[th]]==max(TstatList[[th]], na.rm=T))[1],]!=0)
+      selectionList[[th]]=c(selectionList[[th]],sig)
+      
+      for (th2 in th:n.threshold){
+        num.vec=apply(NNmatrixList[[th]][,sig,drop=F],1, function(x){sum(x>0)})
+        b=which(NNmatrixList[[th]]>0,arr.ind=T)
+        den.vec=as.numeric(table(b[,1]))
+        
+        out.set=which(num.vec/den.vec>fraction)
+        TstatList[[th2]]=TstatList[[th2]][-out.set]
+        NNmatrixList[[th2]]=NNmatrixList[[th2]][-out.set,,drop=F]
+      }
+      
+      if (length(TstatList[[th]])==0){bool=F}
+    }
+    selectionList[[th]]=unique(selectionList[[th]])
+  }
+  
+  return(list(selection=selectionList, threshold=threshold))
 }
+
+# 
+# 
+# ClusterSearch2old=function(Tstat, threshold, NNmatrix, fraction=0.1){
+#   
+#   selection=NULL
+#   sig.ind=which(Tstat>threshold)  
+#   if (length(sig.ind)>0){
+#     Tstat.sub=Tstat[sig.ind]
+#     NNmatrix.sub=NNmatrix[sig.ind,,drop=F]
+#     
+#     if (length(Tstat.sub)==0){bool=F}else{bool=T}
+#     while(bool){
+#       sig=which(NNmatrix.sub[which(Tstat.sub==max(Tstat.sub, na.rm=T))[1],]!=0)
+#       selection=c(selection,sig)
+#       num.vec=apply(NNmatrix.sub[,sig,drop=F],1, function(x){sum(x>0)})
+#       
+#       b=which(NNmatrix.sub>0,arr.ind=T)
+#       den.vec=as.numeric(table(b[,1]))
+#       
+#       out.set=which(num.vec/den.vec>fraction)
+#       Tstat.sub=Tstat.sub[-out.set]
+#       NNmatrix.sub=NNmatrix.sub[-out.set,,drop=F]
+#       if (length(Tstat.sub)==0){bool=F}
+#     }
+#     selection=unique(selection)
+#   }
+#   
+#   return(list(selection=selection, threshold=threshold))
+# }
+
 
 # 
 # Booster=function(fit, NNmatrix, parallel=F, ncores=1){
