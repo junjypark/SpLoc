@@ -2,6 +2,9 @@ ClusterSearch=function(Tstat, threshold, NNmatrix, fraction=0){
   if (length(Tstat)!=nrow(NNmatrix)){
     stop("The number of rows in NNmat needs to be the same as the length of Tstat.")
   }
+  if (fraction<0 || fraction>1){
+    stop("fraction should be between 0 and 1.")
+  }
   
   n.threshold=length(threshold)
   if (n.threshold>1){ threshold=sort(threshold,decreasing = T) } 
