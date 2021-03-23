@@ -51,6 +51,29 @@ buildNNmatrix3D=function(template, radiusSet=c(0,1,2,3)){
   return(NNmatrix)
 }
 
+buildNNmatrixDist=function(distMat, nnSet=c(1,5,10*1:10,50*3:10,100*6:10)){
+  p=nrow(distMat)
+  nnSet=unique(pmin(sort(nnSet),p))
+  n.nnSet=length(nnSet)
+  nnMax=nnSet[n.nnSet]
+  
+  out=foreach(i=1:p,.combine="rbind")%do%{
+    rk=rank(distMat[i,])
+    ind=which(rk<=nnMax)
+    cbind(i,ind, rk[ind])
+  }
+  
+  NNmatrix=foreach(nn=nnSet, .combine="rbind")%do%{
+    ind2=which(out[,3]<=nn)
+    out2=out[ind2,]
+    sparseMatrix(i=out2[,1], j=out2[,2], x=1, dims=c(p,p))
+  }
+  
+  return(NNmatrix)
+}
+
+
+
 combine=function(lst, alpha=0.05){
   n=length(lst)
   seed=do.call("c",lapply(lst, function(x){x$seed}))
