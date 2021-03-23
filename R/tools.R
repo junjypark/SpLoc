@@ -1,4 +1,10 @@
-buildNNmatrix3D=function(template, radiusSet=c(0,1,2,3)){
+buildNNmatrix3D=function(template, radiusSet=c(0,1,2,3), kernel=NULL, phiSet=NULL){
+  if (!is.null(kernel)){
+    if (is.null(phiSet)){ stop("phiSet needs to be specified") }
+    else if (length(phiSet)==1){ phiSet=rep(phiSet, length(radiusSet)) }
+    else if (length(phiSet)!=length(radiusSet)){ stop("Lengths of radiusSet and phiSet are not the same") }
+  } 
+    
   radiusSet=sort(radiusSet)
   nSet=length(radiusSet)
   maxRadius=radiusSet[nSet]
@@ -33,7 +39,9 @@ buildNNmatrix3D=function(template, radiusSet=c(0,1,2,3)){
   jvec=c(mat)
   distvec2=rep(distvec, p)
   
-  NNmatrix=foreach(radius=radiusSet, .combine="rbind")%do%{
+  NNmatrix=foreach(r=1:nSet, .combine="rbind")%do%{
+    radius=radiusSet[r]
+    phi=phiSet[r]
     if (radius==0){
       spDist=sparseMatrix(i=1:length(index),j=1:length(index),x=1, dims=c(length(index),length(index)))
     } else{
@@ -42,7 +50,13 @@ buildNNmatrix3D=function(template, radiusSet=c(0,1,2,3)){
       jvec=jvec[index2]
       distvec2=distvec2[index2]
       
-      spDist=sparseMatrix(i=ivec,j=jvec,x=1, dims=c(p,prod(dim.template)))
+      if (is.null(kernel)){
+        spDist=sparseMatrix(i=ivec,j=jvec,x=1, dims=c(p,prod(dim.template)))
+      } else if (kernel=="Gaussian"){
+        spDist=sparseMatrix(i=ivec,j=jvec,x=exp(-distvec2^2/phi), dims=c(p,prod(dim.template)))
+      } else if (kernel=="Exponential"){
+        spDist=sparseMatrix(i=ivec,j=jvec,x=exp(-distvec2/phi), dims=c(p,prod(dim.template)))
+      }
       spDist=spDist[,index]
     }
     spDist
@@ -71,8 +85,6 @@ buildNNmatrixDist=function(distMat, nnSet=c(1,5,10*1:10,50*3:10,100*6:10)){
   
   return(NNmatrix)
 }
-
-
 
 combine=function(lst, alpha=0.05){
   n=length(lst)
