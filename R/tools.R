@@ -65,22 +65,38 @@ buildNNmatrix3D=function(template, radiusSet=c(0,1,2,3), kernel=NULL, phiSet=NUL
   return(NNmatrix)
 }
 
-buildNNmatrixDist=function(distMat, nnSet=c(1,5,10*1:10,50*3:10,100*6:10)){
+buildNNmatrixDist=function(distMat, nnSet=c(1,5,10*1:10,50*3:10,100*6:10), kernel=NULL, phiSet=NULL){
+  if (!is.null(kernel)){
+    if (is.null(phiSet)){ stop("phiSet needs to be specified") }
+    else if (length(phiSet)==1){ phiSet=rep(phiSet, length(radiusSet)) }
+    else if (length(phiSet)!=length(radiusSet)){ stop("Lengths of nnSet and phiSet are not the same") }
+  } 
+  
   p=nrow(distMat)
   nnSet=unique(pmin(sort(nnSet),p))
   n.nnSet=length(nnSet)
   nnMax=nnSet[n.nnSet]
   
   out=foreach(i=1:p,.combine="rbind")%do%{
-    rk=rank(distMat[i,])
+    dt=distMat[i,]
+    rk=rank(dt)
     ind=which(rk<=nnMax)
-    cbind(i,ind, rk[ind])
+    cbind(i,ind, rk[ind], dt[ind])
   }
   
-  NNmatrix=foreach(nn=nnSet, .combine="rbind")%do%{
+  NNmatrix=foreach(r=1:n.nnSet, .combine="rbind")%do%{
+    nn=nnSet[r]
+    phi=phiSet[r]
     ind2=which(out[,3]<=nn)
     out2=out[ind2,]
-    sparseMatrix(i=out2[,1], j=out2[,2], x=1, dims=c(p,p))
+    if (is.null(kernel)){
+      sp=sparseMatrix(i=out2[,1], j=out2[,2], x=1, dims=c(p,p))
+    } else if (kernel=="Gaussian"){
+      sp=sparseMatrix(i=out2[,1], j=out2[,2], x=exp(-out[,4]^2/phi), dims=c(p,p))
+    } else if (kernel=="Exponential"){
+      sp=sparseMatrix(i=out2[,1], j=out2[,2], x=exp(-out[,4]/phi), dims=c(p,p))
+    }
+    sp
   }
   
   return(NNmatrix)
