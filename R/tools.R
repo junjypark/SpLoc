@@ -46,16 +46,12 @@ buildNNmatrix3D=function(template, radiusSet=c(0,1,2,3), kernel=NULL, phiSet=NUL
       spDist=sparseMatrix(i=1:length(index),j=1:length(index),x=1, dims=c(length(index),length(index)))
     } else{
       index2=which(jvec>0 & distvec2<=radius)
-      ivec=ivec[index2]
-      jvec=jvec[index2]
-      distvec2=distvec2[index2]
-      
       if (is.null(kernel)){
-        spDist=sparseMatrix(i=ivec,j=jvec,x=1, dims=c(p,prod(dim.template)))
+        spDist=sparseMatrix(i=ivec[index2],j=jvec[index2],x=1, dims=c(p,prod(dim.template)))
       } else if (kernel=="Gaussian"){
-        spDist=sparseMatrix(i=ivec,j=jvec,x=exp(-distvec2^2/phi), dims=c(p,prod(dim.template)))
+        spDist=sparseMatrix(i=ivec[index2],j=jvec[index2],x=exp(-distvec2[index2]^2/phi), dims=c(p,prod(dim.template)))
       } else if (kernel=="Exponential"){
-        spDist=sparseMatrix(i=ivec,j=jvec,x=exp(-distvec2/phi), dims=c(p,prod(dim.template)))
+        spDist=sparseMatrix(i=ivec[index2],j=jvec[index2],x=exp(-distvec2[index2]/phi), dims=c(p,prod(dim.template)))
       }
       spDist=spDist[,index]
     }
