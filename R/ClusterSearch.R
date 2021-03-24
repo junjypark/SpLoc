@@ -7,7 +7,7 @@ ClusterSearch=function(Tstat, threshold, NNmatrix, fraction=0){
   }
   
   n.threshold=length(threshold)
-  if (n.threshold>1){ threshold=sort(threshold,decreasing = T) } 
+  if (n.threshold>1){ threshold=sort(threshold, decreasing = T) } 
   
   selectionList=list()
   TstatList=list()
@@ -30,7 +30,7 @@ ClusterSearch=function(Tstat, threshold, NNmatrix, fraction=0){
       
       for (th2 in th:n.threshold){
         num.vec=apply(NNmatrixList[[th2]][,sig,drop=F],1, function(x){sum(x>0)})
-        b=which(NNmatrixList[[th2]]>0,arr.ind=T)
+        b=which(NNmatrixList[[th2]]!=0,arr.ind=T)
         den.vec=as.numeric(table(b[,1]))
         
         out.set=which(num.vec/den.vec>fraction)
