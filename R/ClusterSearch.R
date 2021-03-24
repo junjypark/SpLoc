@@ -1,9 +1,16 @@
-ClusterSearch=function(Tstat, threshold, NNmatrix, fraction=0){
+ClusterSearch=function(Tstat, threshold, NNmatrix, alternative, fraction=0){
   if (length(Tstat)!=nrow(NNmatrix)){
     stop("The number of rows in NNmat needs to be the same as the length of Tstat.")
   }
   if (fraction<0 || fraction>1){
     stop("fraction should be between 0 and 1.")
+  }
+  if (is.null(alternative)){
+    print("Assuming two-sided alternative. Please change 'alternative' if not.")
+  }
+  if (alternative=="less"){
+    Tstat=-Tstat
+    threshold=-threshold
   }
   
   n.threshold=length(threshold)
@@ -31,9 +38,7 @@ ClusterSearch=function(Tstat, threshold, NNmatrix, fraction=0){
       for (th2 in th:n.threshold){
         num.vec=apply(NNmatrixList[[th2]][,sig,drop=F],1, function(x){sum(x>0)})
         den.vec=as.numeric(table(NNmatrixList[[th2]]@i+1))
-        # b=which(NNmatrixList[[th2]]!=0, arr.ind=T)
-        # den.vec=as.numeric(table(b[,1]))
-        
+
         out.set=which(num.vec/den.vec>fraction)
         TstatList[[th2]]=TstatList[[th2]][-out.set]
         NNmatrixList[[th2]]=NNmatrixList[[th2]][-out.set,,drop=F]
