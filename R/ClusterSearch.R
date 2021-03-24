@@ -30,7 +30,7 @@ ClusterSearch=function(Tstat, threshold, NNmatrix, fraction=0){
       
       for (th2 in th:n.threshold){
         num.vec=apply(NNmatrixList[[th2]][,sig,drop=F],1, function(x){sum(x>0)})
-        den.vec=as.numeric(table(NNmatrixList[[th2]]+1))
+        den.vec=as.numeric(table(NNmatrixList[[th2]]@i+1))
         # b=which(NNmatrixList[[th2]]!=0, arr.ind=T)
         # den.vec=as.numeric(table(b[,1]))
         
