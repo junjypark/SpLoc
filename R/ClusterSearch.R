@@ -1,4 +1,4 @@
-ClusterSearch=function(Tstat, threshold, NNmatrix, alternative, fraction=0){
+ClusterSearch=function(Tstat, threshold, NNmatrix, alternative=NULL, fraction=0){
   if (length(Tstat)!=nrow(NNmatrix)){
     stop("The number of rows in NNmat needs to be the same as the length of Tstat.")
   }
@@ -98,28 +98,3 @@ ClusterSearch=function(Tstat, threshold, NNmatrix, alternative, fraction=0){
 #   
 #   return(list(selection=selection, threshold=threshold))
 # }
-
-# 
-# Booster=function(fit, NNmatrix, parallel=F, ncores=1){
-#   ind=which(fit$Tstat>fit$thres)
-#   Tstatsub=fit$Tstat[ind]
-#   NNsub=NNmatrix[ind,]
-#   nonzero.index=which(NNsub!=0, arr.ind=T)
-#   voxels=sort(unique(nonzero.index[,2]))
-#   
-#   if (parallel){
-#     cl=makeCluster(ncores)
-#     registerDoParallel(cl)
-#     boost=foreach(i=1:length(voxels), .combine="c", .packages="Matrix")%dopar%{
-#       max(Tstatsub[which(NNsub[,voxels[i]]!=0)])
-#     }
-#     stopCluster(cl)
-#   } else{
-#     boost=foreach(i=1:length(voxels), .combine="c",.packages="Matrix")%do%{
-#       max(Tstatsub[which(NNsub[,voxels[i]]!=0)])
-#     }
-#   }
-#   
-#   return(list(boost=boost, voxels=voxels))
-# }
-# 
