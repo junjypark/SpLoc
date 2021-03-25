@@ -3,61 +3,62 @@ SpLoc=function(ymat, NNmatrix=NULL, group=NULL, nperm=1000, alpha=0.05, alternat
   if (is.null(NNmatrix)){
     print("As NNmatrix is not specified, SpLoc conducts massive univariate analysis.")
     if (is.null(group)){
-      return(MassiveMean(ymat=ymat,
-                         nperm=nperm, 
-                         alpha=alpha, 
-                         alternative=alternative,
-                         seed=seed,
-                         partition=partition, 
-                         npartition = npartition,
-                         parallel=parallel,
-                         ncores=ncores)
-                         )
+      fit=MassiveMean(ymat=ymat,
+                      nperm=nperm, 
+                      alpha=alpha, 
+                      alternative=alternative,
+                      seed=seed,
+                      partition=partition, 
+                      npartition = npartition,
+                      parallel=parallel,
+                      ncores=ncores)
+      set.seed(NULL)
+      return(fit)
     } else{
-      return(MassiveDiff(ymat=ymat,
-                         group=group,
-                         nperm=nperm, 
-                         alpha=alpha, 
-                         alternative=alternative,
-                         seed=seed,
-                         partition=partition, 
-                         npartition = npartition,
-                         parallel=parallel,
-                         ncores=ncores)
-                         ) 
+      fit=MassiveDiff(ymat=ymat,
+                      group=group,
+                      nperm=nperm, 
+                      alpha=alpha, 
+                      alternative=alternative,
+                      seed=seed,
+                      partition=partition, 
+                      npartition = npartition,
+                      parallel=parallel,
+                      ncores=ncores)
+      set.seed(NULL)
+      return(fit) 
     }
-    
   } else{
     if (is.null(group)){
-      return(
-        SpLocMean(ymat=ymat, 
-                  NNmatrix=NNmatrix, 
-                  nperm=nperm, 
-                  alpha=alpha, 
-                  alternative=alternative,
-                  seed=seed,
-                  is.sparse = is.sparse, 
-                  partition=partition, 
-                  npartition = npartition,
-                  parallel=parallel,
-                  ncores=ncores)
-      )
+      fit=SpLocMean(ymat=ymat, 
+                    NNmatrix=NNmatrix, 
+                    nperm=nperm, 
+                    alpha=alpha, 
+                    alternative=alternative,
+                    seed=seed,
+                    is.sparse = is.sparse, 
+                    partition=partition, 
+                    npartition = npartition,
+                    parallel=parallel,
+                    ncores=ncores)
+      set.seed(NULL)
+      return(fit)
     }
     else{
-      return(
-        SpLocDiff(ymat=ymat, 
-                  NNmatrix=NNmatrix, 
-                  group=group, 
-                  nperm=nperm, 
-                  alpha=alpha, 
-                  alternative=alternative,
-                  seed=seed,
-                  is.sparse = is.sparse, 
-                  partition=partition, 
-                  npartition = npartition,
-                  parallel=parallel, 
-                  ncores=ncores)
-      )
+      fit=SpLocDiff(ymat=ymat, 
+                    NNmatrix=NNmatrix, 
+                    group=group, 
+                    nperm=nperm, 
+                    alpha=alpha, 
+                    alternative=alternative,
+                    seed=seed,
+                    is.sparse = is.sparse, 
+                    partition=partition, 
+                    npartition = npartition,
+                    parallel=parallel, 
+                    ncores=ncores)
+      set.seed(NULL)
+      return(fit)
     }
   }
 }
