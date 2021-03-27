@@ -1,5 +1,5 @@
 ClusterSearch=function(Tstat, threshold, NNmatrix, alternative=NULL, fraction=0){
-  if (length(Tstat)!=nrow(NNmatrix@Dim[1])){
+  if (length(Tstat)!=NNmatrix@Dim[1]){
     stop("The number of rows in NNmat needs to be the same as the length of Tstat.")
   }
   if (fraction<0 || fraction>1){
@@ -53,7 +53,7 @@ ClusterSearch=function(Tstat, threshold, NNmatrix, alternative=NULL, fraction=0)
 }
 
 ClusterSearch2=function(Tstat, threshold, NNmatrix, alternative=NULL, tau=0, is.eps=TRUE, eps=NULL){
-  if (length(Tstat)!=nrow(NNmatrix@Dim[1])){
+  if (length(Tstat)!=NNmatrix@Dim[1]){
     stop("The number of rows in NNmat needs to be the same as the length of Tstat.")
   }
   if (tau<0 || tau>1){
