@@ -97,7 +97,7 @@ ClusterSearch2=function(Tstat, threshold, NNmatrix, alternative=NULL, tau=0, is.
       NNtemp[,exclude]=0
       ind=sort(unique(NNtemp@i+1))
       TstatList[[th]]=Tstat[ind]
-      NNtemp=NNtemp[ind,]
+      NNtemp=NNtemp[ind,,drop=F]
       NNmatrixList[[th]]=NNtemp
     } else{
       TstatList[[th]]=Tstat[sig.ind] 
