@@ -116,14 +116,13 @@ ClusterSearch2=function(Tstat, threshold, NNmatrix, alternative=NULL, tau=0, is.
       if (is.eps){ sig=intersect(sig, include) }
       
       selectionList[[th]]=c(selectionList[[th]],sig)
-      print(paste0("search done: ",length(sig)))
-      
+
       for (th2 in th:n.threshold){
         num.vec=apply(NNmatrixList[[th2]][,sig,drop=F],1, function(x){sum(x>0)})
         den.vec=as.numeric(table(NNmatrixList[[th2]]@i+1))
         out.set=unique(c(which(num.vec/den.vec>tau),i))
         
-        if (length(out.set)>0){
+        if (length(out.set)>0 & length(TstatList[[th2]]>0)){
           TstatList[[th2]]=TstatList[[th2]][-out.set]
           NNmatrixList[[th2]]=NNmatrixList[[th2]][-out.set,,drop=F]
         }
