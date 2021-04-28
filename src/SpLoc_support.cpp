@@ -74,9 +74,7 @@ Rcpp::List SpLocMeanC(arma::mat& ymat, arma::sp_mat& NNmatrix, int nperm, double
     mn=mean(permU.row(k));
     sd=stddev(permU.row(k));
     permU.row(k)=(permU.row(k)-mn)/sd;
-    //U(k)=(U(k)-mn)/sd;
-    //permU.row(k)=permU.row(k)/sd;
-    U(k)=U(k)/sd;
+    U(k)=(U(k)-mn)/sd;
   }
   
   if (side==2){
@@ -131,9 +129,7 @@ Rcpp::List SpLocDiffC(arma::mat& ymat, arma::sp_mat& NNmatrix, arma::vec group, 
     mn=mean(permU.row(k));
     sd=stddev(permU.row(k));
     permU.row(k)=(permU.row(k)-mn)/sd;
-    //U(k)=(U(k)-mn)/sd;
-    //permU.row(k)=permU.row(k)/sd;
-    U(k)=U(k)/sd;
+    U(k)=(U(k)-mn)/sd;
   }
 
   if (side==2){
@@ -188,9 +184,7 @@ Rcpp::List MassiveMeanC(arma::mat ymat, int nperm, double alpha, int s, int side
     mn=mean(permU.row(k));
     sd=stddev(permU.row(k));
     permU.row(k)=(permU.row(k)-mn)/sd;
-    //U(k)=(U(k)-mn)/sd;
-    //permU.row(k)=permU.row(k)/sd;
-    U(k)=U(k)/sd;
+    U(k)=(U(k)-mn)/sd;
   }
   
   if (side==2){
@@ -243,9 +237,7 @@ Rcpp::List MassiveDiffC(arma::mat ymat, arma::vec group, int nperm, double alpha
     mn=mean(permU.row(k));
     sd=stddev(permU.row(k));
     permU.row(k)=(permU.row(k)-mn)/sd;
-    //U(k)=(U(k)-mn)/sd;
-    //permU.row(k)=(permU.row(k))/sd;
-    U(k)=U(k)/sd;
+    U(k)=(U(k)-mn)/sd;
   }
 
   if (side==2){
