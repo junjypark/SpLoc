@@ -69,13 +69,10 @@ Rcpp::List SpLocMeanC(arma::mat& ymat, arma::sp_mat& NNmatrix, int nperm, arma::
   permU=NNmatrix*ymat*flipmat;
 
   if (transform==1){
-    arma::vec uvec(nperm);
-    uvec.randn();
-
     for (int k=0; k<q; ++k){
       mn=mean(permU.row(k));
       sd=stddev(permU.row(k));
-      permU.row(k)=invNT(uvec,permU.row(k));
+      permU.row(k)=avg_rank(permU.row(k));
       U(k)=(U(k)-mn)/sd;
     }
   } else{
@@ -98,10 +95,20 @@ Rcpp::List SpLocMeanC(arma::mat& ymat, arma::sp_mat& NNmatrix, int nperm, arma::
     for (int i=0; i<nperm; ++i){
       permMax(i)=permU.col(i).min();
     }
+    if (transform){
+      arma::vec uvec(nperm);
+      uvec.randn();
+      permMax=quantile(uvec, permMax);
+    }
     qt=quantile(permMax, alpha);  
   } else{
     for (int i=0; i<nperm; ++i){
       permMax(i)=permU.col(i).max();
+    }
+    if (transform){
+      arma::vec uvec(nperm);
+      uvec.randn();
+      permMax=quantile(uvec, permMax);
     }
     qt=quantile(permMax, 1-alpha);
   }
@@ -141,13 +148,10 @@ Rcpp::List SpLocDiffC(arma::mat& ymat, arma::sp_mat& NNmatrix, arma::vec group, 
   permU=NNmatrix*ymat*permmat;
     
   if (transform==1){
-    arma::vec uvec(nperm);
-    uvec.randn();
-
     for (int k=0; k<q; ++k){
       mn=mean(permU.row(k));
       sd=stddev(permU.row(k));
-      permU.row(k)=invNT(uvec,permU.row(k));
+      permU.row(k)=avg_rank(permU.row(k));
       U(k)=(U(k)-mn)/sd;
     }
   } else{
@@ -170,10 +174,20 @@ Rcpp::List SpLocDiffC(arma::mat& ymat, arma::sp_mat& NNmatrix, arma::vec group, 
     for (int i=0; i<nperm; ++i){
       permMax(i)=permU.col(i).min();
     }
+    if (transform){
+      arma::vec uvec(nperm);
+      uvec.randn();
+      permMax=quantile(uvec, permMax);
+    }
     qt=quantile(permMax, alpha);  
   } else{
     for (int i=0; i<nperm; ++i){
       permMax(i)=permU.col(i).max();
+    }
+    if (transform){
+      arma::vec uvec(nperm);
+      uvec.randn();
+      permMax=quantile(uvec, permMax);
     }
     qt=quantile(permMax, 1-alpha);
   }
@@ -213,13 +227,10 @@ Rcpp::List MassiveMeanC(arma::mat ymat, int nperm,  arma::vec alpha, int s, int 
   permU=ymat*flipmat;
   
   if (transform==1){
-    arma::vec uvec(nperm);
-    uvec.randn();
-
     for (int k=0; k<q; ++k){
       mn=mean(permU.row(k));
       sd=stddev(permU.row(k));
-      permU.row(k)=invNT(uvec,permU.row(k));
+      permU.row(k)=avg_rank(permU.row(k));
       U(k)=(U(k)-mn)/sd;
     }
   } else{
@@ -242,10 +253,20 @@ Rcpp::List MassiveMeanC(arma::mat ymat, int nperm,  arma::vec alpha, int s, int 
     for (int i=0; i<nperm; ++i){
       permMax(i)=permU.col(i).min();
     }
+    if (transform){
+      arma::vec uvec(nperm);
+      uvec.randn();
+      permMax=quantile(uvec, permMax);
+    }
     qt=quantile(permMax, alpha);  
   } else{
     for (int i=0; i<nperm; ++i){
       permMax(i)=permU.col(i).max();
+    }
+    if (transform){
+      arma::vec uvec(nperm);
+      uvec.randn();
+      permMax=quantile(uvec, permMax);
     }
     qt=quantile(permMax, 1-alpha);
   }
@@ -283,13 +304,10 @@ Rcpp::List MassiveDiffC(arma::mat ymat, arma::vec group, int nperm,  arma::vec a
   permU=ymat*permmat;
   
   if (transform==1){
-    arma::vec uvec(nperm);
-    uvec.randn();
-
     for (int k=0; k<q; ++k){
       mn=mean(permU.row(k));
       sd=stddev(permU.row(k));
-      permU.row(k)=invNT(uvec,permU.row(k));
+      permU.row(k)=avg_rank(permU.row(k));
       U(k)=(U(k)-mn)/sd;
     }
   } else{
@@ -312,10 +330,20 @@ Rcpp::List MassiveDiffC(arma::mat ymat, arma::vec group, int nperm,  arma::vec a
     for (int i=0; i<nperm; ++i){
       permMax(i)=permU.col(i).min();
     }
+    if (transform){
+      arma::vec uvec(nperm);
+      uvec.randn();
+      permMax=quantile(uvec, permMax);
+    }
     qt=quantile(permMax, alpha);  
   } else{
     for (int i=0; i<nperm; ++i){
       permMax(i)=permU.col(i).max();
+    }
+    if (transform){
+      arma::vec uvec(nperm);
+      uvec.randn();
+      permMax=quantile(uvec, permMax);
     }
     qt=quantile(permMax, 1-alpha);
   }
