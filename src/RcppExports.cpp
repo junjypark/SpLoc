@@ -6,6 +6,18 @@
 
 using namespace Rcpp;
 
+// quantileC
+double quantileC(arma::vec Tstatvec, double alpha);
+RcppExport SEXP _SpLoc_quantileC(SEXP TstatvecSEXP, SEXP alphaSEXP) {
+BEGIN_RCPP
+    Rcpp::RObject rcpp_result_gen;
+    Rcpp::RNGScope rcpp_rngScope_gen;
+    Rcpp::traits::input_parameter< arma::vec >::type Tstatvec(TstatvecSEXP);
+    Rcpp::traits::input_parameter< double >::type alpha(alphaSEXP);
+    rcpp_result_gen = Rcpp::wrap(quantileC(Tstatvec, alpha));
+    return rcpp_result_gen;
+END_RCPP
+}
 // invNT
 arma::vec invNT(arma::vec u, arma::vec x);
 RcppExport SEXP _SpLoc_invNT(SEXP uSEXP, SEXP xSEXP) {
@@ -94,6 +106,7 @@ END_RCPP
 }
 
 static const R_CallMethodDef CallEntries[] = {
+    {"_SpLoc_quantileC", (DL_FUNC) &_SpLoc_quantileC, 2},
     {"_SpLoc_invNT", (DL_FUNC) &_SpLoc_invNT, 2},
     {"_SpLoc_set_seed", (DL_FUNC) &_SpLoc_set_seed, 1},
     {"_SpLoc_SpLocMeanC", (DL_FUNC) &_SpLoc_SpLocMeanC, 6},
