@@ -72,7 +72,7 @@ Rcpp::List SpLocMeanC(arma::mat& ymat, arma::sp_mat& NNmatrix, int nperm, arma::
     for (int k=0; k<q; ++k){
       mn=mean(permU.row(k));
       sd=stddev(permU.row(k));
-      permU.row(k)=avg_rank(permU.row(k));
+      permU.row(k)=(avg_rank(permU.row(k))-0.5)/nperm;
       U(k)=(U(k)-mn)/sd;
     }
   } else{
@@ -151,7 +151,7 @@ Rcpp::List SpLocDiffC(arma::mat& ymat, arma::sp_mat& NNmatrix, arma::vec group, 
     for (int k=0; k<q; ++k){
       mn=mean(permU.row(k));
       sd=stddev(permU.row(k));
-      permU.row(k)=avg_rank(permU.row(k));
+      permU.row(k)=(avg_rank(permU.row(k))-0.5)/nperm;
       U(k)=(U(k)-mn)/sd;
     }
   } else{
@@ -230,7 +230,7 @@ Rcpp::List MassiveMeanC(arma::mat ymat, int nperm,  arma::vec alpha, int s, int 
     for (int k=0; k<q; ++k){
       mn=mean(permU.row(k));
       sd=stddev(permU.row(k));
-      permU.row(k)=avg_rank(permU.row(k));
+      permU.row(k)=(avg_rank(permU.row(k))-0.5)/nperm;
       U(k)=(U(k)-mn)/sd;
     }
   } else{
@@ -307,7 +307,7 @@ Rcpp::List MassiveDiffC(arma::mat ymat, arma::vec group, int nperm,  arma::vec a
     for (int k=0; k<q; ++k){
       mn=mean(permU.row(k));
       sd=stddev(permU.row(k));
-      permU.row(k)=avg_rank(permU.row(k));
+      permU.row(k)=(avg_rank(permU.row(k))-0.5)/nperm;
       U(k)=(U(k)-mn)/sd;
     }
   } else{
