@@ -44,7 +44,7 @@ void set_seed(unsigned int seed) {
 
 // [[Rcpp::depends(RcppArmadillo)]]
 // [[Rcpp::export]]
-Rcpp::List SpLocMeanC(arma::mat& ymat, arma::sp_mat& NNmatrix, int nperm, double alpha, int s, int side){
+Rcpp::List SpLocMeanC(arma::mat& ymat, arma::sp_mat& NNmatrix, int nperm, arma::vec alpha, int s, int side){
   int q=NNmatrix.n_rows;
   int n=ymat.n_cols;
   arma::vec onevec(n); onevec.fill(1);
@@ -115,7 +115,7 @@ Rcpp::List SpLocMeanC(arma::mat& ymat, arma::sp_mat& NNmatrix, int nperm, double
 
 // [[Rcpp::depends(RcppArmadillo)]]
 // [[Rcpp::export]]
-Rcpp::List SpLocDiffC(arma::mat& ymat, arma::sp_mat& NNmatrix, arma::vec group, int nperm, double alpha, int s, int side){
+Rcpp::List SpLocDiffC(arma::mat& ymat, arma::sp_mat& NNmatrix, arma::vec group, int nperm,  arma::vec alpha, int s, int side){
   int q=NNmatrix.n_rows;
   int n=group.size();
   arma::vec U(q);
@@ -188,7 +188,7 @@ Rcpp::List SpLocDiffC(arma::mat& ymat, arma::sp_mat& NNmatrix, arma::vec group, 
 
 // [[Rcpp::depends(RcppArmadillo)]]
 // [[Rcpp::export]]
-Rcpp::List MassiveMeanC(arma::mat ymat, int nperm, double alpha, int s, int side){
+Rcpp::List MassiveMeanC(arma::mat ymat, int nperm,  arma::vec alpha, int s, int side){
   int q=ymat.n_rows;
   int n=ymat.n_cols;
   arma::vec onevec(n); onevec.fill(1);
@@ -259,7 +259,7 @@ Rcpp::List MassiveMeanC(arma::mat ymat, int nperm, double alpha, int s, int side
 
 // [[Rcpp::depends(RcppArmadillo)]]
 // [[Rcpp::export]]
-Rcpp::List MassiveDiffC(arma::mat ymat, arma::vec group, int nperm, double alpha, int s, int side){
+Rcpp::List MassiveDiffC(arma::mat ymat, arma::vec group, int nperm,  arma::vec alpha, int s, int side){
   int q=ymat.n_rows;
   int n=group.size();
   arma::vec U(q);
