@@ -115,7 +115,7 @@ SpLocMean=function(ymat, NNmatrix, nperm=1000, alpha=0.05, alternative=c("two.si
       cl=makeCluster(ncores)
       registerDoParallel(cl)
       result=foreach(i=1:npartition, .packages=("SpLoc"),.noexport = "SpLocC" )%dopar%{
-        fit=SpLocMeanC(ymat, NNList[[i]], nperm, alpha, seed, side)
+        fit=SpLocMeanC(ymat, NNList[[i]], nperm, seed, side)
         fit$alternative=alternative
         fit
       }
@@ -123,7 +123,7 @@ SpLocMean=function(ymat, NNmatrix, nperm=1000, alpha=0.05, alternative=c("two.si
     } else{
       result=list()
       for (i in 1:npartition){
-        result[[i]]=SpLocMeanC(ymat, NNList[[i]], nperm, alpha, seed, side)
+        result[[i]]=SpLocMeanC(ymat, NNList[[i]], nperm, seed, side)
         result[[i]]$alternative=alternative
       }
     }
@@ -131,10 +131,11 @@ SpLocMean=function(ymat, NNmatrix, nperm=1000, alpha=0.05, alternative=c("two.si
     out=combine(result, alpha=alpha)
     return(out)
   } else{
-    out=SpLocMeanC(ymat, NNmatrix, nperm, alpha, seed, side)
+    out=SpLocMeanC(ymat, NNmatrix, nperm, seed, side)
     out$pvalue=(1+sum(c(out$permMax)>max(out$Tstat,na.rm=TRUE)))/(1+nperm)
     out$seed=seed
     out$alternative=alternative
+    out=conbine(list(result),alpha=alpha)
     return(out)    
   }
 }
@@ -198,7 +199,7 @@ SpLocDiff=function(ymat, NNmatrix, group, nperm=1000, alpha=0.05, alternative=c(
       cl=makeCluster(ncores)
       registerDoParallel(cl)
       result=foreach(i=1:npartition, .packages=("SpLoc"),.noexport = "SpLocC" )%dopar%{
-        fit=SpLocDiffC(ymat, NNList[[i]], group, nperm, alpha, seed, side)
+        fit=SpLocDiffC(ymat, NNList[[i]], group, nperm, seed, side)
         fit$alternative=alternative
         fit
       }
@@ -206,7 +207,7 @@ SpLocDiff=function(ymat, NNmatrix, group, nperm=1000, alpha=0.05, alternative=c(
     } else{
       result=list()
       for (i in 1:npartition){
-        result[[i]]=SpLocDiffC(ymat, NNList[[i]], group, nperm, alpha, seed, side)
+        result[[i]]=SpLocDiffC(ymat, NNList[[i]], group, nperm, seed, side)
         result[[i]]$alternative=alternative
       }
     }
@@ -214,10 +215,11 @@ SpLocDiff=function(ymat, NNmatrix, group, nperm=1000, alpha=0.05, alternative=c(
     out=combine(result, alpha=alpha)
     return(out)
   } else{
-    out=SpLocDiffC(ymat, NNmatrix, group, nperm, alpha, seed, side)
+    out=SpLocDiffC(ymat, NNmatrix, group, nperm, seed, side)
     out$pvalue=(1+sum(c(out$permMax)>max(out$Tstat,na.rm=TRUE)))/(1+nperm)
     out$seed=seed
     out$alternative=alternative
+    out=conbine(list(result),alpha=alpha)
     return(out)    
   }
 }
@@ -252,7 +254,7 @@ MassiveMean=function(ymat, nperm=1000, alpha=0.05, alternative=c("two.sided", "l
       cl=makeCluster(ncores)
       registerDoParallel(cl)
       result=foreach(i=1:npartition, .packages=("SpLoc"),.noexport = "SpLocC" )%dopar%{
-        fit=MassiveMeanC(ymatList[[i]], nperm, alpha, seed, side)
+        fit=MassiveMeanC(ymatList[[i]], nperm, seed, side)
         fit$alternative=alternative
         fit
       }
@@ -260,7 +262,7 @@ MassiveMean=function(ymat, nperm=1000, alpha=0.05, alternative=c("two.sided", "l
     } else{
       result=list()
       for (i in 1:npartition){
-        result[[i]]=MassiveMeanC(ymatList[[i]], nperm, alpha, seed, side)
+        result[[i]]=MassiveMeanC(ymatList[[i]], nperm, seed, side)
         result[[i]]$alternative=alternative
       }
     }
@@ -268,10 +270,11 @@ MassiveMean=function(ymat, nperm=1000, alpha=0.05, alternative=c("two.sided", "l
     out=combine(result, alpha=alpha)
     return(out)
   } else{
-    out=MassiveMeanC(ymat, nperm, alpha, seed, side)
+    out=MassiveMeanC(ymat, nperm, seed, side)
     out$pvalue=(1+sum(c(out$permMax)>max(out$Tstat,na.rm=TRUE)))/(1+nperm)
     out$seed=seed
     out$alternative=alternative
+    out=conbine(list(result),alpha=alpha)
   }
   
   return(out)    
@@ -313,7 +316,7 @@ MassiveDiff=function(ymat, group, nperm=1000, alpha=0.05, alternative=c("two.sid
       cl=makeCluster(ncores)
       registerDoParallel(cl)
       result=foreach(i=1:npartition, .packages=("SpLoc"),.noexport = "SpLocC" )%dopar%{
-        fit=MassiveDiffC(ymatList[[i]], group, nperm, alpha, seed, side)
+        fit=MassiveDiffC(ymatList[[i]], group, nperm, seed, side)
         fit$alternative=alternative
         fit
       }
@@ -321,7 +324,7 @@ MassiveDiff=function(ymat, group, nperm=1000, alpha=0.05, alternative=c("two.sid
     } else{
       result=list()
       for (i in 1:npartition){
-        result[[i]]=MassiveDiffC(ymatList[[i]], group, nperm, alpha, seed, side)
+        result[[i]]=MassiveDiffC(ymatList[[i]], group, nperm, seed, side)
         result[[i]]$alternative=alternative
       }
     }
@@ -329,10 +332,11 @@ MassiveDiff=function(ymat, group, nperm=1000, alpha=0.05, alternative=c("two.sid
     out=combine(result, alpha=alpha)
     return(out)
   } else{
-    out=MassiveDiffC(ymat, group, nperm, alpha, seed, side)
+    out=MassiveDiffC(ymat, group, nperm, eed, side)
     out$pvalue=(1+sum(c(out$permMax)>max(out$Tstat,na.rm=TRUE)))/(1+nperm)
     out$seed=seed
     out$alternative=alternative
+    out=conbine(list(result),alpha=alpha)
   }
   return(out)    
 }
