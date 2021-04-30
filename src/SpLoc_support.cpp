@@ -53,6 +53,11 @@ Rcpp::List SpLocMeanC(arma::mat& ymat, arma::sp_mat& NNmatrix, int nperm, double
   double mn;
   double qt;
   
+  int transform=0;
+  if (n<=50){
+    transform=1;
+  } 
+
   arma::mat permU(q, nperm); 
   
   U=NNmatrix*ymat*onevec;  
@@ -62,12 +67,24 @@ Rcpp::List SpLocMeanC(arma::mat& ymat, arma::sp_mat& NNmatrix, int nperm, double
   flipmat.randn(); 
   flipmat=sign(flipmat);
   permU=NNmatrix*ymat*flipmat;
-  
-  for (int k=0; k<q; ++k){
-    mn=mean(permU.row(k));
-    sd=stddev(permU.row(k));
-    permU.row(k)=(permU.row(k)-mn)/sd;
-    U(k)=(U(k)-mn)/sd;
+
+  if (transform==1){
+    arma::vec uvec(nperm);
+    uvec.randn();
+
+    for (int k=0; k<q; ++k){
+      mn=mean(permU.row(k));
+      sd=stddev(permU.row(k));
+      permU.row(k)=invNT(uvec,permU.row(k));
+      U(k)=(U(k)-mn)/sd;
+    }
+  } else{
+    for (int k=0; k<q; ++k){
+      mn=mean(permU.row(k));
+      sd=stddev(permU.row(k));
+      permU.row(k)=(permU.row(k)-mn)/sd;
+      U(k)=(U(k)-mn)/sd;
+    }
   }
   
   if (side==2){
@@ -106,6 +123,11 @@ Rcpp::List SpLocDiffC(arma::mat& ymat, arma::sp_mat& NNmatrix, arma::vec group, 
   double mn;
   double qt;
 
+  int transform=0;
+  if (n<=50){
+    transform=1;
+  } 
+
   arma::mat permU(q, nperm);
 
   U=NNmatrix*ymat*group;  
@@ -118,11 +140,23 @@ Rcpp::List SpLocDiffC(arma::mat& ymat, arma::sp_mat& NNmatrix, arma::vec group, 
 
   permU=NNmatrix*ymat*permmat;
     
-  for (int k=0; k<q; ++k){
-    mn=mean(permU.row(k));
-    sd=stddev(permU.row(k));
-    permU.row(k)=(permU.row(k)-mn)/sd;
-    U(k)=(U(k)-mn)/sd;
+  if (transform==1){
+    arma::vec uvec(nperm);
+    uvec.randn();
+
+    for (int k=0; k<q; ++k){
+      mn=mean(permU.row(k));
+      sd=stddev(permU.row(k));
+      permU.row(k)=invNT(uvec,permU.row(k));
+      U(k)=(U(k)-mn)/sd;
+    }
+  } else{
+    for (int k=0; k<q; ++k){
+      mn=mean(permU.row(k));
+      sd=stddev(permU.row(k));
+      permU.row(k)=(permU.row(k)-mn)/sd;
+      U(k)=(U(k)-mn)/sd;
+    }
   }
 
   if (side==2){
@@ -163,6 +197,11 @@ Rcpp::List MassiveMeanC(arma::mat ymat, int nperm, double alpha, int s, int side
   double mn;  
   double qt;
 
+  int transform=0;
+  if (n<=50){
+    transform=1;
+  } 
+
   arma::mat permU(q, nperm); 
   
   U=ymat*onevec;  
@@ -173,11 +212,23 @@ Rcpp::List MassiveMeanC(arma::mat ymat, int nperm, double alpha, int s, int side
   flipmat=sign(flipmat);
   permU=ymat*flipmat;
   
-  for (int k=0; k<q; ++k){
-    mn=mean(permU.row(k));
-    sd=stddev(permU.row(k));
-    permU.row(k)=(permU.row(k)-mn)/sd;
-    U(k)=(U(k)-mn)/sd;
+  if (transform==1){
+    arma::vec uvec(nperm);
+    uvec.randn();
+
+    for (int k=0; k<q; ++k){
+      mn=mean(permU.row(k));
+      sd=stddev(permU.row(k));
+      permU.row(k)=invNT(uvec,permU.row(k));
+      U(k)=(U(k)-mn)/sd;
+    }
+  } else{
+    for (int k=0; k<q; ++k){
+      mn=mean(permU.row(k));
+      sd=stddev(permU.row(k));
+      permU.row(k)=(permU.row(k)-mn)/sd;
+      U(k)=(U(k)-mn)/sd;
+    }
   }
   
   if (side==2){
@@ -219,6 +270,11 @@ Rcpp::List MassiveDiffC(arma::mat ymat, arma::vec group, int nperm, double alpha
 
   U=ymat*group;  
   
+  int transform=0;
+  if (n<=50){
+    transform=1;
+  } 
+
   arma::mat permmat(n,nperm);
   set_seed(s);
   for (int i=0; i<nperm; ++i){
@@ -226,11 +282,23 @@ Rcpp::List MassiveDiffC(arma::mat ymat, arma::vec group, int nperm, double alpha
   }
   permU=ymat*permmat;
   
-  for (int k=0; k<q; ++k){
-    mn=mean(permU.row(k));
-    sd=stddev(permU.row(k));
-    permU.row(k)=(permU.row(k)-mn)/sd;
-    U(k)=(U(k)-mn)/sd;
+  if (transform==1){
+    arma::vec uvec(nperm);
+    uvec.randn();
+
+    for (int k=0; k<q; ++k){
+      mn=mean(permU.row(k));
+      sd=stddev(permU.row(k));
+      permU.row(k)=invNT(uvec,permU.row(k));
+      U(k)=(U(k)-mn)/sd;
+    }
+  } else{
+    for (int k=0; k<q; ++k){
+      mn=mean(permU.row(k));
+      sd=stddev(permU.row(k));
+      permU.row(k)=(permU.row(k)-mn)/sd;
+      U(k)=(U(k)-mn)/sd;
+    }
   }
 
   if (side==2){
