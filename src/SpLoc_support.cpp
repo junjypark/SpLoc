@@ -117,7 +117,7 @@ Rcpp::List SpLocMeanC(arma::mat& ymat, arma::sp_mat& NNmatrix, int nperm, double
       uvec.randn();
       permMax=quantile(uvec, permMax);
     }
-    qt=quantile(permMax, alpha);  
+    qt=quantileC(permMax, alpha);  
   } else{
     for (int i=0; i<nperm; ++i){
       permMax(i)=permU.col(i).max();
@@ -196,7 +196,7 @@ Rcpp::List SpLocDiffC(arma::mat& ymat, arma::sp_mat& NNmatrix, arma::vec group, 
       uvec.randn();
       permMax=quantile(uvec, permMax);
     }
-    qt=quantile(permMax, alpha);  
+    qt=quantileC(permMax, alpha);  
   } else{
     for (int i=0; i<nperm; ++i){
       permMax(i)=permU.col(i).max();
@@ -275,7 +275,7 @@ Rcpp::List MassiveMeanC(arma::mat ymat, int nperm,  double alpha, int s, int sid
       uvec.randn();
       permMax=quantile(uvec, permMax);
     }
-    qt=quantile(permMax, alpha);  
+    qt=quantileC(permMax, alpha);  
   } else{
     for (int i=0; i<nperm; ++i){
       permMax(i)=permU.col(i).max();
@@ -352,7 +352,7 @@ Rcpp::List MassiveDiffC(arma::mat ymat, arma::vec group, int nperm,  double alph
       uvec.randn();
       permMax=quantile(uvec, permMax);
     }
-    qt=quantile(permMax, alpha);  
+    qt=quantileC(permMax, alpha);  
   } else{
     for (int i=0; i<nperm; ++i){
       permMax(i)=permU.col(i).max();
