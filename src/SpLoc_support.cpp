@@ -112,7 +112,7 @@ Rcpp::List SpLocMeanC(arma::mat& ymat, arma::sp_mat& NNmatrix, int nperm, double
     for (int i=0; i<nperm; ++i){
       permMax(i)=permU.col(i).min();
     }
-    if (transform){
+    if (transform==1){
       arma::vec uvec(nperm);
       uvec.randn();
       permMax=quantile(uvec, permMax);
@@ -122,7 +122,7 @@ Rcpp::List SpLocMeanC(arma::mat& ymat, arma::sp_mat& NNmatrix, int nperm, double
     for (int i=0; i<nperm; ++i){
       permMax(i)=permU.col(i).max();
     }
-    if (transform){
+    if (transform==1){
       arma::vec uvec(nperm);
       uvec.randn();
       permMax=quantile(uvec, permMax);
@@ -191,7 +191,7 @@ Rcpp::List SpLocDiffC(arma::mat& ymat, arma::sp_mat& NNmatrix, arma::vec group, 
     for (int i=0; i<nperm; ++i){
       permMax(i)=permU.col(i).min();
     }
-    if (transform){
+    if (transform==1){
       arma::vec uvec(nperm);
       uvec.randn();
       permMax=quantile(uvec, permMax);
@@ -201,7 +201,7 @@ Rcpp::List SpLocDiffC(arma::mat& ymat, arma::sp_mat& NNmatrix, arma::vec group, 
     for (int i=0; i<nperm; ++i){
       permMax(i)=permU.col(i).max();
     }
-    if (transform){
+    if (transform==1){
       arma::vec uvec(nperm);
       uvec.randn();
       permMax=quantile(uvec, permMax);
@@ -270,7 +270,7 @@ Rcpp::List MassiveMeanC(arma::mat ymat, int nperm,  double alpha, int s, int sid
     for (int i=0; i<nperm; ++i){
       permMax(i)=permU.col(i).min();
     }
-    if (transform){
+    if (transform==1){
       arma::vec uvec(nperm);
       uvec.randn();
       permMax=quantile(uvec, permMax);
@@ -280,7 +280,7 @@ Rcpp::List MassiveMeanC(arma::mat ymat, int nperm,  double alpha, int s, int sid
     for (int i=0; i<nperm; ++i){
       permMax(i)=permU.col(i).max();
     }
-    if (transform){
+    if (transform==1){
       arma::vec uvec(nperm);
       uvec.randn();
       permMax=quantile(uvec, permMax);
@@ -347,7 +347,7 @@ Rcpp::List MassiveDiffC(arma::mat ymat, arma::vec group, int nperm,  double alph
     for (int i=0; i<nperm; ++i){
       permMax(i)=permU.col(i).min();
     }
-    if (transform){
+    if (transform==1){
       arma::vec uvec(nperm);
       uvec.randn();
       permMax=quantile(uvec, permMax);
@@ -357,7 +357,7 @@ Rcpp::List MassiveDiffC(arma::mat ymat, arma::vec group, int nperm,  double alph
     for (int i=0; i<nperm; ++i){
       permMax(i)=permU.col(i).max();
     }
-    if (transform){
+    if (transform==1){
       arma::vec uvec(nperm);
       uvec.randn();
       permMax=quantile(uvec, permMax);
