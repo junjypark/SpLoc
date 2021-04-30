@@ -29,7 +29,7 @@ BEGIN_RCPP
 END_RCPP
 }
 // SpLocMeanC
-Rcpp::List SpLocMeanC(arma::mat& ymat, arma::sp_mat& NNmatrix, int nperm, double alpha, int s, int side);
+Rcpp::List SpLocMeanC(arma::mat& ymat, arma::sp_mat& NNmatrix, int nperm, arma::vec alpha, int s, int side);
 RcppExport SEXP _SpLoc_SpLocMeanC(SEXP ymatSEXP, SEXP NNmatrixSEXP, SEXP npermSEXP, SEXP alphaSEXP, SEXP sSEXP, SEXP sideSEXP) {
 BEGIN_RCPP
     Rcpp::RObject rcpp_result_gen;
@@ -37,7 +37,7 @@ BEGIN_RCPP
     Rcpp::traits::input_parameter< arma::mat& >::type ymat(ymatSEXP);
     Rcpp::traits::input_parameter< arma::sp_mat& >::type NNmatrix(NNmatrixSEXP);
     Rcpp::traits::input_parameter< int >::type nperm(npermSEXP);
-    Rcpp::traits::input_parameter< double >::type alpha(alphaSEXP);
+    Rcpp::traits::input_parameter< arma::vec >::type alpha(alphaSEXP);
     Rcpp::traits::input_parameter< int >::type s(sSEXP);
     Rcpp::traits::input_parameter< int >::type side(sideSEXP);
     rcpp_result_gen = Rcpp::wrap(SpLocMeanC(ymat, NNmatrix, nperm, alpha, s, side));
@@ -45,7 +45,7 @@ BEGIN_RCPP
 END_RCPP
 }
 // SpLocDiffC
-Rcpp::List SpLocDiffC(arma::mat& ymat, arma::sp_mat& NNmatrix, arma::vec group, int nperm, double alpha, int s, int side);
+Rcpp::List SpLocDiffC(arma::mat& ymat, arma::sp_mat& NNmatrix, arma::vec group, int nperm, arma::vec alpha, int s, int side);
 RcppExport SEXP _SpLoc_SpLocDiffC(SEXP ymatSEXP, SEXP NNmatrixSEXP, SEXP groupSEXP, SEXP npermSEXP, SEXP alphaSEXP, SEXP sSEXP, SEXP sideSEXP) {
 BEGIN_RCPP
     Rcpp::RObject rcpp_result_gen;
@@ -54,7 +54,7 @@ BEGIN_RCPP
     Rcpp::traits::input_parameter< arma::sp_mat& >::type NNmatrix(NNmatrixSEXP);
     Rcpp::traits::input_parameter< arma::vec >::type group(groupSEXP);
     Rcpp::traits::input_parameter< int >::type nperm(npermSEXP);
-    Rcpp::traits::input_parameter< double >::type alpha(alphaSEXP);
+    Rcpp::traits::input_parameter< arma::vec >::type alpha(alphaSEXP);
     Rcpp::traits::input_parameter< int >::type s(sSEXP);
     Rcpp::traits::input_parameter< int >::type side(sideSEXP);
     rcpp_result_gen = Rcpp::wrap(SpLocDiffC(ymat, NNmatrix, group, nperm, alpha, s, side));
@@ -62,14 +62,14 @@ BEGIN_RCPP
 END_RCPP
 }
 // MassiveMeanC
-Rcpp::List MassiveMeanC(arma::mat ymat, int nperm, double alpha, int s, int side);
+Rcpp::List MassiveMeanC(arma::mat ymat, int nperm, arma::vec alpha, int s, int side);
 RcppExport SEXP _SpLoc_MassiveMeanC(SEXP ymatSEXP, SEXP npermSEXP, SEXP alphaSEXP, SEXP sSEXP, SEXP sideSEXP) {
 BEGIN_RCPP
     Rcpp::RObject rcpp_result_gen;
     Rcpp::RNGScope rcpp_rngScope_gen;
     Rcpp::traits::input_parameter< arma::mat >::type ymat(ymatSEXP);
     Rcpp::traits::input_parameter< int >::type nperm(npermSEXP);
-    Rcpp::traits::input_parameter< double >::type alpha(alphaSEXP);
+    Rcpp::traits::input_parameter< arma::vec >::type alpha(alphaSEXP);
     Rcpp::traits::input_parameter< int >::type s(sSEXP);
     Rcpp::traits::input_parameter< int >::type side(sideSEXP);
     rcpp_result_gen = Rcpp::wrap(MassiveMeanC(ymat, nperm, alpha, s, side));
@@ -77,7 +77,7 @@ BEGIN_RCPP
 END_RCPP
 }
 // MassiveDiffC
-Rcpp::List MassiveDiffC(arma::mat ymat, arma::vec group, int nperm, double alpha, int s, int side);
+Rcpp::List MassiveDiffC(arma::mat ymat, arma::vec group, int nperm, arma::vec alpha, int s, int side);
 RcppExport SEXP _SpLoc_MassiveDiffC(SEXP ymatSEXP, SEXP groupSEXP, SEXP npermSEXP, SEXP alphaSEXP, SEXP sSEXP, SEXP sideSEXP) {
 BEGIN_RCPP
     Rcpp::RObject rcpp_result_gen;
@@ -85,7 +85,7 @@ BEGIN_RCPP
     Rcpp::traits::input_parameter< arma::mat >::type ymat(ymatSEXP);
     Rcpp::traits::input_parameter< arma::vec >::type group(groupSEXP);
     Rcpp::traits::input_parameter< int >::type nperm(npermSEXP);
-    Rcpp::traits::input_parameter< double >::type alpha(alphaSEXP);
+    Rcpp::traits::input_parameter< arma::vec >::type alpha(alphaSEXP);
     Rcpp::traits::input_parameter< int >::type s(sSEXP);
     Rcpp::traits::input_parameter< int >::type side(sideSEXP);
     rcpp_result_gen = Rcpp::wrap(MassiveDiffC(ymat, group, nperm, alpha, s, side));
