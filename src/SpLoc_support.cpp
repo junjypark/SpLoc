@@ -10,48 +10,6 @@
 using namespace Rcpp;
 using namespace arma;
 
-arma::vec avg_rank(arma::vec x) {
-  arma::uvec w = arma::stable_sort_index(x, "ascend");
-  R_xlen_t sz = x.size();
-  arma::vec r(sz);
-  
-  for (R_xlen_t n, i = 0; i < sz; i += n) {
-    n = 1;
-    while (i + n < sz && x[w[i]] == x[w[i + n]]) ++n;
-    for (R_xlen_t k = 0; k < n; k++) {
-      // r[w[i + k]] = i + (n + 1) / 2.;
-      r[w[i + k]] = i + (n ) ;
-    }
-  }
-  return r;
-}
-
-// [[Rcpp::depends(RcppArmadillo)]]
-// [[Rcpp::export]]
-double quantileC(arma::vec Tstatvec, double alpha){
-  int n=Tstatvec.size();
-  arma::vec avgrank=avg_rank(Tstatvec);
-  int thres=floor(n*alpha);
-  int index=0;
-  for (int i=0; i<n; ++i){
-    if (avgrank(i)==thres){
-      index=i;
-      break;
-    }
-  }
-  double out=Tstatvec(index);
-  return out;
-}
-
-// [[Rcpp::depends(RcppArmadillo)]]
-// [[Rcpp::export]]
-arma::vec invNT(arma::vec u, arma::vec x) {
-  arma::vec rk=avg_rank(x);
-  int n=x.size();
-  arma::vec out=quantile(u, (rk-0.5)/n);
-  return out;
-}
-
 // [[Rcpp::export]]
 void set_seed(unsigned int seed) {
     Rcpp::Environment base_env("package:base");
@@ -61,20 +19,14 @@ void set_seed(unsigned int seed) {
 
 // [[Rcpp::depends(RcppArmadillo)]]
 // [[Rcpp::export]]
-Rcpp::List SpLocMeanC(arma::mat& ymat, arma::sp_mat& NNmatrix, int nperm, double alpha, int s, int side){
+Rcpp::List SpLocMeanC(arma::mat& ymat, arma::sp_mat& NNmatrix, int nperm, int s, int side){
   int q=NNmatrix.n_rows;
   int n=ymat.n_cols;
   arma::vec onevec(n); onevec.fill(1);
   arma::vec U(q);
   double sd;
   double mn;
-  double qt;
   
-  int transform=0;
-  if (n<=50){
-    transform=1;
-  } 
-
   arma::mat permU(q, nperm); 
   
   U=NNmatrix*ymat*onevec;  
@@ -85,20 +37,11 @@ Rcpp::List SpLocMeanC(arma::mat& ymat, arma::sp_mat& NNmatrix, int nperm, double
   flipmat=sign(flipmat);
   permU=NNmatrix*ymat*flipmat;
 
-  if (transform==1){
-    for (int k=0; k<q; ++k){
-      mn=mean(permU.row(k));
-      sd=stddev(permU.row(k));
-      permU.row(k)=(avg_rank(permU.row(k))-0.5)/nperm;
-      U(k)=(U(k)-mn)/sd;
-    }
-  } else{
-    for (int k=0; k<q; ++k){
-      mn=mean(permU.row(k));
-      sd=stddev(permU.row(k));
-      permU.row(k)=(permU.row(k)-mn)/sd;
-      U(k)=(U(k)-mn)/sd;
-    }
+  for (int k=0; k<q; ++k){
+    mn=mean(permU.row(k));
+    sd=stddev(permU.row(k));
+    permU.row(k)=(permU.row(k)-mn)/sd;
+    U(k)=(U(k)-mn)/sd;
   }
   
   if (side==2){
@@ -112,26 +55,13 @@ Rcpp::List SpLocMeanC(arma::mat& ymat, arma::sp_mat& NNmatrix, int nperm, double
     for (int i=0; i<nperm; ++i){
       permMax(i)=permU.col(i).min();
     }
-    if (transform==1){
-      arma::vec uvec(nperm);
-      uvec.randn();
-      permMax=quantile(uvec, permMax);
-    }
-    qt=quantileC(permMax, alpha);  
   } else{
     for (int i=0; i<nperm; ++i){
       permMax(i)=permU.col(i).max();
     }
-    if (transform==1){
-      arma::vec uvec(nperm);
-      uvec.randn();
-      permMax=quantile(uvec, permMax);
-    }
-    qt=quantileC(permMax, 1-alpha);
   }
   
-  return Rcpp::List::create(Rcpp::Named("threshold")=qt,
-                            Rcpp::Named("Tstat")=U,
+  return Rcpp::List::create(Rcpp::Named("Tstat")=U,
                             Rcpp::Named("permMax")=permMax,
                             Rcpp::Named("nperm")=nperm);
 }
@@ -139,18 +69,12 @@ Rcpp::List SpLocMeanC(arma::mat& ymat, arma::sp_mat& NNmatrix, int nperm, double
 
 // [[Rcpp::depends(RcppArmadillo)]]
 // [[Rcpp::export]]
-Rcpp::List SpLocDiffC(arma::mat& ymat, arma::sp_mat& NNmatrix, arma::vec group, int nperm,  double alpha, int s, int side){
+Rcpp::List SpLocDiffC(arma::mat& ymat, arma::sp_mat& NNmatrix, arma::vec group, int nperm, int s, int side){
   int q=NNmatrix.n_rows;
   int n=group.size();
   arma::vec U(q);
   double sd;
   double mn;
-  double qt;
-
-  int transform=0;
-  if (n<=50){
-    transform=1;
-  } 
 
   arma::mat permU(q, nperm);
 
@@ -164,20 +88,11 @@ Rcpp::List SpLocDiffC(arma::mat& ymat, arma::sp_mat& NNmatrix, arma::vec group, 
 
   permU=NNmatrix*ymat*permmat;
     
-  if (transform==1){
-    for (int k=0; k<q; ++k){
-      mn=mean(permU.row(k));
-      sd=stddev(permU.row(k));
-      permU.row(k)=(avg_rank(permU.row(k))-0.5)/nperm;
-      U(k)=(U(k)-mn)/sd;
-    }
-  } else{
-    for (int k=0; k<q; ++k){
-      mn=mean(permU.row(k));
-      sd=stddev(permU.row(k));
-      permU.row(k)=(permU.row(k)-mn)/sd;
-      U(k)=(U(k)-mn)/sd;
-    }
+  for (int k=0; k<q; ++k){
+    mn=mean(permU.row(k));
+    sd=stddev(permU.row(k));
+    permU.row(k)=(permU.row(k)-mn)/sd;
+    U(k)=(U(k)-mn)/sd;
   }
 
   if (side==2){
@@ -191,26 +106,13 @@ Rcpp::List SpLocDiffC(arma::mat& ymat, arma::sp_mat& NNmatrix, arma::vec group, 
     for (int i=0; i<nperm; ++i){
       permMax(i)=permU.col(i).min();
     }
-    if (transform==1){
-      arma::vec uvec(nperm);
-      uvec.randn();
-      permMax=quantile(uvec, permMax);
-    }
-    qt=quantileC(permMax, alpha);  
   } else{
     for (int i=0; i<nperm; ++i){
       permMax(i)=permU.col(i).max();
     }
-    if (transform==1){
-      arma::vec uvec(nperm);
-      uvec.randn();
-      permMax=quantile(uvec, permMax);
-    }
-    qt=quantileC(permMax, 1-alpha);
   }
   
-  return Rcpp::List::create(Rcpp::Named("threshold")=qt,
-                            Rcpp::Named("Tstat")=U,
+  return Rcpp::List::create(Rcpp::Named("Tstat")=U,
                             Rcpp::Named("permMax")=permMax,
                             Rcpp::Named("nperm")=nperm);
 }
@@ -219,19 +121,13 @@ Rcpp::List SpLocDiffC(arma::mat& ymat, arma::sp_mat& NNmatrix, arma::vec group, 
 
 // [[Rcpp::depends(RcppArmadillo)]]
 // [[Rcpp::export]]
-Rcpp::List MassiveMeanC(arma::mat ymat, int nperm,  double alpha, int s, int side){
+Rcpp::List MassiveMeanC(arma::mat ymat, int nperm,  int s, int side){
   int q=ymat.n_rows;
   int n=ymat.n_cols;
   arma::vec onevec(n); onevec.fill(1);
   arma::vec U(q);
   double sd;
   double mn;  
-  double qt;
-
-  int transform=0;
-  if (n<=50){
-    transform=1;
-  } 
 
   arma::mat permU(q, nperm); 
   
@@ -243,20 +139,11 @@ Rcpp::List MassiveMeanC(arma::mat ymat, int nperm,  double alpha, int s, int sid
   flipmat=sign(flipmat);
   permU=ymat*flipmat;
   
-  if (transform==1){
-    for (int k=0; k<q; ++k){
-      mn=mean(permU.row(k));
-      sd=stddev(permU.row(k));
-      permU.row(k)=(avg_rank(permU.row(k))-0.5)/nperm;
-      U(k)=(U(k)-mn)/sd;
-    }
-  } else{
-    for (int k=0; k<q; ++k){
-      mn=mean(permU.row(k));
-      sd=stddev(permU.row(k));
-      permU.row(k)=(permU.row(k)-mn)/sd;
-      U(k)=(U(k)-mn)/sd;
-    }
+  for (int k=0; k<q; ++k){
+    mn=mean(permU.row(k));
+    sd=stddev(permU.row(k));
+    permU.row(k)=(permU.row(k)-mn)/sd;
+    U(k)=(U(k)-mn)/sd;
   }
   
   if (side==2){
@@ -270,26 +157,13 @@ Rcpp::List MassiveMeanC(arma::mat ymat, int nperm,  double alpha, int s, int sid
     for (int i=0; i<nperm; ++i){
       permMax(i)=permU.col(i).min();
     }
-    if (transform==1){
-      arma::vec uvec(nperm);
-      uvec.randn();
-      permMax=quantile(uvec, permMax);
-    }
-    qt=quantileC(permMax, alpha);  
   } else{
     for (int i=0; i<nperm; ++i){
       permMax(i)=permU.col(i).max();
     }
-    if (transform==1){
-      arma::vec uvec(nperm);
-      uvec.randn();
-      permMax=quantile(uvec, permMax);
-    }
-    qt=quantileC(permMax, 1-alpha);
   }
   
-  return Rcpp::List::create(Rcpp::Named("threshold")=qt,
-                            Rcpp::Named("Tstat")=U,
+  return Rcpp::List::create(Rcpp::Named("Tstat")=U,
                             Rcpp::Named("permMax")=permMax,
                             Rcpp::Named("nperm")=nperm);
 }
@@ -297,21 +171,15 @@ Rcpp::List MassiveMeanC(arma::mat ymat, int nperm,  double alpha, int s, int sid
 
 // [[Rcpp::depends(RcppArmadillo)]]
 // [[Rcpp::export]]
-Rcpp::List MassiveDiffC(arma::mat ymat, arma::vec group, int nperm,  double alpha, int s, int side){
+Rcpp::List MassiveDiffC(arma::mat ymat, arma::vec group, int nperm,  int s, int side){
   int q=ymat.n_rows;
   int n=group.size();
   arma::vec U(q);
   double sd;
   double mn;
-  double qt;
   arma::mat permU(q, nperm);
 
   U=ymat*group;  
-  
-  int transform=0;
-  if (n<=50){
-    transform=1;
-  } 
 
   arma::mat permmat(n,nperm);
   set_seed(s);
@@ -320,20 +188,12 @@ Rcpp::List MassiveDiffC(arma::mat ymat, arma::vec group, int nperm,  double alph
   }
   permU=ymat*permmat;
   
-  if (transform==1){
-    for (int k=0; k<q; ++k){
-      mn=mean(permU.row(k));
-      sd=stddev(permU.row(k));
-      permU.row(k)=(avg_rank(permU.row(k))-0.5)/nperm;
-      U(k)=(U(k)-mn)/sd;
-    }
-  } else{
-    for (int k=0; k<q; ++k){
-      mn=mean(permU.row(k));
-      sd=stddev(permU.row(k));
-      permU.row(k)=(permU.row(k)-mn)/sd;
-      U(k)=(U(k)-mn)/sd;
-    }
+
+  for (int k=0; k<q; ++k){
+    mn=mean(permU.row(k));
+    sd=stddev(permU.row(k));
+    permU.row(k)=(permU.row(k)-mn)/sd;
+    U(k)=(U(k)-mn)/sd;
   }
 
   if (side==2){
@@ -347,26 +207,13 @@ Rcpp::List MassiveDiffC(arma::mat ymat, arma::vec group, int nperm,  double alph
     for (int i=0; i<nperm; ++i){
       permMax(i)=permU.col(i).min();
     }
-    if (transform==1){
-      arma::vec uvec(nperm);
-      uvec.randn();
-      permMax=quantile(uvec, permMax);
-    }
-    qt=quantileC(permMax, alpha);  
   } else{
     for (int i=0; i<nperm; ++i){
       permMax(i)=permU.col(i).max();
     }
-    if (transform==1){
-      arma::vec uvec(nperm);
-      uvec.randn();
-      permMax=quantile(uvec, permMax);
-    }
-    qt=quantileC(permMax, 1-alpha);
   }
   
-  return Rcpp::List::create(Rcpp::Named("threshold")=qt,
-                            Rcpp::Named("Tstat")=U,
+  return Rcpp::List::create(Rcpp::Named("Tstat")=U,
                             Rcpp::Named("permMax")=permMax,
                             Rcpp::Named("nperm")=nperm);
 }
