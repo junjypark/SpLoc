@@ -27,6 +27,14 @@ arma::vec avg_rank(arma::vec x) {
 }
 
 // [[Rcpp::export]]
+arma::vec invNT(arma::vec x) {
+  arma::vec rk=avg_rank(x);
+  int n=x.size();
+  rk=(rk-0.5)/n;
+  return rk;
+}
+
+// [[Rcpp::export]]
 double quantileC(arma::vec Tstatvec, double alpha){
   int n=Tstatvec.size();
   arma::vec avgrank=avg_rank(Tstatvec);
