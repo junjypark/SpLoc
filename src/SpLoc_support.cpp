@@ -51,7 +51,7 @@ Rcpp::List SpLocMeanC(arma::mat& ymat, arma::sp_mat& NNmatrix, int nperm, double
   arma::vec U(q);
   double sd;
   double mn;
-  double qt;
+  arma::vec qt;
   
   int transform=0;
   if (n<=50){
@@ -121,7 +121,7 @@ Rcpp::List SpLocDiffC(arma::mat& ymat, arma::sp_mat& NNmatrix, arma::vec group, 
   arma::vec U(q);
   double sd;
   double mn;
-  double qt;
+  arma::vec qt;
 
   int transform=0;
   if (n<=50){
@@ -195,7 +195,7 @@ Rcpp::List MassiveMeanC(arma::mat ymat, int nperm, double alpha, int s, int side
   arma::vec U(q);
   double sd;
   double mn;  
-  double qt;
+  arma::vec qt;
 
   int transform=0;
   if (n<=50){
@@ -265,7 +265,7 @@ Rcpp::List MassiveDiffC(arma::mat ymat, arma::vec group, int nperm, double alpha
   arma::vec U(q);
   double sd;
   double mn;
-  double qt;
+  arma::vec qt;
   arma::mat permU(q, nperm);
 
   U=ymat*group;  
