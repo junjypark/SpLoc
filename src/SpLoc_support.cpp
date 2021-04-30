@@ -26,6 +26,23 @@ arma::vec avg_rank(arma::vec x) {
   return r;
 }
 
+
+// [[Rcpp::export]]
+double quantileC(arma::vec Tstatvec, double alpha){
+  int n=Tstatvec.size();
+  arma::vec avgrank=avg_rank(Tstatvec);
+  int thres=floor(n*alpha);
+  int index=0;
+  for (int i=0; i<n; ++i){
+    if (avgrank(i)==thres){
+      index=i;
+      break;
+    }
+  }
+  double out=Tstatvec(index);
+  return out;
+}
+
 // [[Rcpp::depends(RcppArmadillo)]]
 // [[Rcpp::export]]
 arma::vec invNT(arma::vec u, arma::vec x) {
@@ -110,7 +127,7 @@ Rcpp::List SpLocMeanC(arma::mat& ymat, arma::sp_mat& NNmatrix, int nperm, arma::
       uvec.randn();
       permMax=quantile(uvec, permMax);
     }
-    qt=quantile(permMax, 1-alpha);
+    qt=quantileC(permMax, 1-alpha);
   }
   
   return Rcpp::List::create(Rcpp::Named("threshold")=qt,
@@ -189,7 +206,7 @@ Rcpp::List SpLocDiffC(arma::mat& ymat, arma::sp_mat& NNmatrix, arma::vec group, 
       uvec.randn();
       permMax=quantile(uvec, permMax);
     }
-    qt=quantile(permMax, 1-alpha);
+    qt=quantileC(permMax, 1-alpha);
   }
   
   return Rcpp::List::create(Rcpp::Named("threshold")=qt,
@@ -268,7 +285,7 @@ Rcpp::List MassiveMeanC(arma::mat ymat, int nperm,  arma::vec alpha, int s, int 
       uvec.randn();
       permMax=quantile(uvec, permMax);
     }
-    qt=quantile(permMax, 1-alpha);
+    qt=quantileC(permMax, 1-alpha);
   }
   
   return Rcpp::List::create(Rcpp::Named("threshold")=qt,
@@ -345,7 +362,7 @@ Rcpp::List MassiveDiffC(arma::mat ymat, arma::vec group, int nperm,  arma::vec a
       uvec.randn();
       permMax=quantile(uvec, permMax);
     }
-    qt=quantile(permMax, 1-alpha);
+    qt=quantileC(permMax, 1-alpha);
   }
   
   return Rcpp::List::create(Rcpp::Named("threshold")=qt,
