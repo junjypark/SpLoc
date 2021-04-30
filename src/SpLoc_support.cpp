@@ -26,7 +26,7 @@ arma::vec avg_rank(arma::vec x) {
   return r;
 }
 
-
+// [[Rcpp::depends(RcppArmadillo)]]
 // [[Rcpp::export]]
 double quantileC(arma::vec Tstatvec, double alpha){
   int n=Tstatvec.size();
