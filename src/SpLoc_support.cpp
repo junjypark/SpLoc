@@ -26,6 +26,7 @@ arma::vec avg_rank(arma::vec x) {
   return r;
 }
 
+// [[Rcpp::depends(RcppArmadillo)]]
 // [[Rcpp::export]]
 arma::vec invNT(arma::vec x) {
   arma::vec rk=avg_rank(x);
