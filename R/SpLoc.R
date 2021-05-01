@@ -305,7 +305,7 @@ MassiveDiff=function(ymat, group, nperm=1000, alpha=0.05, alternative=c("two.sid
     out=combine(result, alpha=alpha)
     return(out)
   } else{
-    out=MassiveDiffC(ymat, group, nperm, eed, side)
+    out=MassiveDiffC(ymat, group, nperm, seed, side)
     out$pvalue=(1+sum(c(out$permMax)>max(out$Tstat,na.rm=TRUE)))/(1+nperm)
     out$seed=seed
     out$alternative=alternative
