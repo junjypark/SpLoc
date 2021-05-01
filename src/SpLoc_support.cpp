@@ -30,9 +30,9 @@ Rcpp::List SpLocMeanC(arma::mat& ymat, arma::sp_mat& NNmatrix, int nperm, int s,
   
   arma::mat permU(q, nperm); 
   arma::mat permU2(q, nperm); 
-  
-  NNy=NNmatrix*ymat;
-  NNy2=NNy%NNy;
+ 
+  arma::mat NNy=NNmatrix*ymat;
+  arma::mat NNy2=NNy%NNy;
   U=NNy*onevec;  
   U2=NNy2*onevec;
 
