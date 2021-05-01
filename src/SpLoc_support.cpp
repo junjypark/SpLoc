@@ -24,7 +24,7 @@ Rcpp::List SpLocMeanC(arma::mat& ymat, arma::sp_mat& NNmatrix, int nperm, int s,
   int n=ymat.n_cols;
   arma::vec onevec(n); onevec.fill(1);
   arma::vec U(q);
-  arma::ver U2(q);
+  arma::vec U2(q);
   double sd;
   double mn;
   
@@ -44,7 +44,7 @@ Rcpp::List SpLocMeanC(arma::mat& ymat, arma::sp_mat& NNmatrix, int nperm, int s,
   permU2=NNy2*flipmat;
 
   for (int k=0; k<q; ++k){
-    U(k)=U(k)/sqrt(U2(k)-U(k)%U(k)/n);
+    U(k)=U(k)/sqrt(U2(k)-square(U(k))/n);
     permU.row(k)=permU.row(k)/sqrt(permU2.row(k)-permU.row(k)%permU.row(k)/n);
     mn=mean(permU.row(k));
     sd=stddev(permU.row(k));
