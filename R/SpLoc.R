@@ -1,5 +1,5 @@
-SpLoc=function(ymat, NNmatrix=NULL, group=NULL, nperm=1000, alpha=0.05, alternative=c("two.sided","less", "greater"), seed=NULL, 
-               is.sparse=F,partition=T, npartition=NULL, parallel=F, ncores=1){
+SpLoc=function(ymat, NNmatrix=NULL, group=NULL, nperm=10000, alpha=0.05, alternative=c("two.sided","less", "greater"), seed=NULL, 
+               partition=T, npartition=NULL, parallel=F, ncores=1){
   if (is.null(NNmatrix)){
     print("As NNmatrix is not specified, SpLoc conducts massive univariate analysis.")
     if (is.null(group)){
@@ -36,7 +36,6 @@ SpLoc=function(ymat, NNmatrix=NULL, group=NULL, nperm=1000, alpha=0.05, alternat
                     alpha=alpha, 
                     alternative=alternative,
                     seed=seed,
-                    is.sparse = is.sparse, 
                     partition=partition, 
                     npartition = npartition,
                     parallel=parallel,
@@ -52,7 +51,6 @@ SpLoc=function(ymat, NNmatrix=NULL, group=NULL, nperm=1000, alpha=0.05, alternat
                     alpha=alpha, 
                     alternative=alternative,
                     seed=seed,
-                    is.sparse = is.sparse, 
                     partition=partition, 
                     npartition = npartition,
                     parallel=parallel, 
@@ -65,7 +63,7 @@ SpLoc=function(ymat, NNmatrix=NULL, group=NULL, nperm=1000, alpha=0.05, alternat
 
 
 SpLocMean=function(ymat, NNmatrix, nperm=1000, alpha=0.05, alternative=c("two.sided", "less", "greater"), seed=NULL, 
-                   is.sparse=F,partition=F, npartition=1, parallel=F, ncores=1){
+                   partition=F, npartition=1, parallel=F, ncores=1){
   if (length(which(is(NNmatrix)=="sparseMatrix"))==0){
     stop("NN is not a sparse matrix. Please refer the Matrix R package to convert it.")
   }
@@ -82,17 +80,7 @@ SpLocMean=function(ymat, NNmatrix, nperm=1000, alpha=0.05, alternative=c("two.si
   if (alternative=="two.sided"){ side=2 }
   if (alternative=="greater"){ side=1 }
   if (alternative=="less"){ side=-1 }
-  if (is.null(seed)){
-    stop("Specifying a seed value is required.")
-  }
-  if (is.sparse){
-    index=NULL
-    for (j in 1:ncol(NNmatrix)){
-      if(sum(NNmatrix[,j])!=0){ index=c(index,j)}
-    }
-    NNmatrix=NNmatrix[,index]
-    ymat=ymat[index,]
-  }
+  if (is.null(seed)){ seed=round(runif(1,-1,1)*1e5) }
   if (isTRUE(partition)){
     if (is.null(npartition)){
       npartition=nrow(NNmatrix)%/%10000+1
@@ -135,14 +123,14 @@ SpLocMean=function(ymat, NNmatrix, nperm=1000, alpha=0.05, alternative=c("two.si
     out$pvalue=(1+sum(c(out$permMax)>max(out$Tstat,na.rm=TRUE)))/(1+nperm)
     out$seed=seed
     out$alternative=alternative
-    out=conbine(list(result),alpha=alpha)
+    out=combine(list(result),alpha=alpha)
     return(out)    
   }
 }
 
 
 SpLocDiff=function(ymat, NNmatrix, group, nperm=1000, alpha=0.05, alternative=c("two.sided", "less", "greater"), seed=NULL, 
-                   is.sparse=F,partition=F, npartition=1, parallel=F, ncores=1){
+                   partition=F, npartition=1, parallel=F, ncores=1){
   if (!all.equal(sort(unique(group)),c(-1,1))){
     stop("group should have either 1 or -1.")
   }
@@ -165,17 +153,7 @@ SpLocDiff=function(ymat, NNmatrix, group, nperm=1000, alpha=0.05, alternative=c(
   if (alternative=="two.sided"){ side=2 }
   if (alternative=="greater"){ side=1 }
   if (alternative=="less"){ side=-1 }
-  if (is.null(seed)){
-    stop("Specifying a seed value is required.")
-  }
-  if (is.sparse){
-    index=NULL
-    for (j in 1:ncol(NNmatrix)){
-      if(sum(NNmatrix[,j])!=0){ index=c(index,j)}
-    }
-    NNmatrix=NNmatrix[,index]
-    ymat=ymat[index,]
-  }
+  if (is.null(seed)){ seed=round(runif(1,-1,1)*1e5) }
   if (isTRUE(partition)){
     if (is.null(npartition)){
       npartition=nrow(NNmatrix)%/%10000+1
@@ -184,7 +162,6 @@ SpLocDiff=function(ymat, NNmatrix, group, nperm=1000, alpha=0.05, alternative=c(
       partition=FALSE
     }
   }
-  
   
   if (isTRUE(partition)){
     NNList=list()
@@ -219,7 +196,7 @@ SpLocDiff=function(ymat, NNmatrix, group, nperm=1000, alpha=0.05, alternative=c(
     out$pvalue=(1+sum(c(out$permMax)>max(out$Tstat,na.rm=TRUE)))/(1+nperm)
     out$seed=seed
     out$alternative=alternative
-    out=conbine(list(result),alpha=alpha)
+    out=combine(list(result),alpha=alpha)
     return(out)    
   }
 }
@@ -237,9 +214,7 @@ MassiveMean=function(ymat, nperm=1000, alpha=0.05, alternative=c("two.sided", "l
   if (alternative=="two.sided"){ side=2 }
   if (alternative=="greater"){ side=1 }
   if (alternative=="less"){ side=-1 }
-  if (is.null(seed)){
-    stop("Specifying a seed value is required.")
-  }
+  if (is.null(seed)){ seed=round(runif(1,-1,1)*1e5) }
 
   if (isTRUE(partition)){
     ymatList=list()
@@ -274,7 +249,7 @@ MassiveMean=function(ymat, nperm=1000, alpha=0.05, alternative=c("two.sided", "l
     out$pvalue=(1+sum(c(out$permMax)>max(out$Tstat,na.rm=TRUE)))/(1+nperm)
     out$seed=seed
     out$alternative=alternative
-    out=conbine(list(result),alpha=alpha)
+    out=combine(list(result),alpha=alpha)
   }
   
   return(out)    
@@ -282,7 +257,7 @@ MassiveMean=function(ymat, nperm=1000, alpha=0.05, alternative=c("two.sided", "l
 
 
 MassiveDiff=function(ymat, group, nperm=1000, alpha=0.05, alternative=c("two.sided", "less", "greater"), seed=NULL, 
-                   is.sparse=F,partition=F, npartition=1, parallel=F, ncores=1){
+                     partition=F, npartition=1, parallel=F, ncores=1){
   if (!all.equal(sort(unique(group)),c(-1,1))){
     stop("group should have either 1 or -1.")
   }
@@ -299,9 +274,7 @@ MassiveDiff=function(ymat, group, nperm=1000, alpha=0.05, alternative=c("two.sid
   if (alternative=="two.sided"){ side=2 }
   if (alternative=="greater"){ side=1 }
   if (alternative=="less"){ side=-1 }
-  if (is.null(seed)){
-    stop("Specifying a seed value is required.")
-  }
+  if (is.null(seed)){ seed=round(runif(1,-1,1)*1e5) }
   
   if (isTRUE(partition)){
     ymatList=list()
@@ -336,7 +309,7 @@ MassiveDiff=function(ymat, group, nperm=1000, alpha=0.05, alternative=c("two.sid
     out$pvalue=(1+sum(c(out$permMax)>max(out$Tstat,na.rm=TRUE)))/(1+nperm)
     out$seed=seed
     out$alternative=alternative
-    out=conbine(list(result),alpha=alpha)
+    out=combine(list(result),alpha=alpha)
   }
   return(out)    
 }
