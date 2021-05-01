@@ -51,8 +51,8 @@ Rcpp::List SpLocMeanC(arma::mat& ymat, arma::sp_mat& NNmatrix, int nperm, int s,
 
   for (int k=0; k<q; ++k){
     foo=permU.row(k);
-    U(k)=U(k)/(U2(k)-pow(U(k),2)/n);
-    permU.row(k)=foo/(permU2.row(k)-square(foo)/n);
+    U(k)=U(k)/pow((U2(k)-pow(U(k),2)/n),1/2);
+    permU.row(k)=foo/pow((permU2.row(k)-square(foo)/n),1/2);
     mn=mean(permU.row(k));
     sd=stddev(permU.row(k));
     permU.row(k)=(permU.row(k)-mn)/sd;
