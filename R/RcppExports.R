@@ -9,10 +9,6 @@ SpLocMeanC <- function(ymat, NNmatrix, nperm, s, side) {
     .Call('_SpLoc_SpLocMeanC', PACKAGE = 'SpLoc', ymat, NNmatrix, nperm, s, side)
 }
 
-SpLocMeanC2 <- function(ymat, NNmatrix, nperm, s, side) {
-    .Call('_SpLoc_SpLocMeanC2', PACKAGE = 'SpLoc', ymat, NNmatrix, nperm, s, side)
-}
-
 SpLocDiffC <- function(ymat, NNmatrix, group, nperm, s, side) {
     .Call('_SpLoc_SpLocDiffC', PACKAGE = 'SpLoc', ymat, NNmatrix, group, nperm, s, side)
 }
