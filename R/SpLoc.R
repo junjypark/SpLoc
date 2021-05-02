@@ -80,7 +80,7 @@ SpLocMean=function(ymat, NNmatrix, nperm=1000, alpha=0.05, alternative=c("two.si
   if (alternative=="two.sided"){ side=2 }
   if (alternative=="greater"){ side=1 }
   if (alternative=="less"){ side=-1 }
-  if (is.null(seed)){ seed=as.integer(runif(1,-1,1)*1e5) }
+  if (is.null(seed)){ seed=sample(1e6,1) }
   if (isTRUE(partition)){
     if (is.null(npartition)){
       npartition=nrow(NNmatrix)%/%10000+1
@@ -155,7 +155,7 @@ SpLocDiff=function(ymat, NNmatrix, group, nperm=1000, alpha=0.05, alternative=c(
   if (alternative=="two.sided"){ side=2 }
   if (alternative=="greater"){ side=1 }
   if (alternative=="less"){ side=-1 }
-  if (is.null(seed)){ seed=as.integer(runif(1,-1,1)*1e5) }
+  if (is.null(seed)){ seed=sample(1e6,1) }
   if (isTRUE(partition)){
     if (is.null(npartition)){
       npartition=nrow(NNmatrix)%/%10000+1
@@ -218,8 +218,8 @@ MassiveMean=function(ymat, nperm=1000, alpha=0.05, alternative=c("two.sided", "l
   if (alternative=="two.sided"){ side=2 }
   if (alternative=="greater"){ side=1 }
   if (alternative=="less"){ side=-1 }
-  if (is.null(seed)){ seed=as.integer(runif(1,-1,1)*1e5) }
-
+  if (is.null(seed)){ seed=sample(1e6,1) }
+  
   if (isTRUE(partition)){
     ymatList=list()
     len=ceiling(nrow(ymat)/npartition)
@@ -280,7 +280,7 @@ MassiveDiff=function(ymat, group, nperm=1000, alpha=0.05, alternative=c("two.sid
   if (alternative=="two.sided"){ side=2 }
   if (alternative=="greater"){ side=1 }
   if (alternative=="less"){ side=-1 }
-  if (is.null(seed)){ seed=as.integer(runif(1,-1,1)*1e5) }
+  if (is.null(seed)){ seed=sample(1e6,1) }
   
   if (isTRUE(partition)){
     ymatList=list()
