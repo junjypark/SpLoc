@@ -105,6 +105,7 @@ SpLocMean=function(ymat, NNmatrix, nperm=1000, alpha=0.05, alternative=c("two.si
       result=foreach(i=1:npartition, .packages=("SpLoc"),.noexport = "SpLocC" )%dopar%{
         fit=SpLocMeanC(ymat, NNList[[i]], nperm, seed, side)
         fit$alternative=alternative
+        fit$seed=seed
         fit
       }
       stopCluster(cl)
@@ -113,6 +114,7 @@ SpLocMean=function(ymat, NNmatrix, nperm=1000, alpha=0.05, alternative=c("two.si
       for (i in 1:npartition){
         result[[i]]=SpLocMeanC(ymat, NNList[[i]], nperm, seed, side)
         result[[i]]$alternative=alternative
+        result[[i]]$seed=seed
       }
     }
     
@@ -178,6 +180,7 @@ SpLocDiff=function(ymat, NNmatrix, group, nperm=1000, alpha=0.05, alternative=c(
       result=foreach(i=1:npartition, .packages=("SpLoc"),.noexport = "SpLocC" )%dopar%{
         fit=SpLocDiffC(ymat, NNList[[i]], group, nperm, seed, side)
         fit$alternative=alternative
+        fit$seed=seed
         fit
       }
       stopCluster(cl)
@@ -186,6 +189,7 @@ SpLocDiff=function(ymat, NNmatrix, group, nperm=1000, alpha=0.05, alternative=c(
       for (i in 1:npartition){
         result[[i]]=SpLocDiffC(ymat, NNList[[i]], group, nperm, seed, side)
         result[[i]]$alternative=alternative
+        result[[i]]$seed=seed
       }
     }
     
@@ -231,6 +235,7 @@ MassiveMean=function(ymat, nperm=1000, alpha=0.05, alternative=c("two.sided", "l
       result=foreach(i=1:npartition, .packages=("SpLoc"),.noexport = "SpLocC" )%dopar%{
         fit=MassiveMeanC(ymatList[[i]], nperm, seed, side)
         fit$alternative=alternative
+        fit$seed=seed
         fit
       }
       stopCluster(cl)
@@ -239,6 +244,7 @@ MassiveMean=function(ymat, nperm=1000, alpha=0.05, alternative=c("two.sided", "l
       for (i in 1:npartition){
         result[[i]]=MassiveMeanC(ymatList[[i]], nperm, seed, side)
         result[[i]]$alternative=alternative
+        result[[i]]$seed=seed
       }
     }
     
@@ -291,6 +297,7 @@ MassiveDiff=function(ymat, group, nperm=1000, alpha=0.05, alternative=c("two.sid
       result=foreach(i=1:npartition, .packages=("SpLoc"),.noexport = "SpLocC" )%dopar%{
         fit=MassiveDiffC(ymatList[[i]], group, nperm, seed, side)
         fit$alternative=alternative
+        fit$seed=seed
         fit
       }
       stopCluster(cl)
@@ -299,6 +306,7 @@ MassiveDiff=function(ymat, group, nperm=1000, alpha=0.05, alternative=c("two.sid
       for (i in 1:npartition){
         result[[i]]=MassiveDiffC(ymatList[[i]], group, nperm, seed, side)
         result[[i]]$alternative=alternative
+        result[[i]]$seed=seed
       }
     }
     
