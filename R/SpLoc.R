@@ -125,7 +125,7 @@ SpLocMean=function(ymat, NNmatrix, nperm=1000, alpha=0.05, alternative=c("two.si
     out$pvalue=(1+sum(c(out$permMax)>max(out$Tstat,na.rm=TRUE)))/(1+nperm)
     out$seed=seed
     out$alternative=alternative
-    out=combine(list(result),alpha=alpha)
+#    out=combine(list(result),alpha=alpha)
     return(out)    
   }
 }
@@ -200,7 +200,7 @@ SpLocDiff=function(ymat, NNmatrix, group, nperm=1000, alpha=0.05, alternative=c(
     out$pvalue=(1+sum(c(out$permMax)>max(out$Tstat,na.rm=TRUE)))/(1+nperm)
     out$seed=seed
     out$alternative=alternative
-    out=combine(list(result),alpha=alpha)
+#    out=combine(list(result),alpha=alpha)
     return(out)    
   }
 }
@@ -255,7 +255,7 @@ MassiveMean=function(ymat, nperm=1000, alpha=0.05, alternative=c("two.sided", "l
     out$pvalue=(1+sum(c(out$permMax)>max(out$Tstat,na.rm=TRUE)))/(1+nperm)
     out$seed=seed
     out$alternative=alternative
-    out=combine(list(result),alpha=alpha)
+#    out=combine(list(result),alpha=alpha)
   }
   
   return(out)    
@@ -317,7 +317,7 @@ MassiveDiff=function(ymat, group, nperm=1000, alpha=0.05, alternative=c("two.sid
     out$pvalue=(1+sum(c(out$permMax)>max(out$Tstat,na.rm=TRUE)))/(1+nperm)
     out$seed=seed
     out$alternative=alternative
-    out=combine(list(result),alpha=alpha)
+#    out=combine(list(result),alpha=alpha)
   }
   return(out)    
 }
