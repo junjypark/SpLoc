@@ -1,5 +1,5 @@
 SpLoc=function(ymat, NNmatrix=NULL, group=NULL, nperm=10000, alpha=0.05, alternative=c("two.sided","less", "greater"), seed=NULL, 
-               partition=T, npartition=NULL, parallel=F, ncores=1){
+               partition=T, npartition=1, parallel=F, ncores=1){
   if (is.null(NNmatrix)){
     print("As NNmatrix is not specified, SpLoc conducts massive univariate analysis.")
     if (is.null(group)){
