@@ -107,8 +107,8 @@ ClusterSearch2=function(Tstat, threshold, NNmatrix, alternative=NULL, tau=0){
   
   ind0=which(Tstat<0)
   ind1=which(Tstat>min.threshold)
-  #ind2=unique(summary(NNmatrix[ind1,])$j)
-  ind2=unique(summary(NNmatrix[ind1,])[,2])
+  ind2=unique(summary(NNmatrix[ind1,])$j)
+  # ind2=unique(summary(NNmatrix[ind1,])[,2])
   out=unique(NNmatrix[,-ind2]@i+1)
   NNmatrix=NNmatrix[setdiff(ind0, out),]
   
