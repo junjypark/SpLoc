@@ -1,5 +1,5 @@
 SpLoc=function(ymat, NNmatrix=NULL, group=NULL, nperm=10000, alpha=0.05, alternative=c("two.sided","less", "greater"), seed=NULL, 
-               partition=T, npartition=1, parallel=F, ncores=1){
+               partition=T, npartition=NULL, parallel=F, ncores=1){
   if (is.null(NNmatrix)){
     print("As NNmatrix is not specified, SpLoc conducts massive univariate analysis.")
     if (is.null(group)){
@@ -62,7 +62,7 @@ SpLoc=function(ymat, NNmatrix=NULL, group=NULL, nperm=10000, alpha=0.05, alterna
 }
 
 
-SpLocMean=function(ymat, NNmatrix, nperm=1000, alpha=0.05, alternative=c("two.sided", "less", "greater"), seed=NULL, 
+SpLocMean=function(ymat, NNmatrix, nperm=10000, alpha=0.05, alternative=c("two.sided", "less", "greater"), seed=NULL, 
                    partition=F, npartition=1, parallel=F, ncores=1){
   if (length(which(is(NNmatrix)=="sparseMatrix"))==0){
     stop("NN is not a sparse matrix. Please refer the Matrix R package to convert it.")
@@ -125,13 +125,12 @@ SpLocMean=function(ymat, NNmatrix, nperm=1000, alpha=0.05, alternative=c("two.si
     out$pvalue=(1+sum(c(out$permMax)>max(out$Tstat,na.rm=TRUE)))/(1+nperm)
     out$seed=seed
     out$alternative=alternative
-#    out=combine(list(result),alpha=alpha)
     return(out)    
   }
 }
 
 
-SpLocDiff=function(ymat, NNmatrix, group, nperm=1000, alpha=0.05, alternative=c("two.sided", "less", "greater"), seed=NULL, 
+SpLocDiff=function(ymat, NNmatrix, group, nperm=10000, alpha=0.05, alternative=c("two.sided", "less", "greater"), seed=NULL, 
                    partition=F, npartition=1, parallel=F, ncores=1){
   if (!all.equal(sort(unique(group)),c(-1,1))){
     stop("group should have either 1 or -1.")
@@ -200,13 +199,12 @@ SpLocDiff=function(ymat, NNmatrix, group, nperm=1000, alpha=0.05, alternative=c(
     out$pvalue=(1+sum(c(out$permMax)>max(out$Tstat,na.rm=TRUE)))/(1+nperm)
     out$seed=seed
     out$alternative=alternative
-#    out=combine(list(result),alpha=alpha)
     return(out)    
   }
 }
 
 
-MassiveMean=function(ymat, nperm=1000, alpha=0.05, alternative=c("two.sided", "less", "greater"), seed=NULL, 
+MassiveMean=function(ymat, nperm=10000, alpha=0.05, alternative=c("two.sided", "less", "greater"), seed=NULL, 
                    partition=F, npartition=1, parallel=F, ncores=1){
   if ( alpha<0 |alpha>1){
     stop("alpha should range between 0 and 1.")
@@ -221,6 +219,10 @@ MassiveMean=function(ymat, nperm=1000, alpha=0.05, alternative=c("two.sided", "l
   if (is.null(seed)){ seed=sample(1e6,1) }
   
   if (isTRUE(partition)){
+    if (is.null(npartition)){
+      npartition=nrow(NNmatrix)%/%10000+1
+    }
+    
     ymatList=list()
     len=ceiling(nrow(ymat)/npartition)
     for (i in 1:npartition){
@@ -255,14 +257,13 @@ MassiveMean=function(ymat, nperm=1000, alpha=0.05, alternative=c("two.sided", "l
     out$pvalue=(1+sum(c(out$permMax)>max(out$Tstat,na.rm=TRUE)))/(1+nperm)
     out$seed=seed
     out$alternative=alternative
-#    out=combine(list(result),alpha=alpha)
   }
   
   return(out)    
 }
 
 
-MassiveDiff=function(ymat, group, nperm=1000, alpha=0.05, alternative=c("two.sided", "less", "greater"), seed=NULL, 
+MassiveDiff=function(ymat, group, nperm=10000, alpha=0.05, alternative=c("two.sided", "less", "greater"), seed=NULL, 
                      partition=F, npartition=1, parallel=F, ncores=1){
   if (!all.equal(sort(unique(group)),c(-1,1))){
     stop("group should have either 1 or -1.")
@@ -283,6 +284,10 @@ MassiveDiff=function(ymat, group, nperm=1000, alpha=0.05, alternative=c("two.sid
   if (is.null(seed)){ seed=sample(1e6,1) }
   
   if (isTRUE(partition)){
+    if (is.null(npartition)){
+      npartition=nrow(NNmatrix)%/%10000+1
+    }
+    
     ymatList=list()
     len=ceiling(nrow(ymat)/npartition)
     for (i in 1:npartition){
@@ -317,7 +322,6 @@ MassiveDiff=function(ymat, group, nperm=1000, alpha=0.05, alternative=c("two.sid
     out$pvalue=(1+sum(c(out$permMax)>max(out$Tstat,na.rm=TRUE)))/(1+nperm)
     out$seed=seed
     out$alternative=alternative
-#    out=combine(list(result),alpha=alpha)
   }
   return(out)    
 }
