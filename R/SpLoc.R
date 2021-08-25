@@ -122,7 +122,11 @@ SpLocMean=function(ymat, NNmatrix, nperm=10000, alpha=0.05, alternative=c("two.s
     return(out)
   } else{
     out=SpLocMeanC(ymat, NNmatrix, nperm, seed, side)
-    out$pvalue=(1+sum(c(out$permMax)>max(out$Tstat,na.rm=TRUE)))/(1+nperm)
+    if (alternative=="less"){
+      out$pvalue=(1+sum(c(out$permMax)<min(out$Tstat,na.rm=TRUE)))/(1+nperm)
+    } else{
+      out$pvalue=(1+sum(c(out$permMax)>max(out$Tstat,na.rm=TRUE)))/(1+nperm)
+    }
     out$seed=seed
     out$alternative=alternative
     return(out)    
@@ -196,7 +200,11 @@ SpLocDiff=function(ymat, NNmatrix, group, nperm=10000, alpha=0.05, alternative=c
     return(out)
   } else{
     out=SpLocDiffC(ymat, NNmatrix, group, nperm, seed, side)
-    out$pvalue=(1+sum(c(out$permMax)>max(out$Tstat,na.rm=TRUE)))/(1+nperm)
+    if (alternative=="less"){
+      out$pvalue=(1+sum(c(out$permMax)<min(out$Tstat,na.rm=TRUE)))/(1+nperm)
+    } else{
+      out$pvalue=(1+sum(c(out$permMax)>max(out$Tstat,na.rm=TRUE)))/(1+nperm)
+    } 
     out$seed=seed
     out$alternative=alternative
     return(out)    
@@ -254,7 +262,11 @@ MassiveMean=function(ymat, nperm=10000, alpha=0.05, alternative=c("two.sided", "
     return(out)
   } else{
     out=MassiveMeanC(ymat, nperm, seed, side)
-    out$pvalue=(1+sum(c(out$permMax)>max(out$Tstat,na.rm=TRUE)))/(1+nperm)
+    if (alternative=="less"){
+      out$pvalue=(1+sum(c(out$permMax)<min(out$Tstat,na.rm=TRUE)))/(1+nperm)
+    } else{
+      out$pvalue=(1+sum(c(out$permMax)>max(out$Tstat,na.rm=TRUE)))/(1+nperm)
+    }
     out$seed=seed
     out$alternative=alternative
   }
@@ -319,7 +331,12 @@ MassiveDiff=function(ymat, group, nperm=10000, alpha=0.05, alternative=c("two.si
     return(out)
   } else{
     out=MassiveDiffC(ymat, group, nperm, seed, side)
-    out$pvalue=(1+sum(c(out$permMax)>max(out$Tstat,na.rm=TRUE)))/(1+nperm)
+    if (alternative=="less"){
+      out$pvalue=(1+sum(c(out$permMax)<min(out$Tstat,na.rm=TRUE)))/(1+nperm)
+    } else{
+      out$pvalue=(1+sum(c(out$permMax)>max(out$Tstat,na.rm=TRUE)))/(1+nperm)
+    }
+    
     out$seed=seed
     out$alternative=alternative
   }
