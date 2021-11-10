@@ -63,7 +63,7 @@ SpLoc=function(ymat, NNmatrix=NULL, group=NULL, nperm=10000, alpha=0.05, alterna
 
 
 SpLocMean=function(ymat, NNmatrix, nperm=10000, alpha=0.05, alternative=c("two.sided", "less", "greater"), seed=NULL, 
-                   partition=F, npartition=1, parallel=F, ncores=1){
+                   partition=T, npartition=1, parallel=F, ncores=1){
   if (length(which(is(NNmatrix)=="sparseMatrix"))==0){
     stop("NN is not a sparse matrix. Please refer the Matrix R package to convert it.")
   }
@@ -103,7 +103,7 @@ SpLocMean=function(ymat, NNmatrix, nperm=10000, alpha=0.05, alternative=c("two.s
       cl=makeCluster(ncores)
       registerDoParallel(cl)
       result=foreach(i=1:npartition, .packages=("SpLoc"),.noexport = "SpLocC" )%dopar%{
-        fit=SpLocMeanC(ymat, NNList[[i]], nperm, seed, side)
+        fit=SpLocMeanC(ymat, NNList[[i]], nperm, seed)
         fit$alternative=alternative
         fit$seed=seed
         fit
@@ -112,7 +112,7 @@ SpLocMean=function(ymat, NNmatrix, nperm=10000, alpha=0.05, alternative=c("two.s
     } else{
       result=list()
       for (i in 1:npartition){
-        result[[i]]=SpLocMeanC(ymat, NNList[[i]], nperm, seed, side)
+        result[[i]]=SpLocMeanC(ymat, NNList[[i]], nperm, seed)
         result[[i]]$alternative=alternative
         result[[i]]$seed=seed
       }
@@ -122,11 +122,19 @@ SpLocMean=function(ymat, NNmatrix, nperm=10000, alpha=0.05, alternative=c("two.s
     return(out)
   } else{
     out=SpLocMeanC(ymat, NNmatrix, nperm, seed, side)
+    
     if (alternative=="less"){
-      out$pvalue=(1+sum(c(out$permMax)<min(out$Tstat,na.rm=TRUE)))/(1+nperm)
-    } else{
-      out$pvalue=(1+sum(c(out$permMax)>max(out$Tstat,na.rm=TRUE)))/(1+nperm)
+      out$threshold=quantile(out$permMin,alpha)
+      out$pvalue=(1+sum(c(out$permMin)<min(out$Tstat,na.rm=T)))/(1+nperm[1])
+    } else if (alternative=="greater"){
+      threshold=quantile(out$permMax,1-alpha)
+      out$pvalue=(1+sum(c(out$permMax)>max(out$Tstat,na.rm=T)))/(1+nperm[1])
+    } else {
+      perm=pmax(abs(out$permMin),abs(out$permMax))
+      out$threshold=quantile(pmax(abs(out$permMin),abs(out$permMax)),1-alpha)
+      out$pvalue=(1+sum(c(perm)>max(abs(out$Tstat),na.rm=T)))/(1+nperm[1])
     }
+
     out$seed=seed
     out$alternative=alternative
     return(out)    
@@ -135,10 +143,7 @@ SpLocMean=function(ymat, NNmatrix, nperm=10000, alpha=0.05, alternative=c("two.s
 
 
 SpLocDiff=function(ymat, NNmatrix, group, nperm=10000, alpha=0.05, alternative=c("two.sided", "less", "greater"), seed=NULL, 
-                   partition=F, npartition=1, parallel=F, ncores=1){
-  # if (!all.equal(sort(unique(group)),c(-1,1))){
-  #   stop("group should have either 1 or -1.")
-  # }
+                   partition=T, npartition=1, parallel=F, ncores=1){
   if (length(group)!=ncol(ymat)){
     stop("The number of elements in group does not match with the number of columns in ymat.")
   }
@@ -213,7 +218,7 @@ SpLocDiff=function(ymat, NNmatrix, group, nperm=10000, alpha=0.05, alternative=c
 
 
 MassiveMean=function(ymat, nperm=10000, alpha=0.05, alternative=c("two.sided", "less", "greater"), seed=NULL, 
-                   partition=F, npartition=1, parallel=F, ncores=1){
+                   partition=T, npartition=NULL, parallel=F, ncores=1){
   if ( alpha<0 |alpha>1){
     stop("alpha should range between 0 and 1.")
   }
@@ -276,10 +281,7 @@ MassiveMean=function(ymat, nperm=10000, alpha=0.05, alternative=c("two.sided", "
 
 
 MassiveDiff=function(ymat, group, nperm=10000, alpha=0.05, alternative=c("two.sided", "less", "greater"), seed=NULL, 
-                     partition=F, npartition=1, parallel=F, ncores=1){
-  # if (!all.equal(sort(unique(group)),c(-1,1))){
-  #   stop("group should have either 1 or -1.")
-  # }
+                     partition=T, npartition=NULL, parallel=F, ncores=1){
   if (length(group)!=ncol(ymat)){
     stop("The number of elements in group does not match with the number of columns in ymat.")
   }
