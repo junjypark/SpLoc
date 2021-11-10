@@ -136,9 +136,9 @@ SpLocMean=function(ymat, NNmatrix, nperm=10000, alpha=0.05, alternative=c("two.s
 
 SpLocDiff=function(ymat, NNmatrix, group, nperm=10000, alpha=0.05, alternative=c("two.sided", "less", "greater"), seed=NULL, 
                    partition=F, npartition=1, parallel=F, ncores=1){
-  if (!all.equal(sort(unique(group)),c(-1,1))){
-    stop("group should have either 1 or -1.")
-  }
+  # if (!all.equal(sort(unique(group)),c(-1,1))){
+  #   stop("group should have either 1 or -1.")
+  # }
   if (length(group)!=ncol(ymat)){
     stop("The number of elements in group does not match with the number of columns in ymat.")
   }
@@ -277,9 +277,9 @@ MassiveMean=function(ymat, nperm=10000, alpha=0.05, alternative=c("two.sided", "
 
 MassiveDiff=function(ymat, group, nperm=10000, alpha=0.05, alternative=c("two.sided", "less", "greater"), seed=NULL, 
                      partition=F, npartition=1, parallel=F, ncores=1){
-  if (!all.equal(sort(unique(group)),c(-1,1))){
-    stop("group should have either 1 or -1.")
-  }
+  # if (!all.equal(sort(unique(group)),c(-1,1))){
+  #   stop("group should have either 1 or -1.")
+  # }
   if (length(group)!=ncol(ymat)){
     stop("The number of elements in group does not match with the number of columns in ymat.")
   }
