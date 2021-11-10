@@ -125,6 +125,34 @@ combine=function(lst, alpha=0.05){
   ))
 }
 
+process=function(fit, threshold=NULL){
+  if (is.null(threshold)){ threshold=fit$threshold }
+  alternative=fit$alternative
+  n.locations=fit$n.locations
+  cl1=cl2=NULL
+  if (alternative=="two.sided"){
+    cl1=which(apply(matrix(fit$Tstat,n.locations),1,max)> thres)
+    cl2=which(apply(matrix(fit$Tstat,n.locations),1,min)< -thres)
+    inter=intersect(cl1,cl2)
+    n.inter=length(inter)
+    if (n.inter>0){
+      for (j in 1:n.inter){
+        if (fit$Tstat[inter[j]]>0){
+          cl2=setdiff(cl2, inter[j])
+        } else{
+          cl1=setdiff(cl1, inter[j])
+        }
+      }
+    }
+  } else if (alternative=="greater"){
+    cl1=which(apply(matrix(fitLHb.SpLocPlus$Tstat,n.locations),1,max)> thres)
+  } else if (alternative=="less"){
+    cl2=which(apply(matrix(fitLHb.SpLocPlus$Tstat,n.locations),1,min)< thres)
+  }
+  
+  return(list(indices.greater=cl1,indices.less=cl2))
+}
+
 # process=function(fit, NNmatrix=NULL, thres){
 #   if (is.null(NNmatrix)){
 #     p=length(fit$Tstat)
