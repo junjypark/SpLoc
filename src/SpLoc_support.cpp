@@ -44,25 +44,17 @@ Rcpp::List SpLocMeanC(arma::mat& ymat, arma::sp_mat& NNmatrix, int nperm, int s,
     U(k)=(U(k)-mn)/sd;
   }
   
-  if (side==2){
-    permU=permU%permU;
-    U=U%U;  
-  }
-
   arma::vec permMax(nperm);
+  arma::vec permMin(nperm);
     
-  if (side==-1){
-    for (int i=0; i<nperm; ++i){
-      permMax(i)=permU.col(i).min();
-    }
-  } else{
-    for (int i=0; i<nperm; ++i){
-      permMax(i)=permU.col(i).max();
-    }
+  for (int i=0; i<nperm; ++i){
+    permMin(i)=permU.col(i).min();
+    permMax(i)=permU.col(i).max();
   }
   
   return Rcpp::List::create(Rcpp::Named("Tstat")=U,
                             Rcpp::Named("permMax")=permMax,
+                            Rcpp::Named("permMin")=permMin,
                             Rcpp::Named("nperm")=nperm);
 }
 
@@ -95,25 +87,17 @@ Rcpp::List SpLocDiffC(arma::mat& ymat, arma::sp_mat& NNmatrix, arma::vec group, 
     U(k)=(U(k)-mn)/sd;
   }
 
-  if (side==2){
-    permU=permU%permU;
-    U=U%U;  
-  }
-
   arma::vec permMax(nperm);
-
-  if (side==-1){
-    for (int i=0; i<nperm; ++i){
-      permMax(i)=permU.col(i).min();
-    }
-  } else{
-    for (int i=0; i<nperm; ++i){
-      permMax(i)=permU.col(i).max();
-    }
+  arma::vec permMin(nperm);
+    
+  for (int i=0; i<nperm; ++i){
+    permMin(i)=permU.col(i).min();
+    permMax(i)=permU.col(i).max();
   }
   
   return Rcpp::List::create(Rcpp::Named("Tstat")=U,
                             Rcpp::Named("permMax")=permMax,
+                            Rcpp::Named("permMin")=permMin,
                             Rcpp::Named("nperm")=nperm);
 }
 
@@ -146,25 +130,17 @@ Rcpp::List MassiveMeanC(arma::mat ymat, int nperm,  int s, int side){
     U(k)=(U(k)-mn)/sd;
   }
   
-  if (side==2){
-    permU=permU%permU;
-    U=U%U;  
-  }
-  
   arma::vec permMax(nperm);
-
-  if (side==-1){
-    for (int i=0; i<nperm; ++i){
-      permMax(i)=permU.col(i).min();
-    }
-  } else{
-    for (int i=0; i<nperm; ++i){
-      permMax(i)=permU.col(i).max();
-    }
+  arma::vec permMin(nperm);
+    
+  for (int i=0; i<nperm; ++i){
+    permMin(i)=permU.col(i).min();
+    permMax(i)=permU.col(i).max();
   }
   
   return Rcpp::List::create(Rcpp::Named("Tstat")=U,
                             Rcpp::Named("permMax")=permMax,
+                            Rcpp::Named("permMin")=permMin,
                             Rcpp::Named("nperm")=nperm);
 }
 
@@ -187,7 +163,6 @@ Rcpp::List MassiveDiffC(arma::mat ymat, arma::vec group, int nperm,  int s, int 
     permmat.col(i)=shuffle(group);
   }
   permU=ymat*permmat;
-  
 
   for (int k=0; k<q; ++k){
     mn=mean(permU.row(k));
@@ -196,24 +171,16 @@ Rcpp::List MassiveDiffC(arma::mat ymat, arma::vec group, int nperm,  int s, int 
     U(k)=(U(k)-mn)/sd;
   }
 
-  if (side==2){
-    permU=permU%permU;
-    U=U%U;  
-  }
-
   arma::vec permMax(nperm);
-
-  if (side==-1){
-    for (int i=0; i<nperm; ++i){
-      permMax(i)=permU.col(i).min();
-    }
-  } else{
-    for (int i=0; i<nperm; ++i){
-      permMax(i)=permU.col(i).max();
-    }
+  arma::vec permMin(nperm);
+    
+  for (int i=0; i<nperm; ++i){
+    permMin(i)=permU.col(i).min();
+    permMax(i)=permU.col(i).max();
   }
   
   return Rcpp::List::create(Rcpp::Named("Tstat")=U,
                             Rcpp::Named("permMax")=permMax,
+                            Rcpp::Named("permMin")=permMin,
                             Rcpp::Named("nperm")=nperm);
 }
