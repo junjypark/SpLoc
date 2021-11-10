@@ -77,9 +77,6 @@ SpLocMean=function(ymat, NNmatrix, nperm=10000, alpha=0.05, alternative=c("two.s
     alternative="two.sided"
     print("Conducting the two-sided test as alternative has not been specified...")
     }
-  if (alternative=="two.sided"){ side=2 }
-  if (alternative=="greater"){ side=1 }
-  if (alternative=="less"){ side=-1 }
   if (is.null(seed)){ seed=sample(1e6,1) }
   if (isTRUE(partition)){
     if (is.null(npartition)){
@@ -121,7 +118,7 @@ SpLocMean=function(ymat, NNmatrix, nperm=10000, alpha=0.05, alternative=c("two.s
     out=combine(result, alpha=alpha)
     return(out)
   } else{
-    out=SpLocMeanC(ymat, NNmatrix, nperm, seed, side)
+    out=SpLocMeanC(ymat, NNmatrix, nperm, seed)
     
     if (alternative=="less"){
       out$threshold=quantile(out$permMin,alpha)
@@ -160,9 +157,6 @@ SpLocDiff=function(ymat, NNmatrix, group, nperm=10000, alpha=0.05, alternative=c
     alternative="two.sided"
     print("Conducting the two-sided test as alternative has not been specified...")
   }
-  if (alternative=="two.sided"){ side=2 }
-  if (alternative=="greater"){ side=1 }
-  if (alternative=="less"){ side=-1 }
   if (is.null(seed)){ seed=sample(1e6,1) }
   if (isTRUE(partition)){
     if (is.null(npartition)){
@@ -186,7 +180,7 @@ SpLocDiff=function(ymat, NNmatrix, group, nperm=10000, alpha=0.05, alternative=c
       cl=makeCluster(ncores)
       registerDoParallel(cl)
       result=foreach(i=1:npartition, .packages=("SpLoc"),.noexport = "SpLocC" )%dopar%{
-        fit=SpLocDiffC(ymat, NNList[[i]], group, nperm, seed, side)
+        fit=SpLocDiffC(ymat, NNList[[i]], group, nperm, seed)
         fit$alternative=alternative
         fit$seed=seed
         fit
@@ -195,7 +189,7 @@ SpLocDiff=function(ymat, NNmatrix, group, nperm=10000, alpha=0.05, alternative=c
     } else{
       result=list()
       for (i in 1:npartition){
-        result[[i]]=SpLocDiffC(ymat, NNList[[i]], group, nperm, seed, side)
+        result[[i]]=SpLocDiffC(ymat, NNList[[i]], group, nperm, seed)
         result[[i]]$alternative=alternative
         result[[i]]$seed=seed
       }
@@ -204,7 +198,7 @@ SpLocDiff=function(ymat, NNmatrix, group, nperm=10000, alpha=0.05, alternative=c
     out=combine(result, alpha=alpha)
     return(out)
   } else{
-    out=SpLocDiffC(ymat, NNmatrix, group, nperm, seed, side)
+    out=SpLocDiffC(ymat, NNmatrix, group, nperm, seed)
     if (alternative=="less"){
       out$pvalue=(1+sum(c(out$permMax)<min(out$Tstat,na.rm=TRUE)))/(1+nperm)
     } else{
@@ -226,9 +220,6 @@ MassiveMean=function(ymat, nperm=10000, alpha=0.05, alternative=c("two.sided", "
     alternative="two.sided"
     print("Conducting the two-sided test as alternative has not been specified...")
   }
-  if (alternative=="two.sided"){ side=2 }
-  if (alternative=="greater"){ side=1 }
-  if (alternative=="less"){ side=-1 }
   if (is.null(seed)){ seed=sample(1e6,1) }
   
   if (isTRUE(partition)){
@@ -248,7 +239,7 @@ MassiveMean=function(ymat, nperm=10000, alpha=0.05, alternative=c("two.sided", "
       cl=makeCluster(ncores)
       registerDoParallel(cl)
       result=foreach(i=1:npartition, .packages=("SpLoc"),.noexport = "SpLocC" )%dopar%{
-        fit=MassiveMeanC(ymatList[[i]], nperm, seed, side)
+        fit=MassiveMeanC(ymatList[[i]], nperm, seed)
         fit$alternative=alternative
         fit$seed=seed
         fit
@@ -257,7 +248,7 @@ MassiveMean=function(ymat, nperm=10000, alpha=0.05, alternative=c("two.sided", "
     } else{
       result=list()
       for (i in 1:npartition){
-        result[[i]]=MassiveMeanC(ymatList[[i]], nperm, seed, side)
+        result[[i]]=MassiveMeanC(ymatList[[i]], nperm, seed)
         result[[i]]$alternative=alternative
         result[[i]]$seed=seed
       }
@@ -266,7 +257,7 @@ MassiveMean=function(ymat, nperm=10000, alpha=0.05, alternative=c("two.sided", "
     out=combine(result, alpha=alpha)
     return(out)
   } else{
-    out=MassiveMeanC(ymat, nperm, seed, side)
+    out=MassiveMeanC(ymat, nperm, seed)
     if (alternative=="less"){
       out$pvalue=(1+sum(c(out$permMax)<min(out$Tstat,na.rm=TRUE)))/(1+nperm)
     } else{
@@ -292,9 +283,6 @@ MassiveDiff=function(ymat, group, nperm=10000, alpha=0.05, alternative=c("two.si
     alternative="two.sided"
     print("Conducting the two-sided test as alternative has not been specified...")
   }
-  if (alternative=="two.sided"){ side=2 }
-  if (alternative=="greater"){ side=1 }
-  if (alternative=="less"){ side=-1 }
   if (is.null(seed)){ seed=sample(1e6,1) }
   
   if (isTRUE(partition)){
@@ -314,7 +302,7 @@ MassiveDiff=function(ymat, group, nperm=10000, alpha=0.05, alternative=c("two.si
       cl=makeCluster(ncores)
       registerDoParallel(cl)
       result=foreach(i=1:npartition, .packages=("SpLoc"),.noexport = "SpLocC" )%dopar%{
-        fit=MassiveDiffC(ymatList[[i]], group, nperm, seed, side)
+        fit=MassiveDiffC(ymatList[[i]], group, nperm, seed)
         fit$alternative=alternative
         fit$seed=seed
         fit
@@ -323,7 +311,7 @@ MassiveDiff=function(ymat, group, nperm=10000, alpha=0.05, alternative=c("two.si
     } else{
       result=list()
       for (i in 1:npartition){
-        result[[i]]=MassiveDiffC(ymatList[[i]], group, nperm, seed, side)
+        result[[i]]=MassiveDiffC(ymatList[[i]], group, nperm, seed)
         result[[i]]$alternative=alternative
         result[[i]]$seed=seed
       }
@@ -332,7 +320,7 @@ MassiveDiff=function(ymat, group, nperm=10000, alpha=0.05, alternative=c("two.si
     out=combine(result, alpha=alpha)
     return(out)
   } else{
-    out=MassiveDiffC(ymat, group, nperm, seed, side)
+    out=MassiveDiffC(ymat, group, nperm, seed)
     if (alternative=="less"){
       out$pvalue=(1+sum(c(out$permMax)<min(out$Tstat,na.rm=TRUE)))/(1+nperm)
     } else{
