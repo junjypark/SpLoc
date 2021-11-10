@@ -131,8 +131,8 @@ process=function(fit, threshold=NULL){
   n.locations=fit$n.locations
   cl1=cl2=NULL
   if (alternative=="two.sided"){
-    cl1=which(apply(matrix(fit$Tstat,n.locations),1,max)> thres)
-    cl2=which(apply(matrix(fit$Tstat,n.locations),1,min)< -thres)
+    cl1=which(apply(matrix(fit$Tstat,n.locations),1,max)> threshold)
+    cl2=which(apply(matrix(fit$Tstat,n.locations),1,min)< -threshold)
     inter=intersect(cl1,cl2)
     n.inter=length(inter)
     if (n.inter>0){
@@ -145,9 +145,9 @@ process=function(fit, threshold=NULL){
       }
     }
   } else if (alternative=="greater"){
-    cl1=which(apply(matrix(fit$Tstat,n.locations),1,max)> thres)
+    cl1=which(apply(matrix(fit$Tstat,n.locations),1,max)> threshold)
   } else if (alternative=="less"){
-    cl2=which(apply(matrix(fit$Tstat,n.locations),1,min)< thres)
+    cl2=which(apply(matrix(fit$Tstat,n.locations),1,min)< threshold)
   }
   
   return(list(indices.greater=cl1,indices.less=cl2))
