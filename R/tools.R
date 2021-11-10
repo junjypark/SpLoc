@@ -128,7 +128,7 @@ combine=function(lst, alpha=0.05){
 process=function(fit, threshold=NULL){
   if (is.null(threshold)){ threshold=fit$threshold }
   alternative=fit$alternative
-  n.locations=fit$n.locations
+  n.locations=fit$nlocations
   cl1=cl2=NULL
   if (alternative=="two.sided"){
     cl1=which(apply(matrix(fit$Tstat,n.locations),1,max)> threshold)
