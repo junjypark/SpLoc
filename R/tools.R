@@ -145,9 +145,9 @@ process=function(fit, threshold=NULL){
       }
     }
   } else if (alternative=="greater"){
-    cl1=which(apply(matrix(fitLHb.SpLocPlus$Tstat,n.locations),1,max)> thres)
+    cl1=which(apply(matrix(fit$Tstat,n.locations),1,max)> thres)
   } else if (alternative=="less"){
-    cl2=which(apply(matrix(fitLHb.SpLocPlus$Tstat,n.locations),1,min)< thres)
+    cl2=which(apply(matrix(fit$Tstat,n.locations),1,min)< thres)
   }
   
   return(list(indices.greater=cl1,indices.less=cl2))
