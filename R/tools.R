@@ -1,10 +1,5 @@
-buildNNmatrix3D=function(template, radiusSet=c(0,1,2,3), kernel=NULL, phiSet=NULL){
-  if (!is.null(kernel)){
-    if (is.null(phiSet)){ stop("phiSet needs to be specified") }
-    else if (length(phiSet)==1){ phiSet=rep(phiSet, length(radiusSet)) }
-    else if (length(phiSet)!=length(radiusSet)){ stop("Lengths of radiusSet and phiSet are not the same") }
-  } 
-    
+buildNNmatrix3D=function(template, radiusSet=c(0,1,2,3)){
+
   radiusSet=sort(radiusSet)
   nSet=length(radiusSet)
   maxRadius=radiusSet[nSet]
@@ -61,12 +56,7 @@ buildNNmatrix3D=function(template, radiusSet=c(0,1,2,3), kernel=NULL, phiSet=NUL
   return(NNmatrix)
 }
 
-buildNNmatrixDist=function(distMat, nnSet=c(1,5,10*1:10,50*3:10,100*6:10), kernel=NULL, phiSet=NULL){
-  if (!is.null(kernel)){
-    if (is.null(phiSet)){ stop("phiSet needs to be specified") }
-    else if (length(phiSet)==1){ phiSet=rep(phiSet, length(radiusSet)) }
-    else if (length(phiSet)!=length(radiusSet)){ stop("Lengths of nnSet and phiSet are not the same") }
-  } 
+buildNNmatrixDist=function(distMat, nnSet=c(1,5,10*1:10,50*3:10,100*6:10)){
   
   p=nrow(distMat)
   nnSet=unique(pmin(sort(nnSet),p))
@@ -85,13 +75,7 @@ buildNNmatrixDist=function(distMat, nnSet=c(1,5,10*1:10,50*3:10,100*6:10), kerne
     phi=phiSet[r]
     ind2=which(out[,3]<=nn)
     out2=out[ind2,]
-    if (is.null(kernel)){
-      sp=sparseMatrix(i=out2[,1], j=out2[,2], x=1, dims=c(p,p))
-    } else if (kernel=="Gaussian"){
-      sp=sparseMatrix(i=out2[,1], j=out2[,2], x=exp(-out[,4]^2/phi), dims=c(p,p))
-    } else if (kernel=="Exponential"){
-      sp=sparseMatrix(i=out2[,1], j=out2[,2], x=exp(-out[,4]/phi), dims=c(p,p))
-    }
+    sp=sparseMatrix(i=out2[,1], j=out2[,2], x=1, dims=c(p,p))
     sp
   }
   
@@ -114,19 +98,25 @@ combine=function(lst, alpha=0.05){
   else{nperm=nperm[1]}
   
   Tstat=do.call("c",lapply(lst, function(x){x$Tstat}))
+  permMin=apply(do.call("cbind",lapply(lst, function(x){x$permMin})),1,min)
+  permMax=apply(do.call("cbind",lapply(lst, function(x){x$permMax})),1,max)
+
   if (alternative=="less"){
-    permMax=apply(do.call("cbind",lapply(lst, function(x){x$permMax})),1,min)
-    threshold=quantile(permMax, alpha)
-    pvalue=(1+sum(c(permMax)<max(Tstat,na.rm=T)))/(1+nperm[1])
-  } else{
-    permMax=apply(do.call("cbind",lapply(lst, function(x){x$permMax})),1,max)
-    threshold=quantile(permMax, 1-alpha)
+    threshold=quantile(permMin,alpha)
+    pvalue=(1+sum(c(permMin)<min(Tstat,na.rm=T)))/(1+nperm[1])
+  } else if (alternative=="greater"){
+    threshold=quantile(permMax,1-alpha)
     pvalue=(1+sum(c(permMax)>max(Tstat,na.rm=T)))/(1+nperm[1])
+  } else {
+    perm=pmax(abs(permMin),abs(permMax))
+    threshold=quantile(pmax(abs(permMin),abs(permMax)),1-alpha)
+    pvalue=(1+sum(c(perm)>max(abs(Tstat),na.rm=T)))/(1+nperm[1])
   }
 
   return(list(
     threshold=threshold,
     Tstat=Tstat,
+    permMin=permMin,
     permMax=permMax,
     pvalue=pvalue,
     seed=seed,
@@ -135,21 +125,21 @@ combine=function(lst, alpha=0.05){
   ))
 }
 
-process=function(fit, NNmatrix=NULL, thres){
-  if (is.null(NNmatrix)){
-    p=length(fit$Tstat)
-    index=which(fit$Tstat>thres)
-    Tstat=fit$Tstat[index]
-    if (length(index)==0){NNmatrix.trim=NULL }
-    else{ NNmatrix.trim=sparseMatrix(i=1:length(index), j=index, x=1, dims=c(length(index), p)) }
-    return(list(Tstat=Tstat,NNmatrix=NNmatrix.trim))
-  } else{
-    if (length(fit$Tstat)!=nrow(NNmatrix)){ 
-      stop("The number of test statistics must correspond to the rows of the NNmatrix.") 
-    }
-    index=which(fit$Tstat>thres)
-    Tstat=fit$Tstat[index]
-    NNmatrix.trim=NNmatrix[index,,drop=F]
-    return(list(Tstat=Tstat,NNmatrix=NNmatrix.trim))
-  }
-}
+# process=function(fit, NNmatrix=NULL, thres){
+#   if (is.null(NNmatrix)){
+#     p=length(fit$Tstat)
+#     index=which(fit$Tstat>thres)
+#     Tstat=fit$Tstat[index]
+#     if (length(index)==0){NNmatrix.trim=NULL }
+#     else{ NNmatrix.trim=sparseMatrix(i=1:length(index), j=index, x=1, dims=c(length(index), p)) }
+#     return(list(Tstat=Tstat,NNmatrix=NNmatrix.trim))
+#   } else{
+#     if (length(fit$Tstat)!=nrow(NNmatrix)){ 
+#       stop("The number of test statistics must correspond to the rows of the NNmatrix.") 
+#     }
+#     index=which(fit$Tstat>thres)
+#     Tstat=fit$Tstat[index]
+#     NNmatrix.trim=NNmatrix[index,,drop=F]
+#     return(list(Tstat=Tstat,NNmatrix=NNmatrix.trim))
+#   }
+# }
