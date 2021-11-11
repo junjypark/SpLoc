@@ -185,6 +185,12 @@ Rcpp::List MassiveDiffC(arma::mat ymat, arma::vec group, int nperm,  int s){
                             Rcpp::Named("nperm")=nperm);
 }
 
+// [[Rcpp::export]]
+double computetraceABA(arma::mat A, arma::mat B){
+  arma::mat BA=B*A;
+  double out=accu(A%BA);
+  return out;
+}
 
 // [[Rcpp::depends(RcppArmadillo)]]
 // [[Rcpp::export]]
