@@ -174,22 +174,3 @@ process=function(fit, threshold=NULL){
   
   return(list(indices.greater=cl1,indices.less=cl2))
 }
-
-# process=function(fit, NNmatrix=NULL, thres){
-#   if (is.null(NNmatrix)){
-#     p=length(fit$Tstat)
-#     index=which(fit$Tstat>thres)
-#     Tstat=fit$Tstat[index]
-#     if (length(index)==0){NNmatrix.trim=NULL }
-#     else{ NNmatrix.trim=sparseMatrix(i=1:length(index), j=index, x=1, dims=c(length(index), p)) }
-#     return(list(Tstat=Tstat,NNmatrix=NNmatrix.trim))
-#   } else{
-#     if (length(fit$Tstat)!=nrow(NNmatrix)){ 
-#       stop("The number of test statistics must correspond to the rows of the NNmatrix.") 
-#     }
-#     index=which(fit$Tstat>thres)
-#     Tstat=fit$Tstat[index]
-#     NNmatrix.trim=NNmatrix[index,,drop=F]
-#     return(list(Tstat=Tstat,NNmatrix=NNmatrix.trim))
-#   }
-# }
