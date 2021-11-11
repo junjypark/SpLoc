@@ -35,7 +35,7 @@ CovRegOptim=function(rho, epsilon, corMat_base){
   corMat=corMat_base^rho
   corMat_norm=sum(corMat^2)
   if (corMat_norm>p+1e-10){
-    y1=sum(epsilon*crossprod(corMat, epsilon))/n
+    y1=sum(epsilon*(corMat%*%epsilon))/n
     y2=sum(epsilon^2)/n
     sigma2= (y1-y2)/(corMat_norm-p)
     tau2= (-p*y1+corMat_norm*y2)/(corMat_norm*p-p^2)
@@ -54,7 +54,7 @@ ObtainVarComps=function(rho, epsilon, corMat_base){
   corMat=corMat_base^rho
   corMat_norm=sum(corMat^2)
   if (corMat_norm>p+1e-10){
-    y1=sum(epsilon*crossprod(corMat, epsilon))/n
+    y1=sum(epsilon*(corMat%*%epsilon))/n
     y2=sum(epsilon^2)/n
     sigma2= (y1-y2)/(corMat_norm-p)
     tau2= (-p*y1+corMat_norm*y2)/(corMat_norm*p-p^2)
