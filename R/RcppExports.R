@@ -21,6 +21,10 @@ MassiveDiffC <- function(ymat, group, nperm, s) {
     .Call('_SpLoc_MassiveDiffC', PACKAGE = 'SpLoc', ymat, group, nperm, s)
 }
 
+computetraceABA <- function(A, B) {
+    .Call('_SpLoc_computetraceABA', PACKAGE = 'SpLoc', A, B)
+}
+
 CovRegOptimC <- function(rho, epsilon, corMat_base) {
     .Call('_SpLoc_CovRegOptimC', PACKAGE = 'SpLoc', rho, epsilon, corMat_base)
 }
