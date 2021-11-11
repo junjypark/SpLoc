@@ -108,6 +108,7 @@ combine=function(lst, alpha=0.05){
   n=length(lst)
   seed=do.call("c",lapply(lst, function(x){x$seed}))
   nperm=do.call("c",lapply(lst, function(x){x$nperm}))
+  nlocations=do.call("c",lapply(lst, function(x){x$nlocations}))
   alternative=do.call("c",lapply(lst, function(x){x$alternative}))
   
   if (length(unique(seed))>1){stop("Use the same seed for every SpLoc output.")}
@@ -143,6 +144,7 @@ combine=function(lst, alpha=0.05){
     pvalue=pvalue,
     seed=seed,
     nperm=nperm,
+    nlocations=nlocations,
     alternative=alternative
   ))
 }
