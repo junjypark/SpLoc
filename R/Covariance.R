@@ -111,7 +111,7 @@ buildNNGPmat=function(distMat, NNGPinfo, params, kernel = "exponential"){
     lnn=length(nn)
     coordip1=nn[lnn]
     
-    K=sigma2*f(rho,distMat[nn,nn,drop=F],k)+tau2*diag(lnn)
+    K=sigma2*f(rho,distMat[nn,nn,drop=F])+tau2*diag(lnn)
     
     A[coordip1,nn[-lnn]]=solve(K[-lnn,-lnn], K[lnn,-lnn])
     D[coordip1,coordip1]=K[lnn,lnn]-sum(K[lnn,-lnn]*solve(K[-lnn,-lnn], K[lnn,-lnn]))
