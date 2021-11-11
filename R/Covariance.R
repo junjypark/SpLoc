@@ -120,6 +120,6 @@ buildNNGPmat=function(distMat, NNGPinfo, params, kernel = "exponential"){
   
   IA=Matrix(diag(ncol(A))-A,sparse=T)
   sD=Matrix(diag(1/diag(D)),sparse=T)
-  NNGPprec=IA%*%sD%*%t(IA)
+  NNGPprec=IA%*%sD%*%Matrix::t(IA)
   return(list(A=IA, D=sD, NNGPprec=NNGPprec))
 }
