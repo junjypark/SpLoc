@@ -184,3 +184,53 @@ Rcpp::List MassiveDiffC(arma::mat ymat, arma::vec group, int nperm,  int s){
                             Rcpp::Named("permMin")=permMin,
                             Rcpp::Named("nperm")=nperm);
 }
+
+
+// [[Rcpp::depends(RcppArmadillo)]]
+// [[Rcpp::export]]
+double CovRegOptimC(double rho, arma::mat& epsilon, arma::mat corMat_base){
+  int p=epsilon.n_rows;
+  int n=epsilon.n_cols;
+  double sigma2;
+  double tau2;
+  double ss;
+
+  arma::mat corMat = pow(corMat_base, rho);
+  double corMat_norm=pow(norm(corMat, "fro"),2);
+  if (corMat_norm>p+pow(10,-10)){
+    double y1=computetraceABA(epsilon, corMat)/n;
+    double y2=pow(norm(epsilon,"fro"),2)/n;
+    sigma2= (y1-y2)/(corMat_norm-p);
+    tau2= (-p*y1+corMat_norm*y2)/(corMat_norm*p-p*p);
+    ss= -2*(sigma2*y1*n+tau2*y2*n)+p*tau2*tau2+corMat_norm*sigma2*sigma2+2*sigma2*tau2*p;
+  } else{
+    sigma2=-1;
+    tau2=-1;
+    ss=pow(10, 10);
+  }
+  return ss;
+}
+
+
+// [[Rcpp::depends(RcppArmadillo)]]
+// [[Rcpp::export]]
+Rcpp::List ObtainVarCompsC(double rho, arma::mat& epsilon, arma::mat corMat_base){
+  int p=epsilon.n_rows;
+  int n=epsilon.n_cols;
+  double sigma2;
+  double tau2;
+  arma::mat corMat = pow(corMat_base, rho);
+  double corMat_norm=pow(norm(corMat, "fro"),2);
+  if (corMat_norm>p+pow(10,-10)){
+    double y1=computetraceABA(epsilon, corMat)/n;
+    double y2=pow(norm(epsilon,"fro"),2)/n;
+    sigma2= (y1-y2)/(corMat_norm-p);
+    tau2= (-p*y1+corMat_norm*y2)/(corMat_norm*p-p*p);
+  } else{
+    sigma2=-1;
+    tau2=-1;
+  }
+  return Rcpp::List::create(Rcpp::Named("sigma2")=sigma2,
+                            Rcpp::Named("tau2")=tau2);
+}
+
