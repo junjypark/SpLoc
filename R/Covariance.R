@@ -185,7 +185,7 @@ buildNNGPmat=function(distMat, NNGPinfo, params, kernel = "exponential"){
   tau2=params$tau2
   k=params$K
   
-  f.exp=function(rho, d){ exp(-rho*d) } }
+  f.exp=function(rho, d){ exp(-rho*d) }
   f.gau=function(rho, d){ exp(-rho*d^2/2)}
 
   for (i in 1:(nrow(NNGPinfo$NN)-1)){
