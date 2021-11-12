@@ -1,7 +1,7 @@
 usethis::use_package("Matrix")
 
 
-CovReg=function(epsilon,  distMat, kernel="exponential", sparse=T, qtl=0.5,maxdist=NULL){
+CovReg=function(epsilon,  distMat, kernel="exponential", sparse=T, qtl=0.5, maxdist=NULL){
   if (!is.null(qtl) & !is.null(maxdist)){ stop("Only one of qtl or maxdist should be specified.")}
   if (sparse & is.null(qtl) & is.null (maxdist)){ stop("One of qtl or maxdist should be specified to enable the sparse option.") }
   
@@ -39,7 +39,7 @@ CovReg=function(epsilon,  distMat, kernel="exponential", sparse=T, qtl=0.5,maxdi
                   epsilon=epsilon, 
                   corMat_base1=corMat.base1,
                   corMat_base2=corMat.base2)$par
-    varcomps=ObtainVarComps2(rho.hat, epsilon, corMat.base)
+    varcomps=ObtainVarComps2(rho.hat, epsilon, corMat.base1, corMat.base2)
   }
   return(list(sigma2=varcomps$sigma2, 
               tau2=varcomps$tau2, 
@@ -72,7 +72,7 @@ CovRegOptim2=function(rho, epsilon, corMat_base1, corMat_base2){
   p=nrow(epsilon)
   n=ncol(epsilon)
   corMat1=corMat_base1^rho1
-  corMat2=corMat_base2^rho1
+  corMat2=corMat_base2^rho2
   corMat1_norm=sum(corMat1^2)
   corMat2_norm=sum(corMat2^2)
   corMat12_norm=sum(corMat1*corMat2)
@@ -206,7 +206,7 @@ buildNNGPmat=function(distMat, NNGPinfo, params, kernel = "exponential"){
     A[coordip1,nn[-lnn]]=solve(K[-lnn,-lnn], K[lnn,-lnn])
     D[coordip1,coordip1]=K[lnn,lnn]-sum(K[lnn,-lnn]*solve(K[-lnn,-lnn], K[lnn,-lnn]))
   }
-  D[NNGPinfo$NN[1,1],NNGPinfo$NN[1,1]]=sigma2+tau2
+  D[NNGPinfo$NN[1,1],NNGPinfo$NN[1,1]]=sum(sigma2)+tau2
   
   IA=Matrix(diag(ncol(A))-A,sparse=T)
   sD=Matrix(diag(1/diag(D)),sparse=T)
