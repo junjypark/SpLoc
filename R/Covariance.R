@@ -9,13 +9,12 @@ CovReg=function(epsilon,  distMat, kernel="exponential", sparse=T, qtl=0.5,maxdi
   if (!is.null(qtl)){  q=quantile(distMat, qtl) }
   if (!is.null(maxdist)){ q=maxdist }
   
-  if (kernel=="gaussian"){distMat=distMat^2}
   n=ncol(epsilon); p=nrow(epsilon)
   if (kernel%in%c("exponential", "gaussian")){
-    corMat.base=exp(-distMat)
-    if (!is.null(q)){
-      corMat.base=ifelse(distMat<q, corMat.base, 0)
-    }
+    if (kernel=="exponential"){corMat.base=exp(-distMat)}
+    else if (kernel=="gaussian"){corMat.base=exp(-distMat^2/2)}
+    
+    if (!is.null(q)){ corMat.base=ifelse(distMat<q, corMat.base, 0) }
     
     if (sparse){
       corMat.base=Matrix(corMat.base,sparse=T)
@@ -25,7 +24,23 @@ CovReg=function(epsilon,  distMat, kernel="exponential", sparse=T, qtl=0.5,maxdi
       rho.hat=optimize(CovRegOptimC,interval=c(10^-5, 10),epsilon=epsilon, corMat_base=corMat.base)$`minimum`
       varcomps=ObtainVarCompsC(rho.hat, epsilon, corMat.base)
     }
-  } 
+  } else if (kernrel=="mixture"){
+    corMat.base1=exp(-distMat)
+    corMat.base2=exp(-distMat^2/2)
+    
+    if (!is.null(q)){
+      corMat.base1=ifelse(distMat<q, corMat.base1, 0)
+      corMat.base2=ifelse(distMat<q, corMat.base2, 0)
+    }
+    
+    corMat.base1=Matrix(corMat.base1,sparse=T)
+    corMat.base2=Matrix(corMat.base2,sparse=T)
+    rho.hat=optim(c(0.001, 0.001), CovRegOptim2,
+                  epsilon=epsilon, 
+                  corMat_base1=corMat.base1,
+                  corMat_base2=corMat.base2)$par
+    varcomps=ObtainVarComps2(rho.hat, epsilon, corMat.base)
+  }
   return(list(sigma2=varcomps$sigma2, 
               tau2=varcomps$tau2, 
               rho=rho.hat,
@@ -51,6 +66,40 @@ CovRegOptim=function(rho, epsilon, corMat_base){
   return(ss)
 }
 
+CovRegOptim2=function(rho, epsilon, corMat_base1, corMat_base2){
+  rho1=rho[1]
+  rho2=rho[2]
+  p=nrow(epsilon)
+  n=ncol(epsilon)
+  corMat1=corMat_base1^rho1
+  corMat2=corMat_base2^rho1
+  corMat1_norm=sum(corMat1^2)
+  corMat2_norm=sum(corMat2^2)
+  corMat12_norm=sum(corMat1*corMat2)
+  Mat=matrix(c(corMat1_norm, corMat12_norm, p, 
+               corMat12_norm, corMat2_norm, p,
+               p,p,p),3,3)
+  if (corMat1_norm>p+1e-10 & corMat2_norm>p+1e-10){
+    y1=sum(epsilon*(corMat1%*%epsilon))/n
+    y2=sum(epsilon*(corMat2%*%epsilon))/n
+    y3=sum(epsilon^2)/n
+    y=c(y1,y2,y3)
+    params=solve(Mat, y)
+    sigma1=params[1]
+    sigma2=params[2]
+    tau2=params[3]
+    ss= sigma1^2*corMat1_norm+sigma2^2*corMat2_norm+tau2^2*p-2*
+      (sigma1*sigma2*corMat12_norm+sigma1*tau2*p+sigma2*tau2*p)-2*
+      (sigma1*y1*n+sigma2*y2*n+tau2*y3*n)
+  } else{
+    sigma1=-1;
+    sigma2=-1;
+    tau2=-1;
+    ss=10^10;
+  }
+  return(ss)
+}
+
 ObtainVarComps=function(rho, epsilon, corMat_base){
   p=nrow(epsilon)
   n=ncol(epsilon)
@@ -67,6 +116,36 @@ ObtainVarComps=function(rho, epsilon, corMat_base){
   }
   return(list(sigma2=sigma2, tau2=tau2))
 }
+
+ObtainVarComps2=function(rho, epsilon, corMat_base1, corMat_base2){
+  rho1=rho[1]
+  rho2=rho[2]
+  p=nrow(epsilon)
+  n=ncol(epsilon)
+  corMat1=corMat_base1^rho1
+  corMat2=corMat_base2^rho2
+  corMat1_norm=sum(corMat1^2)
+  corMat2_norm=sum(corMat2^2)
+  corMat12_norm=sum(corMat1*corMat2)
+  Mat=matrix(c(corMat1_norm, corMat12_norm, p, 
+               corMat12_norm, corMat2_norm, p,
+               p,p,p),3,3)
+  if (corMat1_norm>p+1e-10){
+    y1=sum(epsilon*(corMat1%*%epsilon))/n
+    y2=sum(epsilon*(corMat2%*%epsilon))/n
+    y3=sum(epsilon^2)/n
+    y=c(y1,y2,y3)
+    params=solve(Mat, y)
+    sigma2=params[1:2]
+    tau2=params[3]
+  } else{
+    sigma1=-1
+    sigma2=-1
+    tau2=-1
+  }
+  return(list(sigma2=sigma2, tau2=tau2))
+}
+
 
 constructNNGPinfo=function(distMat, NN=50, start.vertex=NULL){
   orders=NULL
