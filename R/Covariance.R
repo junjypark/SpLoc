@@ -24,7 +24,7 @@ CovReg=function(epsilon,  distMat, kernel="exponential", sparse=T, qtl=0.5,maxdi
       rho.hat=optimize(CovRegOptimC,interval=c(10^-5, 10),epsilon=epsilon, corMat_base=corMat.base)$`minimum`
       varcomps=ObtainVarCompsC(rho.hat, epsilon, corMat.base)
     }
-  } else if (kernrel=="mixture"){
+  } else if (kernel=="mixture"){
     corMat.base1=exp(-distMat)
     corMat.base2=exp(-distMat^2/2)
     
