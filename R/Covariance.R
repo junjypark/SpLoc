@@ -185,16 +185,24 @@ buildNNGPmat=function(distMat, NNGPinfo, params, kernel = "exponential"){
   tau2=params$tau2
   k=params$K
   
-  if (kernel=="exponential"){ f=function(rho, d){ exp(-rho*d) } }
-  else if (kernel=="gaussian"){ f=function(rho, d){ exp(-rho*d^2)} }
+  f.exp=function(rho, d){ exp(-rho*d) } }
+  f.gau=function(rho, d){ exp(-rho*d^2/2)}
 
   for (i in 1:(nrow(NNGPinfo$NN)-1)){
     nn=na.omit(NNGPinfo$NN[i+1,])
     lnn=length(nn)
     coordip1=nn[lnn]
     
-    K=sigma2*f(rho,distMat[nn,nn,drop=F])+tau2*diag(lnn)
-    
+    if (kernel=="exponential"){
+      K=sigma2*f.exp(rho,distMat[nn,nn,drop=F])+tau2*diag(lnn)
+    } else if (kernel=="gaussian"){
+      K=sigma2*f.gau(rho,distMat[nn,nn,drop=F])+tau2*diag(lnn)
+    } else if (kernel=="mixture"){
+      K=sigma2[1]*f.exp(rho[1],distMat[nn,nn,drop=F])+
+        sigma2[2]*f.gau(rho[2],distMat[nn,nn,drop=F])+
+        tau2*diag(lnn)
+    }
+
     A[coordip1,nn[-lnn]]=solve(K[-lnn,-lnn], K[lnn,-lnn])
     D[coordip1,coordip1]=K[lnn,lnn]-sum(K[lnn,-lnn]*solve(K[-lnn,-lnn], K[lnn,-lnn]))
   }
