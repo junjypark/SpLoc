@@ -35,7 +35,7 @@ CovReg=function(epsilon,  distMat, kernel="exponential", sparse=T, qtl=0.5, maxd
     
     corMat.base1=Matrix(corMat.base1,sparse=T)
     corMat.base2=Matrix(corMat.base2,sparse=T)
-    rho.hat=optim(c(0.001, 0.001), CovRegOptim2,
+    rho.hat=optim(c(0.01, 0.01), CovRegOptim2,
                   epsilon=epsilon, 
                   corMat_base1=corMat.base1,
                   corMat_base2=corMat.base2)$par
@@ -79,7 +79,7 @@ CovRegOptim2=function(rho, epsilon, corMat_base1, corMat_base2){
   Mat=matrix(c(corMat1_norm, corMat12_norm, p, 
                corMat12_norm, corMat2_norm, p,
                p,p,p),3,3)
-  if (corMat1_norm>p+1e-10 & corMat2_norm>p+1e-10){
+  if (det(Mat)>0){
     y1=sum(epsilon*(corMat1%*%epsilon))/n
     y2=sum(epsilon*(corMat2%*%epsilon))/n
     y3=sum(epsilon^2)/n
@@ -88,9 +88,9 @@ CovRegOptim2=function(rho, epsilon, corMat_base1, corMat_base2){
     sigma1=params[1]
     sigma2=params[2]
     tau2=params[3]
-    ss= sigma1^2*corMat1_norm+sigma2^2*corMat2_norm+tau2^2*p-2*
-      (sigma1*sigma2*corMat12_norm+sigma1*tau2*p+sigma2*tau2*p)-2*
-      (sigma1*y1*n+sigma2*y2*n+tau2*y3*n)
+    ss= sigma1^2*corMat1_norm+sigma2^2*corMat2_norm+tau2^2*p+
+      2*(sigma1*sigma2*corMat12_norm+sigma1*tau2*p+sigma2*tau2*p)-
+      2*(sigma1*y1*n+sigma2*y2*n+tau2*y3*n)
   } else{
     sigma1=-1;
     sigma2=-1;
