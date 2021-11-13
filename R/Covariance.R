@@ -105,15 +105,12 @@ ObtainVarComps=function(rho, epsilon, corMat_base){
   n=ncol(epsilon)
   corMat=corMat_base^rho
   corMat_norm=sum(corMat^2)
-  if (corMat_norm>p+1e-10){
-    y1=sum(epsilon*(corMat%*%epsilon))/n
-    y2=sum(epsilon^2)/n
-    sigma2= (y1-y2)/(corMat_norm-p)
-    tau2= (-p*y1+corMat_norm*y2)/(corMat_norm*p-p^2)
-  } else{
-    sigma2=-1
-    tau2=-1
-  }
+
+  y1=sum(epsilon*(corMat%*%epsilon))/n
+  y2=sum(epsilon^2)/n
+  sigma2= (y1-y2)/(corMat_norm-p)
+  tau2= (-p*y1+corMat_norm*y2)/(corMat_norm*p-p^2)
+
   return(list(sigma2=sigma2, tau2=tau2))
 }
 
@@ -130,19 +127,15 @@ ObtainVarComps2=function(rho, epsilon, corMat_base1, corMat_base2){
   Mat=matrix(c(corMat1_norm, corMat12_norm, p, 
                corMat12_norm, corMat2_norm, p,
                p,p,p),3,3)
-  if (corMat1_norm>p+1e-10){
-    y1=sum(epsilon*(corMat1%*%epsilon))/n
-    y2=sum(epsilon*(corMat2%*%epsilon))/n
-    y3=sum(epsilon^2)/n
-    y=c(y1,y2,y3)
-    params=solve(Mat, y)
-    sigma2=params[1:2]
-    tau2=params[3]
-  } else{
-    sigma1=-1
-    sigma2=-1
-    tau2=-1
-  }
+
+  y1=sum(epsilon*(corMat1%*%epsilon))/n
+  y2=sum(epsilon*(corMat2%*%epsilon))/n
+  y3=sum(epsilon^2)/n
+  y=c(y1,y2,y3)
+  params=solve(Mat, y)
+  sigma2=params[1:2]
+  tau2=params[3]
+
   return(list(sigma2=sigma2, tau2=tau2))
 }
 
