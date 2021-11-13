@@ -149,19 +149,22 @@ combine=function(lst, alpha=0.05){
   ))
 }
 
+
 process=function(fit, threshold=NULL){
   if (is.null(threshold)){ threshold=fit$threshold }
   alternative=fit$alternative
   n.locations=fit$nlocations
   cl1=cl2=NULL
   if (alternative=="two.sided"){
-    cl1=which(apply(matrix(fit$Tstat,n.locations),1,max)> threshold)
-    cl2=which(apply(matrix(fit$Tstat,n.locations),1,min)< -threshold)
+    Tmax=apply(matrix(fit$Tstat,n.locations),1,max)
+    Tmin=apply(matrix(fit$Tstat,n.locations),1,min)
+    cl1=which(Tmax> threshold)
+    cl2=which(Tmin< -threshold)
     inter=intersect(cl1,cl2)
     n.inter=length(inter)
     if (n.inter>0){
       for (j in 1:n.inter){
-        if (fit$Tstat[inter[j]]>0){
+        if (abs(Tmax[inter[j]])>abs(Tmax[inter[j]])){
           cl2=setdiff(cl2, inter[j])
         } else{
           cl1=setdiff(cl1, inter[j])
