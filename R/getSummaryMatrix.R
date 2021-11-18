@@ -6,7 +6,7 @@ getSummaryMatrix=function(ymat, X=NULL, mask,
   p=nrow(ymat); n=ncol(ymat)
   if (!longitudinal){
     if (!is.null(X)){
-      n=nrow(X); p=ncol(X)
+      n=nrow(X);
       Q=diag(n)-tcrossprod(tcrossprod(X,solve(crossprod(X))),X)
       ymat=tcrossprod(ymat,Q)
     }
