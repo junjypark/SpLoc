@@ -234,7 +234,7 @@ MassiveMean=function(ymat, nperm=10000, alpha=0.05, alternative=c("two.sided", "
   
   if (isTRUE(partition)){
     if (is.null(npartition)){
-      npartition=nrow(NNmatrix)%/%10000+1
+      npartition=nrow(ymat)%/%10000+1
     }
     
     ymatList=list()
@@ -305,7 +305,7 @@ MassiveDiff=function(ymat, group, nperm=10000, alpha=0.05, alternative=c("two.si
   
   if (isTRUE(partition)){
     if (is.null(npartition)){
-      npartition=nrow(NNmatrix)%/%10000+1
+      npartition=nrow(ymat)%/%10000+1
     }
     
     ymatList=list()
