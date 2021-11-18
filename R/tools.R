@@ -126,14 +126,14 @@ combine=function(lst, alpha=0.05){
 
   if (alternative=="less"){
     threshold=quantile(permMin,alpha)
-    pvalue=(1+sum(c(permMin)<min(Tstat,na.rm=T)))/(1+nperm[1])
+    pvalue=(1+sum(c(permMin)<min(Tstat,na.rm=T)))/(1+nperm)
   } else if (alternative=="greater"){
     threshold=quantile(permMax,1-alpha)
-    pvalue=(1+sum(c(permMax)>max(Tstat,na.rm=T)))/(1+nperm[1])
+    pvalue=(1+sum(c(permMax)>max(Tstat,na.rm=T)))/(1+nperm)
   } else {
     perm=pmax(abs(permMin),abs(permMax))
-    threshold=quantile(pmax(abs(permMin),abs(permMax)),1-alpha)
-    pvalue=(1+sum(c(perm)>max(abs(Tstat),na.rm=T)))/(1+nperm[1])
+    threshold=quantile(perm,1-alpha)
+    pvalue=(1+sum(c(perm)>max(abs(Tstat),na.rm=T)))/(1+nperm)
   }
 
   return(list(
