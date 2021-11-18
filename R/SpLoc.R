@@ -209,7 +209,7 @@ SpLocDiff=function(ymat, NNmatrix, group, nperm=10000, alpha=0.05, alternative=c
       out$pvalue=(1+sum(c(out$permMax)>max(out$Tstat,na.rm=T)))/(1+nperm[1])
     } else {
       perm=pmax(abs(out$permMin),abs(out$permMax))
-      out$threshold=quantile(pmax(abs(out$permMin),abs(out$permMax)),1-alpha)
+      out$threshold=quantile(perm,1-alpha)
       out$pvalue=(1+sum(c(perm)>max(abs(out$Tstat),na.rm=T)))/(1+nperm[1])
     }
     
@@ -277,7 +277,7 @@ MassiveMean=function(ymat, nperm=10000, alpha=0.05, alternative=c("two.sided", "
       out$pvalue=(1+sum(c(out$permMax)>max(out$Tstat,na.rm=T)))/(1+nperm[1])
     } else {
       perm=pmax(abs(out$permMin),abs(out$permMax))
-      out$threshold=quantile(pmax(abs(out$permMin),abs(out$permMax)),1-alpha)
+      out$threshold=quantile(perm,1-alpha)
       out$pvalue=(1+sum(c(perm)>max(abs(out$Tstat),na.rm=T)))/(1+nperm[1])
     }
     
