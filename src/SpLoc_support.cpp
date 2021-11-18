@@ -72,7 +72,7 @@ Rcpp::List SpLocDiffC(arma::mat& ymat, arma::sp_mat& NNmatrix, arma::vec group, 
 
   U=NNmatrix*ymat*group;  
   
-  arma::mat permmat(n,nperm);
+  arma::mat permmat(n,nperm); permmat.fill(0);
   set_seed(s);
   for (int i=0; i<nperm; ++i){
     permmat.col(i)=shuffle(group);
