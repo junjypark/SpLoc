@@ -6,8 +6,6 @@ R code to apply SpLoc to longitudinal cortical thickness data. The current versi
 
 * Park, J.Y., Fiecas, M. (2021) Permutation-based inference for spatially localized signals in longitudinal MRI data. *NeuroImage*,  239, 118312.
 
-* Park, J.Y., Fiecas, M. SpLoc: Spatial scanning for detecting fMRI group-level activation clusters. *In preparation*.
-
 ## Installation
 To install the latest development builds directly from GitHub, please run the followings:
 
