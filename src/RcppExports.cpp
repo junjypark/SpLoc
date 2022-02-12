@@ -77,44 +77,6 @@ BEGIN_RCPP
     return rcpp_result_gen;
 END_RCPP
 }
-// computetraceABA
-double computetraceABA(arma::mat A, arma::mat B);
-RcppExport SEXP _SpLoc_computetraceABA(SEXP ASEXP, SEXP BSEXP) {
-BEGIN_RCPP
-    Rcpp::RObject rcpp_result_gen;
-    Rcpp::RNGScope rcpp_rngScope_gen;
-    Rcpp::traits::input_parameter< arma::mat >::type A(ASEXP);
-    Rcpp::traits::input_parameter< arma::mat >::type B(BSEXP);
-    rcpp_result_gen = Rcpp::wrap(computetraceABA(A, B));
-    return rcpp_result_gen;
-END_RCPP
-}
-// CovRegOptimC
-double CovRegOptimC(double rho, arma::mat& epsilon, arma::mat corMat_base);
-RcppExport SEXP _SpLoc_CovRegOptimC(SEXP rhoSEXP, SEXP epsilonSEXP, SEXP corMat_baseSEXP) {
-BEGIN_RCPP
-    Rcpp::RObject rcpp_result_gen;
-    Rcpp::RNGScope rcpp_rngScope_gen;
-    Rcpp::traits::input_parameter< double >::type rho(rhoSEXP);
-    Rcpp::traits::input_parameter< arma::mat& >::type epsilon(epsilonSEXP);
-    Rcpp::traits::input_parameter< arma::mat >::type corMat_base(corMat_baseSEXP);
-    rcpp_result_gen = Rcpp::wrap(CovRegOptimC(rho, epsilon, corMat_base));
-    return rcpp_result_gen;
-END_RCPP
-}
-// ObtainVarCompsC
-Rcpp::List ObtainVarCompsC(double rho, arma::mat& epsilon, arma::mat corMat_base);
-RcppExport SEXP _SpLoc_ObtainVarCompsC(SEXP rhoSEXP, SEXP epsilonSEXP, SEXP corMat_baseSEXP) {
-BEGIN_RCPP
-    Rcpp::RObject rcpp_result_gen;
-    Rcpp::RNGScope rcpp_rngScope_gen;
-    Rcpp::traits::input_parameter< double >::type rho(rhoSEXP);
-    Rcpp::traits::input_parameter< arma::mat& >::type epsilon(epsilonSEXP);
-    Rcpp::traits::input_parameter< arma::mat >::type corMat_base(corMat_baseSEXP);
-    rcpp_result_gen = Rcpp::wrap(ObtainVarCompsC(rho, epsilon, corMat_base));
-    return rcpp_result_gen;
-END_RCPP
-}
 
 static const R_CallMethodDef CallEntries[] = {
     {"_SpLoc_set_seed", (DL_FUNC) &_SpLoc_set_seed, 1},
@@ -122,9 +84,6 @@ static const R_CallMethodDef CallEntries[] = {
     {"_SpLoc_SpLocDiffC", (DL_FUNC) &_SpLoc_SpLocDiffC, 5},
     {"_SpLoc_MassiveMeanC", (DL_FUNC) &_SpLoc_MassiveMeanC, 3},
     {"_SpLoc_MassiveDiffC", (DL_FUNC) &_SpLoc_MassiveDiffC, 4},
-    {"_SpLoc_computetraceABA", (DL_FUNC) &_SpLoc_computetraceABA, 2},
-    {"_SpLoc_CovRegOptimC", (DL_FUNC) &_SpLoc_CovRegOptimC, 3},
-    {"_SpLoc_ObtainVarCompsC", (DL_FUNC) &_SpLoc_ObtainVarCompsC, 3},
     {NULL, NULL, 0}
 };
 
