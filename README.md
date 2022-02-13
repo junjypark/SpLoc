@@ -4,7 +4,7 @@
 
 R code to apply SpLoc to longitudinal cortical thickness data. The current version supports parallel computing using the *doParallel* package.
 
-* Park, J.Y., Fiecas, M. (2021) Permutation-based inference for spatially localized signals in longitudinal MRI data. *NeuroImage*,  239, 118312.
+* [Park, J.Y., Fiecas, M. (2021) Permutation-based inference for spatially localized signals in longitudinal MRI data. *NeuroImage*,  239, 118312.](https://doi.org/10.1016/j.neuroimage.2021.118312)
 
 ## Installation
 To install the latest development builds directly from GitHub, please run the followings:
@@ -13,6 +13,10 @@ To install the latest development builds directly from GitHub, please run the fo
 if (!require("devtools"))
   install.packages("devtools")
 devtools::install_github("junjypark/SpLoc")
+```
+Then the package can be loaded directly in R:
+```R
+library(SpLoc)
 ```
 
 ## Usage
